@@ -123,8 +123,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
 	private final static int SCANNIN_GREQUEST_CODE = 1;
-//	private LoadingDialog lockLoading;
-//	private LoadingDialog loadingDialog;
+	private LoadingDialog lockLoading;
+	private LoadingDialog loadingDialog;
 	private LoadingDialog loadingDialog1;
 	public static boolean isForeground = false;
 
@@ -190,6 +190,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 
+		isContainsList = new ArrayList<>();
+		macList = new ArrayList<>();
+		pOptions = new ArrayList<>();
+
 
 		mapView = (MapView) findViewById(R.id.mainUI_map);
 		mapView.onCreate(savedInstanceState);// 此方法必须重写
@@ -206,21 +210,30 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		}).start();
 		initView();
 
+//		registerReceiver(Config.initFilter());
+//		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
 
 		Toast.makeText(this, SharedPreferencesUrls.getInstance().getString("uid","")+"<==>"+SharedPreferencesUrls.getInstance().getString("access_token",""), Toast.LENGTH_SHORT).show();
 
+//		internalReceiver = null;
+
+//		registerReceiver(Config.initFilter());
+//		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 	}
 
 	@Override
 	protected void onResume() {
 		isForeground = true;
 		super.onResume();
+		context = this;
+
+		Toast.makeText(this, "main====onResume", Toast.LENGTH_SHORT).show();
+
+		closeBroadcast();
 
 		registerReceiver(Config.initFilter());
 		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-
-		Toast.makeText(this, "main===onResume", Toast.LENGTH_SHORT).show();
 
 		JPushInterface.onResume(this);
 		mapView.onResume();
@@ -276,14 +289,26 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			}
 		}
 
+	}
 
-
+	private void closeBroadcast(){
+		try {
+			if (internalReceiver != null) {
+				unregisterReceiver(internalReceiver);
+			}
+		} catch (Exception e) {
+			Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
 	protected void onPause() {
 		isForeground = false;
 		super.onPause();
+
+
+
+
 		JPushInterface.onPause(this);
 		mapView.onPause();
 		deactivate();
@@ -291,15 +316,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 
 
-//		try {
-//			if (internalReceiver != null) {
-//				unregisterReceiver(internalReceiver);
-//			}
-//		} catch (Exception e) {
-//			Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
-//		}
 
-		Toast.makeText(this, "main====onPause", Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(this, "main====onPause", Toast.LENGTH_SHORT).show();
+
 	}
 
 
@@ -657,34 +677,28 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 		switch (view.getId()){
 			case R.id.mainUI_leftBtn:
-//				UIHelper.goToAct(context,ActionCenterActivity.class);
 
-                if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
+//				if (loadingDialog != null && loadingDialog.isShowing()){
+//					loadingDialog.dismiss();
+//				}
+//				if (lockLoading != null && lockLoading.isShowing()){
+//					lockLoading.dismiss();
+//				}
+//				if (loadingDialog1 != null && loadingDialog1.isShowing()){
+//					loadingDialog1.dismiss();
+//				}
 
+
+//				UIHelper.goToAct(context, Main2Activity.class);
+				UIHelper.goToAct(MainActivity.this, ActionCenterActivity.class);
+
+//                if (loadingDialog != null && loadingDialog.isShowing()){
+//					loadingDialog.dismiss();
+//				}
+
+//				UIHelper.goToAct(context, Main2Activity.class);
 //				UIHelper.goToAct(context, CurRoadBikingActivity.class);
 
-
-//				BaseApplication.getInstance().getIBLE().getLockStatus();
-
-//				BaseApplication.getInstance().getIBLE().connect("A8:1B:6A:B4:E7:C9", MainActivity.this);
-
-//				BaseApplication.getInstance().getIBLE().stopScan();
-//				m_myHandler.sendEmptyMessage(0x99);
-//				BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
-//					@Override
-//					public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
-//						if (device==null|| TextUtils.isEmpty(device.getAddress()))return;
-//						if ("A8:1B:6A:B4:E7:C9".equalsIgnoreCase(device.getAddress())){
-//							m_myHandler.removeMessages(0x99);
-//							BaseApplication.getInstance().getIBLE().stopScan();
-//							BaseApplication.getInstance().getIBLE().connect("A8:1B:6A:B4:E7:C9", MainActivity.this);
-//						}
-//					}
-//				});
-//
-//				Toast.makeText(context,"####",Toast.LENGTH_SHORT).show();
 
 				break;
 			case R.id.mainUI_rightBtn:
@@ -1107,10 +1121,15 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 										}
 										try {
 
+											closeBroadcast();
+
 											Intent intent = new Intent();
 											intent.setClass(MainActivity.this, ActivityScanerCode.class);
 											intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 											startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+
+
+
 										} catch (Exception e) {
 											UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
 										}
@@ -1154,11 +1173,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 									loadingDialog1.dismiss();
 								}
 								try {
+									closeBroadcast();
 
 									Intent intent = new Intent();
 									intent.setClass(MainActivity.this, ActivityScanerCode.class);
 									intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 									startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+
+
 								} catch (Exception e) {
 									UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
 								}
@@ -1353,12 +1375,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //			broadcastReceiver2 = null;
 //		}
 
-		try {
-			if (internalReceiver != null) {
-				unregisterReceiver(internalReceiver);
-			}
-		} catch (Exception e) {
-		}
+//		try {
+//			if (internalReceiver != null) {
+//				unregisterReceiver(internalReceiver);
+//			}
+//		} catch (Exception e) {
+//		}
 
 	}
 	private void setUpLocationStyle() {
@@ -1523,11 +1545,13 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					// Permission Granted
 					if (permissions[0].equals(Manifest.permission.CAMERA)){
 						try {
+							closeBroadcast();
 
 							Intent intent = new Intent();
 							intent.setClass(MainActivity.this, ActivityScanerCode.class);
 							intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+
 						} catch (Exception e) {
 							UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
 						}
@@ -1664,7 +1688,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					lockLoading.dismiss();
 				}
 //					isStop = true;
-				Toast.makeText(context,"设备连接成功",Toast.LENGTH_SHORT).show();
+				Toast.makeText(context,"main===设备连接成功",Toast.LENGTH_SHORT).show();
 
 				break;
 			case Config.BATTERY_ACTION:

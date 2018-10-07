@@ -14,4 +14,5 @@
     <string name="scan_tips">将二维码放入框内, 即可自动扫描</string>
     <string name="pickerview_cancel">取消</string>
     <string name="pickerview_submit">确定</string>
+    <string name="title_activity_main3">Main3Activity</string>
 </resources>

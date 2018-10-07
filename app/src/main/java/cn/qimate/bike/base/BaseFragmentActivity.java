@@ -38,8 +38,11 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
 import com.sunshine.blelibrary.config.Config;
+import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.inter.OnConnectionListener;
 import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
+import com.sunshine.blelibrary.utils.GlobalParameterUtils;
+import com.zxing.lib.scaner.activity.ActivityScanerCode;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -84,7 +87,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 	private static final int MSG_SET_TAGS = 1002;
 	static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
 
-	protected static InternalReceiver internalReceiver = null;
+	protected InternalReceiver internalReceiver = null;
 
 	private TelephonyManager tm;
 	protected Context context;
@@ -93,9 +96,9 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 	public static String oid = "";
 	public static String type = "";
 
-	private List<Boolean> isContainsList;
-	private List<String> macList;
-	private List<Polygon> pOptions;
+	public static List<Boolean> isContainsList;
+	public static List<String> macList;
+	public static List<Polygon> pOptions;
 	private LatLng myLocation = null;
 	private boolean mFirstFix = true;
 	protected OnLocationChangedListener mListener;
@@ -117,7 +120,8 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
 
-
+//		registerReceiver(Config.initFilter());
+//		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
 		tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 		// 添加Activity到堆栈
@@ -130,24 +134,63 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
 
-
-		isContainsList = new ArrayList<>();
-		macList = new ArrayList<>();
-		pOptions = new ArrayList<>();
-
-
 		Toast.makeText(this, "===="+m_nowMac, Toast.LENGTH_SHORT).show();
 
         uid = SharedPreferencesUrls.getInstance().getString("uid","");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-		if("".equals(m_nowMac)){
-			getCurrentorder(uid, access_token);
-		}else{
-			connect();
+		if(context instanceof MainActivity || context instanceof ActivityScanerCode || context instanceof CurRoadStartActivity || context instanceof CurRoadBikingActivity){
+			if("".equals(m_nowMac)){
+				getCurrentorder(uid, access_token);
+			}else{
+				connect();
+			}
 		}
 
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		RefreshLogin();
+
+	}
+
+	@Override
+	protected void onDestroy() {
+
+		// 结束Activity从堆栈中移除
+
+//		Toast.makeText(context, "###====finish", Toast.LENGTH_SHORT).show();
+
+//		if (broadcastReceiver2 != null) {
+//			unregisterReceiver(broadcastReceiver2);
+//			broadcastReceiver2 = null;
+//		}
+
+
+
+		super.onDestroy();
+
+//		Toast.makeText(context, "base===onDestroy==="+type, Toast.LENGTH_SHORT).show();
+
+		if (!"1".equals(type)){
+			if (mLeScanCallback != null && mBluetoothAdapter != null) {
+				mBluetoothAdapter.stopLeScan(mLeScanCallback);
+				mLeScanCallback = null;
+			}
+		}
+
+//		try {
+//			if (internalReceiver!= null) {
+//				unregisterReceiver(internalReceiver);
+//			}
+//		} catch (Exception e) {
+//			Toast.makeText(context, "eee==="+e, Toast.LENGTH_SHORT).show();
+//		}
+
+		AppManager.getAppManager().finishActivity(this);
 	}
 
 	private void getCurrentorder(String uid, String access_token){
@@ -201,7 +244,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //								hintText.setText("还车须至校园地图红色覆盖区，关锁后距车一米内点击结束！");
 								m_nowMac = bean.getMacinfo();
 
-								Toast.makeText(context, "###===="+m_nowMac, Toast.LENGTH_SHORT).show();
+//								Toast.makeText(context, "###===="+m_nowMac, Toast.LENGTH_SHORT).show();
 
 //								connect();
 
@@ -272,50 +315,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 	}
 
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		RefreshLogin();
 
-	}
-
-	@Override
-	protected void onDestroy() {
-
-		// 结束Activity从堆栈中移除
-
-//		Toast.makeText(context, "###====finish", Toast.LENGTH_SHORT).show();
-
-//		if (broadcastReceiver2 != null) {
-//			unregisterReceiver(broadcastReceiver2);
-//			broadcastReceiver2 = null;
-//		}
-
-
-
-		super.onDestroy();
-
-		Toast.makeText(context, "base===onDestroy==="+type, Toast.LENGTH_SHORT).show();
-
-		if (!"1".equals(type)){
-			if (mLeScanCallback != null && mBluetoothAdapter != null) {
-				mBluetoothAdapter.stopLeScan(mLeScanCallback);
-				mLeScanCallback = null;
-			}
-		}
-
-
-//
-//		try {
-//			if (internalReceiver!= null) {
-//				unregisterReceiver(internalReceiver);
-//			}
-//		} catch (Exception e) {
-//			Toast.makeText(context, "eee==="+e, Toast.LENGTH_SHORT).show();
-//		}
-
-		AppManager.getAppManager().finishActivity(this);
-	}
 
 	public void finishMine() {
 		AppManager.getAppManager().finishActivity(this);
@@ -473,6 +473,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 								}
 
                                 UIHelper.goToAct(context, FeedbackActivity.class);
+//								UIHelper.goToAct(context, Main2Activity.class);
 //                                scrollToFinishActivity();
                             }else {
                                 Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
@@ -611,7 +612,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
                         }
                     }
                 }else {
-                    Toast.makeText(context,"请停放至校内公共停车区域，或重启手机定位服务",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,"请停放至校内公共停车区域，或重启手机定位服务==="+isContainsList.size()+"==="+macList.size(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -839,9 +840,89 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 		if (intent == null) {
 			return;
 		}
+
+//		String action = intent.getAction();
+//		String data = intent.getStringExtra("data");
+//		switch (action) {
+//			case Config.TOKEN_ACTION:
+//
+//				mHandler.postDelayed(new Runnable() {
+//					@Override
+//					public void run() {
+//						BaseApplication.getInstance().getIBLE().getBattery();
+//					}
+//				}, 500);
+//				if (null != lockLoading && lockLoading.isShowing()) {
+//					lockLoading.dismiss();
+//				}
+////					isStop = true;
+//				Toast.makeText(context,"base===设备连接成功",Toast.LENGTH_SHORT).show();
+//
+//				break;
+//			case Config.BATTERY_ACTION:
+////					Toast.makeText(context,"####===2",Toast.LENGTH_SHORT).show();
+//				break;
+//			case Config.OPEN_ACTION:
+//				Toast.makeText(context,"####===3",Toast.LENGTH_SHORT).show();
+//				break;
+//			case Config.CLOSE_ACTION:
+//				Toast.makeText(context,"####===4",Toast.LENGTH_SHORT).show();
+//				break;
+//			case Config.LOCK_STATUS_ACTION:
+////				if (CurRoadBikingActivity.instance.loadingDialog != null && CurRoadBikingActivity.instance.loadingDialog.isShowing()){
+////					CurRoadBikingActivity.instance.loadingDialog.dismiss();
+////				}
+////				if (CurRoadBikingActivity.instance.lockLoading != null && CurRoadBikingActivity.instance.lockLoading.isShowing()){
+////					CurRoadBikingActivity.instance.lockLoading.dismiss();
+////				}
+//
+//				if (loadingDialog != null && loadingDialog.isShowing()){
+//					loadingDialog.dismiss();
+//				}
+//				if (lockLoading != null && lockLoading.isShowing()){
+//					lockLoading.dismiss();
+//				}
+//
+//				if (TextUtils.isEmpty(data)) {
+//
+//					Toast.makeText(context,"====锁已关闭",Toast.LENGTH_SHORT).show();
+//
+//					//锁已关闭
+//					submit(context, uid, access_token);
+//
+//				} else {
+//					//锁已开启
+//					Toast.makeText(context,"您还未上锁，请给车上锁后还车",Toast.LENGTH_SHORT).show();
+//				}
+//				break;
+//			case Config.LOCK_RESULT:
+////				if (CurRoadBikingActivity.instance.loadingDialog != null && CurRoadBikingActivity.instance.loadingDialog.isShowing()){
+////					CurRoadBikingActivity.instance.loadingDialog.dismiss();
+////				}
+////				if (CurRoadBikingActivity.instance.lockLoading != null && CurRoadBikingActivity.instance.lockLoading.isShowing()){
+////					CurRoadBikingActivity.instance.lockLoading.dismiss();
+////				}
+//
+//				if (loadingDialog != null && loadingDialog.isShowing()){
+//					loadingDialog.dismiss();
+//				}
+//				if (lockLoading != null && lockLoading.isShowing()){
+//					lockLoading.dismiss();
+//				}
+//
+//				if(context instanceof  CurRoadStartActivity){
+//					Toast.makeText(context,"s===恭喜您，您已成功上锁", Toast.LENGTH_SHORT).show();
+//				}else{
+//					Toast.makeText(context,"####===恭喜您，您已成功上锁", Toast.LENGTH_SHORT).show();
+//				}
+//
+//				endBtn(context);
+//
+//				break;
+//		}
 	}
 
-	protected final void registerReceiver(IntentFilter intentfilter) {
+	protected void registerReceiver(IntentFilter intentfilter) {
 //		if (actionArray == null) {
 //			return;
 //		}
@@ -862,7 +943,6 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 		public void onReceive(Context context, Intent intent) {
 
 			handleReceiver(context, intent);
-
 
 		}
 	};

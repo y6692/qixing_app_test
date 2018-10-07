@@ -285,10 +285,10 @@
         <!-- 友盟key -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="59b3498199f0c741a7001858"></meta-data>
+            android:value="59b3498199f0c741a7001858" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Umeng"></meta-data>
+            android:value="Umeng" />
 
         <uses-library
             android:name="com.google.android.maps"
@@ -300,7 +300,7 @@
             android:value="10b35740d0b28319c37f7e8dfacce11f" />
 
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
-        <service android:name="com.amap.api.location.APSService"></service>
+        <service android:name="com.amap.api.location.APSService" />
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
@@ -318,7 +318,7 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
         <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <service
@@ -395,7 +395,10 @@
             android:name="JPUSH_APPKEY"
             android:value="f113c47412dbd4499c9c9a61" /> <!-- </>值来自开发者平台取得的AppKey -->
 
-        <activity android:name=".activity.Main2Activity"></activity>
+        <activity android:name=".activity.Main2Activity" />
+        <activity
+            android:name=".activity.Main3Activity"
+            android:label="@string/title_activity_main3"></activity>
     </application>
 
 </manifest>

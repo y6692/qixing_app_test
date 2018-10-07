@@ -156,6 +156,31 @@ public class ScanCaptureAct extends SwipeBackActivity implements View.OnClickLis
 		findViewById();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		Toast.makeText(this, "capture===="+internalReceiver, Toast.LENGTH_SHORT).show();
+
+		try {
+			if (internalReceiver != null) {
+				unregisterReceiver(internalReceiver);
+			}
+		} catch (Exception e) {
+			Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+		}
+
+		initViews();
+		playBeep = true;
+		isStop = false;
+		AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
+		if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+			playBeep = false;
+		}
+		initBeepSound();
+		vibrate = true;
+	}
+
 	private void findViewById() {
 
 		loadingDialog = new LoadingDialog(ScanCaptureAct.this);
@@ -259,19 +284,7 @@ public class ScanCaptureAct extends SwipeBackActivity implements View.OnClickLis
 		}
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		initViews();
-		playBeep = true;
-		isStop = false;
-		AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
-		if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-			playBeep = false;
-		}
-		initBeepSound();
-		vibrate = true;
-	}
+
 
 	private void initViews() {
 

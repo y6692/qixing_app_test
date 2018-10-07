@@ -56,7 +56,7 @@ import cn.qimate.bike.util.PublicWay;
 @SuppressLint("NewApi")
 public class CurRoadStartActivity extends SwipeBackActivity implements View.OnClickListener{
 
-    private Context context;
+//    private Context context;
     private LoadingDialog loadingDialog;
     private ImageView backImg;
     private TextView title;
@@ -108,6 +108,50 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
             }
         }
         initView();
+
+//        registerReceiver(Config.initFilter());
+//        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+    }
+
+    @Override
+    protected void onResume() {
+        isEnd = false;
+        super.onResume();
+
+        Toast.makeText(this, "start===="+internalReceiver, Toast.LENGTH_SHORT).show();
+
+//        try {
+//            if (internalReceiver != null) {
+//                unregisterReceiver(internalReceiver);
+//            }
+//        } catch (Exception e) {
+//            Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+//        }
+
+        registerReceiver(Config.initFilter());
+        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Toast.makeText(this, "start====onPause", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        isEnd = true;
+        super.onDestroy();
+
+        try {
+            if (internalReceiver != null) {
+                unregisterReceiver(internalReceiver);
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initView(){
@@ -382,36 +426,6 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 //        finish();
 //    }
 
-
-    @Override
-    protected void onResume() {
-        isEnd = false;
-        super.onResume();
-
-        registerReceiver(Config.initFilter());
-        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        try {
-            if (internalReceiver != null) {
-                unregisterReceiver(internalReceiver);
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
-        }
-
-        Toast.makeText(this, "start====onPause", Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        isEnd = true;
-        super.onDestroy();
-    }
 
     Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
