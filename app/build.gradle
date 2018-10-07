@@ -1,0 +1,121 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    defaultConfig {
+        applicationId "cn.qimate.bike"
+        minSdkVersion 18
+        targetSdkVersion 25
+        versionCode 25
+        versionName "1.4.4"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        config {
+            keyPassword 'password'
+            keyAlias "android.keystore"
+            storeFile file('debug.keystore')
+            storePassword 'password'
+        }
+
+        release {
+            keyAlias "7MA"
+            keyPassword "123456"
+            storeFile file("../7ma.jks")
+            storePassword "123456"
+        }
+    }
+
+
+    buildTypes {
+        release {
+            debuggable true
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "7MA.apk"
+                }
+            }
+        }
+
+
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
+    }
+
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+//    compileOptions {
+//        sourceCompatibility 1.8
+//        targetCompatibility 1.8
+//    }
+
+//    allprojects {
+//        gradle.projectsEvaluated {
+//            tasks.withType(JavaCompile) {
+//                options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//            }
+//        }
+//    }
+
+}
+
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    testCompile 'junit:junit:4.12'
+    compile files('libs/fastjson-1.1.34.android.jar')
+    compile files('libs/alipaySdk-20160809.jar')
+    compile files('libs/SocialSDK_WeiXin_1.jar')
+    compile files('libs/ZBarDecoder.jar')
+    compile 'com.android.support:multidex:1.0.0'
+    compile project(':pullzoomview')
+    compile project(':library')
+    compile project(':LongshTabStripLibrary')
+    implementation project(path: ':RxTools-library')
+    compile files('libs/httpmime-4.2.5.jar')
+    compile files('libs/libapshare.jar')
+    compile files('libs/SocialSDK_QQZone_3.jar')
+    compile files('libs/SocialSDK_alipay.jar')
+    compile 'com.jakewharton:butterknife:8.5.1'
+    compile 'com.android.support:cardview-v7:26.1.0'
+    implementation files('libs/AMap_Location_V4.2.0_20180809.jar')
+}
+
+afterEvaluate {
+    tasks.matching {
+        it.name.startsWith('dex')
+    }.each { dx ->
+        if (dx.additionalParameters == null) {
+            dx.additionalParameters = []
+        }
+        dx.additionalParameters += '--multi-dex'
+        // 设置multidex.keep文件中class为第一个dex文件中包含的class，如果没有下一项设置此项无作用
+        dx.additionalParameters += "--main-dex-list=$projectDir/multidex.keep".toString()
+        //此项添加后第一个classes.dex文件只能包含-main-dex-list列表中class
+        dx.additionalParameters += '--minimal-main-dex'
+    }
+}

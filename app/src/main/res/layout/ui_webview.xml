@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:WebViewWithProgress="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/ui_main_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/ui_backgroud">
+
+        <cn.qimate.bike.core.widget.WebViewWithProgress
+            android:id="@+id/webViewUI_webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            WebViewWithProgress:progressStyle="circle"/>
+    </LinearLayout>
+</LinearLayout>

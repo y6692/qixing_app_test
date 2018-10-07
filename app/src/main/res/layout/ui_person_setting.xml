@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/ui_main_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/ui_backgroud">
+
+        <cn.qimate.bike.core.widget.MyScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp45"
+                        android:paddingLeft="@dimen/dp15"
+                        android:paddingRight="@dimen/dp15"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tx_black"
+                            android:textSize="@dimen/sp16"
+                            android:text="姓名"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:gravity="left"/>
+
+                        <EditText
+                            android:id="@+id/settingUI_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:gravity="right|center_vertical"
+                            android:layout_marginLeft="@dimen/dp15"
+                            android:hint="请输入姓名"
+                            android:textColorHint="#999"
+                            android:background="@null"
+                            android:paddingRight="@dimen/dp15"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="@color/line_color"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:layout_marginRight="@dimen/dp15"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp45"
+                        android:paddingLeft="@dimen/dp15"
+                        android:paddingRight="@dimen/dp15"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tx_black"
+                            android:textSize="@dimen/sp16"
+                            android:text="手机号"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"/>
+
+                        <TextView
+                            android:id="@+id/settingUI_phoneNum"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:gravity="right|center_vertical"
+                            android:layout_marginLeft="@dimen/dp15"
+                            android:paddingRight="@dimen/dp15"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="@color/line_color"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:layout_marginRight="@dimen/dp15"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp45"
+                        android:paddingLeft="@dimen/dp15"
+                        android:paddingRight="@dimen/dp15"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tx_black"
+                            android:textSize="@dimen/sp16"
+                            android:text="昵称"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"/>
+
+                        <EditText
+                            android:id="@+id/settingUI_nickName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/sp14"
+                            android:textColor="@color/tx_black"
+                            android:gravity="right|center_vertical"
+                            android:layout_marginLeft="@dimen/dp15"
+                            android:hint="请输入昵称"
+                            android:textColorHint="#999"
+                            android:background="@null"
+                            android:paddingRight="@dimen/dp15"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="@color/line_color"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:layout_marginRight="@dimen/dp15"/>
+
+                    <RelativeLayout
+                        android:id="@+id/settingUI_sexLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp45"
+                        android:paddingLeft="@dimen/dp15"
+                        android:paddingRight="@dimen/dp15">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tx_black"
+                            android:textSize="@dimen/sp16"
+                            android:text="性别"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/settingUI_sex"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/sp14"
+                                android:textColor="@color/tx_black"
+                                android:hint="请选择你的性别"
+                                android:textColorHint="#999"
+                                android:gravity="right|center_vertical"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:src="@drawable/arrows_right"
+                                android:layout_marginLeft="@dimen/dp10"
+                                android:scaleType="centerInside"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="@color/line_color"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:layout_marginRight="@dimen/dp15"/>
+                    <RelativeLayout
+                        android:id="@+id/settingUI_schoolLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp45"
+                        android:paddingLeft="@dimen/dp15"
+                        android:paddingRight="@dimen/dp15">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tx_black"
+                            android:textSize="@dimen/sp16"
+                            android:text="学校"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/settingUI_school"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/sp14"
+                                android:textColor="@color/tx_black"
+                                android:hint="请选择你的性别"
+                                android:textColorHint="#999"
+                                android:gravity="right|center_vertical"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:src="@drawable/arrows_right"
+                                android:layout_marginLeft="@dimen/dp10"
+                                android:scaleType="centerInside"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="@color/line_color"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:layout_marginRight="@dimen/dp15"/>
+                    <RelativeLayout
+                        android:id="@+id/settingUI_classLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp45"
+                        android:paddingLeft="@dimen/dp15"
+                        android:paddingRight="@dimen/dp15">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tx_black"
+                            android:textSize="@dimen/sp16"
+                            android:text="年级"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/settingUI_class"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:textSize="@dimen/sp14"
+                                android:textColor="@color/tx_black"
+                                android:hint="请选择您的年级"
+                                android:textColorHint="#999"
+                                android:gravity="center_vertical|right"
+                                android:background="@null"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:src="@drawable/arrows_right"
+                                android:layout_marginLeft="@dimen/dp10"
+                                android:scaleType="centerInside"/>
+                        </LinearLayout>
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="@color/line_color"
+                        android:layout_marginLeft="@dimen/dp15"
+                        android:layout_marginRight="@dimen/dp15"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp45"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/dp15"
+                        android:paddingRight="@dimen/dp15">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="学号"
+                            android:textColor="@color/tx_black"
+                            android:textSize="@dimen/sp16" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dp15"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/settingUI_stuNum"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@null"
+                                android:gravity="center_vertical|right"
+                                android:hint="请输入您的学号"
+                                android:inputType="numberDecimal"
+                                android:paddingRight="@dimen/dp15"
+                                android:textColor="@color/tx_black"
+                                android:textColorHint="#999"
+                                android:textSize="@dimen/sp14" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/settingUI_submitBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:layout_marginTop="@dimen/dp25"
+                    android:background="@drawable/btn_bcg"
+                    android:maxHeight="0dp"
+                    android:text="提交"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp16"
+                    android:gravity="center"
+                    android:enabled="true"/>
+            </LinearLayout>
+        </cn.qimate.bike.core.widget.MyScrollView>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/line_color"
+        android:layout_marginLeft="@dimen/dp15"
+        android:layout_marginRight="@dimen/dp15"/>
+
+</LinearLayout>

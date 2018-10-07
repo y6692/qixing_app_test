@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+    <include
+        layout="@layout/ui_main_title"/>
+    <LinearLayout
+        android:id="@+id/ui_myCommision_headLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp160"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+
+            <TextView
+                android:id="@+id/ui_myCommision_moneyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp16"
+                android:textColor="#fcc245"
+                android:text=""/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="元"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp10"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/ui_myCommision_withdrawBtn"
+            android:layout_width="@dimen/dp90"
+            android:layout_height="@dimen/dp30"
+            android:layout_marginTop="@dimen/dp15"
+            android:background="@drawable/shape_commission_withdraw"
+            android:gravity="center"
+            android:textSize="@dimen/sp16"
+            android:textColor="@color/ui_main"
+            android:text="佣金提现"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_bg"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/ui_main_tab"/>
+    </LinearLayout>
+</LinearLayout>

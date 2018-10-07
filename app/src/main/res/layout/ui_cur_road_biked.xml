@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/ui_main_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/ui_backgroud">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#f7f7f7">
+
+            <cn.qimate.bike.core.widget.MyScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/dp5">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp40"
+                        android:paddingLeft="@dimen/dp10"
+                        android:paddingRight="@dimen/dp10"
+                        android:background="@color/white">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tx_black"
+                            android:textSize="@dimen/sp18"
+                            android:text="还车成功"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"/>
+
+                        <TextView
+                            android:id="@+id/curRoadUI_biked_code"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp14"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:textColor="#d5d5d5"/>
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/line_height"
+                        android:background="#eee"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="@color/white">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp40"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tx_black"
+                                android:textSize="@dimen/sp16"
+                                android:text="车辆编号："/>
+
+                            <TextView
+                                android:id="@+id/curRoadUI_biked_num"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/sp14"
+                                android:layout_marginLeft="@dimen/dp5"
+                                android:textColor="@color/tx_black_light"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp40"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tx_black"
+                                android:textSize="@dimen/sp16"
+                                android:text="开始时间："/>
+
+                            <TextView
+                                android:id="@+id/curRoadUI_biked_startTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/sp14"
+                                android:layout_marginLeft="@dimen/dp5"
+                                android:textColor="@color/tx_black_light"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp40"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tx_black"
+                                android:textSize="@dimen/sp16"
+                                android:text="结束时间："/>
+
+                            <TextView
+                                android:id="@+id/curRoadUI_biked_endTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/sp14"
+                                android:layout_marginLeft="@dimen/dp5"
+                                android:textColor="@color/tx_black_light"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp40"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tx_black"
+                                android:textSize="@dimen/sp16"
+                                android:text="状态："/>
+
+                            <TextView
+                                android:id="@+id/curRoadUI_biked_state"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="待支付"
+                                android:textSize="@dimen/sp16"
+                                android:layout_marginLeft="@dimen/dp5"
+                                android:textColor="#30a8eb"/>
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/line_height"
+                            android:background="#eee"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/dp40"
+                            android:paddingLeft="@dimen/dp10"
+                            android:paddingRight="@dimen/dp10">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:orientation="horizontal"
+                                android:layout_centerVertical="true">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/tx_black"
+                                    android:textSize="@dimen/sp14"
+                                    android:text="骑行"/>
+                                <TextView
+                                    android:id="@+id/curRoadUI_biked_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/sp14"
+                                    android:textColor="#f86961" />
+
+                                <TextView
+                                    android:id="@+id/curRoadUI_biked_timeUnit"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/tx_black"
+                                    android:textSize="@dimen/sp14"
+                                    android:text="分钟，"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/tx_black"
+                                    android:textSize="@dimen/sp14"
+                                    android:text="花费"/>
+                                <TextView
+                                    android:id="@+id/curRoadUI_biked_money"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/sp14"
+                                    android:textColor="#f86961" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/tx_black"
+                                    android:textSize="@dimen/sp14"
+                                    android:text="元"/>
+                            </LinearLayout>
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp40"
+                        android:background="@color/white"
+                        android:layout_marginTop="@dimen/dp10"
+                        android:paddingLeft="@dimen/dp10"
+                        android:paddingRight="@dimen/dp10">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_alignParentLeft="true">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tx_black"
+                                android:textSize="@dimen/sp14"
+                                android:text="余额："/>
+
+                            <TextView
+                                android:id="@+id/curRoadUI_biked_balance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#f86961"
+                                android:textSize="@dimen/sp14"
+                                android:layout_marginLeft="@dimen/dp5"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tx_black"
+                                android:textSize="@dimen/sp14"
+                                android:text="元"/>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/curRoadUI_biked_baImage"
+                            android:layout_width="@dimen/dp40"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/express_type_selected"
+                            android:layout_alignParentRight="true"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </cn.qimate.bike.core.widget.MyScrollView>
+
+            <LinearLayout
+                android:id="@+id/curRoadUI_biked_payBalanceLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp40"
+                android:background="#f86961"
+                android:layout_alignParentBottom="true"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="余额支付"
+                    android:textSize="@dimen/sp16"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ui_backgroud"
+        android:orientation="vertical">
+
+        <cn.qimate.bike.core.widget.MyScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/myPurseUI_headLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="260dp"
+                    android:background="@color/ui_main">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <cn.qimate.bike.core.widget.MLImageView
+                            android:id="@+id/myPurseUI_headImage"
+                            android:layout_width="@dimen/dp100"
+                            android:layout_height="@dimen/dp100"
+                            android:layout_margin="@dimen/dp10"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/my_purse_icon"
+                            melove:shape_type="round" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/dp5">
+
+                            <TextView
+                                android:id="@+id/myPurseUI_money"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/sp22" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="元"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/sp16" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/dp10"
+                            android:text="账户余额"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp16" />
+                    </LinearLayout>
+                </RelativeLayout>
+                <Button
+                    android:id="@+id/myPurseUI_monthCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:background="@drawable/btn_bcg"
+                    android:gravity="center"
+                    android:maxHeight="0dp"
+                    android:text="购买月卡"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp16"/>
+                <Button
+                    android:id="@+id/myPurseUI_rechargeBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:layout_marginTop="@dimen/dp20"
+                    android:background="@drawable/btn_bcg"
+                    android:gravity="center"
+                    android:maxHeight="0dp"
+                    android:text="余额充值"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp16" />
+
+                <Button
+                    android:id="@+id/myPurseUI_activationNum_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:background="@drawable/btn_bcg"
+                    android:gravity="center"
+                    android:maxHeight="0dp"
+                    android:text="我有兑换码,点此处兑换>>>"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp16"/>
+            </LinearLayout>
+        </cn.qimate.bike.core.widget.MyScrollView>
+    </LinearLayout>
+
+    <include
+        layout="@layout/ui_main_title"/>
+
+</LinearLayout>

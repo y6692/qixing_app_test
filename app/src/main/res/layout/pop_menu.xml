@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/pop_win_bg">
+
+    <!-- 弹窗背景 -->
+    <ImageView
+        android:id="@+id/popupWindow_back"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFF5F7FA"
+        android:visibility="gone"
+        android:scaleType="fitXY"
+        android:fitsSystemWindows="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#f2f2f2"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp40"
+            android:gravity="center"
+            android:text="客户服务"
+            android:textColor="@color/tx_black"
+            android:textSize="@dimen/sp16"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="@color/white"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/dp20">
+
+            <LinearLayout
+                android:id="@+id/pop_menu_feedbackLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dp60"
+                    android:layout_height="@dimen/dp60"
+                    android:layout_marginTop="@dimen/dp25"
+                    android:background="@null"
+                    android:src="@drawable/feedback_icon"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:textColor="@color/tx_black"
+                    android:textSize="@dimen/sp14"
+                    android:text="问题反馈"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/pop_menu_helpLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dp60"
+                    android:layout_height="@dimen/dp60"
+                    android:layout_marginTop="@dimen/dp25"
+                    android:background="@null"
+                    android:src="@drawable/help_icon"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:textColor="@color/tx_black"
+                    android:textSize="@dimen/sp14"
+                    android:text="使用帮助"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/pop_menu_callLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dp60"
+                    android:layout_height="@dimen/dp60"
+                    android:layout_marginTop="@dimen/dp25"
+                    android:background="@null"
+                    android:src="@drawable/call_icon"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp15"
+                    android:textColor="@color/tx_black"
+                    android:textSize="@dimen/sp14"
+                    android:text="拨打客服"/>
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/pop_menu_cancleBtn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp40"
+            android:background="@color/white"
+            android:textSize="@dimen/sp16"
+            android:text="取消"
+            android:textColor="@color/tx_black"
+            android:gravity="center"/>
+    </LinearLayout>
+</RelativeLayout>

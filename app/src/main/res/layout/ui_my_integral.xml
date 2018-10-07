@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_main"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp45">
+        <ImageView
+            android:id="@+id/myIntegralUI_title_backBtn"
+            android:layout_width="@dimen/dp40"
+            android:layout_height="match_parent"
+            android:src="@drawable/back_image"
+            android:padding="@dimen/dp10"
+            android:layout_alignParentLeft="true"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true">
+
+            <Button
+                android:id="@+id/myIntegralUI_recordBtn"
+                android:layout_width="@dimen/dp80"
+                android:layout_height="@dimen/dp30"
+                android:background="@drawable/switch_button_left_bg"
+                android:text="积分记录"
+                android:textSize="@dimen/sp14"
+                android:textColor="@drawable/bottom_icon_tx_bg"
+                android:gravity="center"/>
+
+            <Button
+                android:id="@+id/myIntegralUI_ruleBtn"
+                android:layout_width="@dimen/dp80"
+                android:layout_height="@dimen/dp30"
+                android:background="@drawable/switch_button_right_bg"
+                android:text="积分规则"
+                android:textSize="@dimen/sp14"
+                android:textColor="@drawable/bottom_icon_tx_bg"
+                android:gravity="center"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f7f7f7"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/myIntegralUI_middleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</LinearLayout>

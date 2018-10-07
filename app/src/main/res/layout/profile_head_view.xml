@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_view">
+
+    <RelativeLayout
+        android:id="@+id/personUI_titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp40"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/dp20"
+        android:layout_marginRight="@dimen/dp10">
+
+        <ImageView
+            android:id="@+id/personUI_backImage"
+            android:layout_width="@dimen/dp40"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/back_image"
+            android:padding="@dimen/dp10"/>
+
+        <ImageView
+            android:id="@+id/personUI_title_settingBtn"
+            android:layout_width="@dimen/dp45"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:src="@drawable/setting_icon"
+            android:padding="@dimen/dp10"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp80">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp">
+
+                <cn.qimate.bike.core.widget.MLImageView
+                    android:id="@+id/personUI_bottom_header"
+                    android:layout_width="@dimen/dp60"
+                    android:layout_height="@dimen/dp60"
+                    android:src="@drawable/me_header"
+                    melove:border_color="@color/ml_white"
+                    melove:border_width="1dp"
+                    melove:shape_type="round"
+                    android:layout_centerInParent="true"
+                    android:background="@null"
+                    android:scaleType="centerInside"/>
+
+                <ImageView
+                    android:id="@+id/personUI_bottom_authState"
+                    android:layout_width="@dimen/dp40"
+                    android:layout_height="@dimen/dp40"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:src="@drawable/auth_state_icon"
+                    android:padding="@dimen/dp10"
+                    android:scaleType="centerInside"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/personUI_userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp14"
+                    android:textColor="@color/white"
+                    android:text=""
+                    android:layout_centerInParent="true"/>
+
+                <ImageView
+                    android:id="@+id/personUI_superVip"
+                    android:layout_width="@dimen/dp80"
+                    android:layout_height="@dimen/dp30"
+                    android:src="@drawable/super_vip_icon"
+                    android:layout_toRightOf="@id/personUI_userName"
+                    android:scaleType="centerInside"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

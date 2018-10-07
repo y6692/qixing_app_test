@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:melove="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/item01_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/dp10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp60"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <cn.qimate.bike.core.widget.MLImageView
+                android:id="@+id/item_historyRoad_header"
+                android:layout_width="@dimen/dp45"
+                android:layout_height="@dimen/dp45"
+                android:layout_margin="@dimen/dp10"
+                android:src="@null"
+                melove:shape_type="round"
+                android:scaleType="centerInside"/>
+
+            <TextView
+                android:id="@+id/item_historyRoad_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="￥0.10"
+                android:textSize="@dimen/sp16"
+                android:textColor="#f86961"/>
+
+            <TextView
+            android:id="@+id/item_historyRoad_bikeCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tx_black_light"
+            android:textSize="@dimen/sp14"
+            android:text="车牌Nc898"
+            android:layout_marginLeft="@dimen/dp10"/>
+
+            <TextView
+                android:id="@+id/item_historyRoad_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tx_black_light"
+                android:textSize="@dimen/sp14"
+                android:text="16/07/17:34"
+                android:layout_marginLeft="@dimen/dp25"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right_arrows"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp5"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/item_historyRoad_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:background="@color/line_color"/>
+</LinearLayout>

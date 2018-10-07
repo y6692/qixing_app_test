@@ -1,0 +1,1743 @@
+package cn.qimate.bike.activity;
+
+import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.Dialog;
+import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.Circle;
+import com.amap.api.maps.model.CircleOptions;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.Polygon;
+import com.amap.api.maps.model.PolygonOptions;
+import com.sunshine.blelibrary.config.Config;
+import com.sunshine.blelibrary.config.LockType;
+import com.sunshine.blelibrary.inter.OnConnectionListener;
+import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
+import com.sunshine.blelibrary.utils.GlobalParameterUtils;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import cn.loopj.android.http.RequestParams;
+import cn.loopj.android.http.TextHttpResponseHandler;
+import cn.qimate.bike.R;
+import cn.qimate.bike.base.BaseApplication;
+import cn.qimate.bike.ble.utils.ParseLeAdvData;
+import cn.qimate.bike.core.common.DisplayUtil;
+import cn.qimate.bike.core.common.HttpHelper;
+import cn.qimate.bike.core.common.SharedPreferencesUrls;
+import cn.qimate.bike.core.common.UIHelper;
+import cn.qimate.bike.core.common.Urls;
+import cn.qimate.bike.core.widget.CustomDialog;
+import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.jpush.ServiceReceiver;
+import cn.qimate.bike.model.CurRoadBikingBean;
+import cn.qimate.bike.model.NearbyBean;
+import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.PublicWay;
+import cn.qimate.bike.util.UtilAnim;
+import cn.qimate.bike.util.UtilBitmap;
+import cn.qimate.bike.util.UtilScreenCapture;
+
+import static cn.qimate.bike.core.common.Urls.schoolrangeList;
+
+/**
+ * Created by Administrator on 2017/2/12 0012.
+ */
+@SuppressLint("NewApi")
+public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnClickListener,
+        LocationSource,AMapLocationListener
+//        ,OnConnectionListener
+    {
+    private final static String TAG = "BLEService";
+
+    public static CurRoadBikingActivity instance;
+
+    /**
+     * 选中的蓝牙设备
+     */
+    BluetoothDevice mDevice;
+
+    BluetoothAdapter mBluetoothAdapter;
+    private String m_nowMac = "";
+
+    static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
+    public static boolean isForeground = false;
+//    private Context context;
+//    public static  LoadingDialog loadingDialog;
+//    public static  LoadingDialog lockLoading;
+    private LinearLayout mainLayout;
+    private ImageView backImg;
+    private TextView title;
+    private TextView rightBtn;
+
+    private TextView bikeCodeText;
+    private TextView time;
+    private Button lookPsdBtn;
+    private Button endBtn;
+
+    private AMap aMap;
+    private MapView mapView;
+    private OnLocationChangedListener mListener;
+    private AMapLocationClient mlocationClient;
+    private AMapLocationClientOption mLocationOption;
+
+    private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
+    private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
+    private boolean mFirstFix = true;
+    private LatLng myLocation = null;
+    private Circle mCircle;
+    private BitmapDescriptor successDescripter;
+    private Marker centerMarker;
+    private boolean isMovingMarker = false;
+    private String oid = "";
+    private String osn = "";
+    private String password = "";
+
+    private List<Boolean> isContainsList;
+    private List<Polygon> pOptions;
+    private String type = "";
+    private String uid = "";
+    private String access_token = "";
+    private boolean isLock = false;
+    private ImageView linkServiceBtn;
+    private LinearLayout linkServiceLayout;
+    private boolean isFrist = true;
+    private Dialog dialog;
+    private ImageView titleImage;
+    private ImageView exImage_1;
+    private ImageView exImage_2;
+    private ImageView exImage_3;
+
+    private ImageView closeBtn;
+
+    private ImageView myLocationBtn;
+    private LinearLayout myLocationLayout;
+    private TextView hintText;
+
+    private double referLatitude = 0.0;
+    private double referLongitude = 0.0;
+
+    private String bikeCode = "";
+    private LinearLayout refreshLayout;
+    private BitmapDescriptor siteDescripter;
+    private List<Marker> siteMarkerList;
+
+    private boolean isStop = false;
+    private boolean isRefresh = false;
+
+    private LinearLayout slideLayout;
+    private int imageWith = 0;
+    private List<String> macList;
+    private int flag = 0;
+
+    int k=0;
+
+    @Override
+    @TargetApi(23)
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.ui_cur_road_biking);
+        context = this;
+        instance = this;
+
+
+        //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
+        IntentFilter filter = new IntentFilter("data.broadcast.action");
+        registerReceiver(broadcastReceiver1, filter);
+
+//        registerReceiver(broadcastReceiver, Config.initFilter());
+
+//        try {
+//            if (internalReceiver != null) {
+//                unregisterReceiver(internalReceiver);
+//            }
+//        } catch (Exception e) {
+//            Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+//        }
+
+//        registerReceiver(Config.initFilter());
+//        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+
+        mapView = (MapView) findViewById(R.id.curRoadUI_biking_map);
+        mapView.onCreate(savedInstanceState);// 此方法必须重写
+
+        isContainsList = new ArrayList<>();
+        pOptions = new ArrayList<>();
+        siteMarkerList = new ArrayList<>();
+        SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+        imageWith = (int)(getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+        macList = new ArrayList<>();
+        initView();
+
+        Toast.makeText(this, "===="+m_nowMac, Toast.LENGTH_SHORT).show();
+
+//        connect();
+    }
+    BroadcastReceiver broadcastReceiver1 = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getCurrentorder(SharedPreferencesUrls.getInstance().getString("uid",""),
+                    SharedPreferencesUrls.getInstance().getString("access_token",""));
+        }
+    };
+    private void initView(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                            REQUEST_CODE_ASK_PERMISSIONS);
+                } else {
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    scrollToFinishActivity();
+                                }
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            CurRoadBikingActivity.this.requestPermissions(
+                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                                    REQUEST_CODE_ASK_PERMISSIONS);
+                        }
+                    });
+                    customBuilder.create().show();
+                }
+                return;
+            }
+        }
+        loadingDialog = new LoadingDialog(context);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
+
+        lockLoading = new LoadingDialog(context);
+        lockLoading.setCancelable(false);
+        lockLoading.setCanceledOnTouchOutside(false);
+
+        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
+        dialog.setContentView(dialogView);
+        dialog.setCanceledOnTouchOutside(false);
+
+        hintText = (TextView)findViewById(R.id.curRoadUI_biking_hintText);
+
+        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+
+        mainLayout = (LinearLayout)findViewById(R.id.mainUI_title_mainLayout);
+        backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
+        title = (TextView) findViewById(R.id.mainUI_title_titleText);
+        title.setText("骑行中");
+        rightBtn = (TextView)findViewById(R.id.mainUI_title_rightBtn);
+        rightBtn.setText("关锁后无法结束");
+        RelativeLayout.LayoutParams params4 = (RelativeLayout.LayoutParams)rightBtn.getLayoutParams();
+        params4.setMargins(0,DisplayUtil.dip2px(context,10),0,DisplayUtil.dip2px(context,10));
+        rightBtn.setLayoutParams(params4);
+        rightBtn.setBackgroundColor(getResources().getColor(R.color.white));
+        rightBtn.setTextColor(getResources().getColor(R.color.ui_main));
+        rightBtn.setOnClickListener(this);
+
+        refreshLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_refreshLayout);
+
+        bikeCodeText = (TextView)findViewById(R.id.curRoadUI_biking_code);
+        time = (TextView)findViewById(R.id.curRoadUI_biking_time);
+        lookPsdBtn = (Button)findViewById(R.id.curRoadUI_biking_lookPsdBtn);
+        endBtn = (Button)findViewById(R.id.curRoadUI_biking_endBtn);
+        linkServiceBtn = (ImageView)findViewById(R.id.curRoadUI_biking_linkService_btn);
+        myLocationBtn = (ImageView)findViewById(R.id.curRoadUI_biking_myLocation);
+        linkServiceLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_linkServiceLayout);
+        myLocationLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_myLocationLayout);
+        slideLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_slideLayout);
+        if (aMap == null) {
+            aMap = mapView.getMap();
+            setUpMap();
+        }
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings()
+                .setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(20);// 设置缩放监听
+        aMap.moveCamera(cameraUpdate);
+        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+        siteDescripter = BitmapDescriptorFactory.fromResource(R.drawable.site_mark_icon);
+        setUpLocationStyle();
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+        titleImage.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_1.setLayoutParams(params1);
+
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_2.setLayoutParams(params2);
+
+        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_3.setLayoutParams(params3);
+
+        backImg.setOnClickListener(this);
+        lookPsdBtn.setOnClickListener(this);
+        endBtn.setOnClickListener(this);
+        linkServiceBtn.setOnClickListener(this);
+        myLocationBtn.setOnClickListener(this);
+        myLocationLayout.setOnClickListener(this);
+        linkServiceLayout.setOnClickListener(this);
+        refreshLayout.setOnClickListener(this);
+        slideLayout.setOnClickListener(this);
+
+        exImage_1.setOnClickListener(myOnClickLister);
+        exImage_2.setOnClickListener(myOnClickLister);
+        closeBtn.setOnClickListener(myOnClickLister);
+
+        initSite();
+
+
+
+        uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+        Toast.makeText(CurRoadBikingActivity.this, uid+"===="+access_token, Toast.LENGTH_SHORT).show();
+    }
+    private View.OnClickListener myOnClickLister = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ui_fristView_exImage_1:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+                    break;
+                case R.id.ui_fristView_exImage_2:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+                    break;
+                case R.id.ui_fristView_closeBtn:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.mainUI_title_backBtn:
+                scrollToFinishActivity();
+                break;
+            case R.id.mainUI_title_rightBtn:
+                Intent intent = new Intent(context,ClientServiceActivity.class);
+                intent.putExtra("bikeCode",bikeCode);
+                startActivity(intent);
+                scrollToFinishActivity();
+                break;
+            case R.id.curRoadUI_biking_lookPsdBtn:
+                if ("查看密码".equals(lookPsdBtn.getText().toString().trim())){
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("查看密码").setMessage("解锁码："+password)
+                            .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    customBuilder.create().show();
+                }else {
+                    flag = 1;
+                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                        Toast.makeText(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+                        scrollToFinishActivity();
+                    }
+                    //蓝牙锁
+                    if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                        BaseApplication.getInstance().getIBLE().enableBluetooth();
+                        return;
+                    }
+                    if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                        if (loadingDialog != null && !loadingDialog.isShowing()){
+                            loadingDialog.setTitle("正在开锁");
+                            loadingDialog.show();
+                        }
+                        BaseApplication.getInstance().getIBLE().openLock();
+                    }else {
+                        if (lockLoading != null && !lockLoading.isShowing()){
+                            lockLoading.setTitle("正在连接");
+                            lockLoading.show();
+                        }
+
+                        connect();
+                    }
+                }
+                break;
+            case R.id.curRoadUI_biking_endBtn:
+                endBtn(context);
+//                endBtn();
+                break;
+            case R.id.curRoadUI_biking_linkServiceLayout:
+            case R.id.curRoadUI_biking_linkService_btn:
+                initmPopupWindowView();
+
+                break;
+            case R.id.curRoadUI_biking_myLocationLayout:
+            case R.id.curRoadUI_biking_myLocation:
+                if (myLocation != null) {
+                    CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
+                    aMap.animateCamera(update);
+                }
+                break;
+            case R.id.curRoadUI_biking_refreshLayout:
+                isRefresh = true;
+                RefreshLogin();
+                String uid1 = SharedPreferencesUrls.getInstance().getString("uid","");
+                String access_token1 = SharedPreferencesUrls.getInstance().getString("access_token","");
+                if (uid1 == null || "".equals(uid1) || access_token1 == null || "".equals(access_token1)){
+                    UIHelper.goToAct(context,LoginActivity.class);
+                }else {
+                    getCurrentorder(SharedPreferencesUrls.getInstance().getString("uid",""),
+                            SharedPreferencesUrls.getInstance().getString("access_token",""));
+                }
+                break;
+            case R.id.curRoadUI_biking_slideLayout:
+                UIHelper.goWebViewAct(context,"停车须知",Urls.phtml5 +
+                        SharedPreferencesUrls.getInstance().getString("uid",""));
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void endBtn(){
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
+            UIHelper.goToAct(context,LoginActivity.class);
+        }else {
+
+            Toast.makeText(context,macList.size()+"==="+isContainsList,Toast.LENGTH_SHORT);
+
+            if (isContainsList.contains(true)){
+                if ("1".equals(type)){
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("温馨提示").setMessage("还车必须到校内关锁并拨乱数字密码，距车一米内在APP点击结束!")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            submit(context, uid,access_token);
+                        }
+                    });
+                    customBuilder.create().show();
+                }else {
+                    flag = 2;
+                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                        Toast.makeText(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+                        scrollToFinishActivity();
+                    }
+                    //蓝牙锁
+                    if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                        BaseApplication.getInstance().getIBLE().enableBluetooth();
+                        return;
+                    }
+                    if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                        if (loadingDialog != null && !loadingDialog.isShowing()){
+                            loadingDialog.setTitle("请稍等");
+                            loadingDialog.show();
+                        }
+
+                        BaseApplication.getInstance().getIBLE().getLockStatus();
+                    }else {
+
+                        if (lockLoading != null && !lockLoading.isShowing()){
+                            lockLoading.setTitle("正在连接");
+                            lockLoading.show();
+                        }
+
+                        m_myHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(CurRoadBikingActivity.this, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus(), Toast.LENGTH_SHORT).show();
+
+                                if (lockLoading != null && lockLoading.isShowing()){
+                                    lockLoading.dismiss();
+                                }
+
+                                if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                    customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    customBuilder.create().show();
+                                }
+
+                            }
+                        }, 10 * 1000);
+
+                        if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                            connect();
+                        }
+
+                    }
+                }
+            }else {
+                if (macList.size() > 0 && !"1".equals(type)){
+                    if (!TextUtils.isEmpty(m_nowMac)) {
+                        //蓝牙锁
+                        if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                            BaseApplication.getInstance().getIBLE().enableBluetooth();
+                            return;
+                        }
+                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        }else {
+                            if (lockLoading != null && !lockLoading.isShowing()){
+                                lockLoading.setTitle("正在连接");
+                                lockLoading.show();
+                            }
+                            connect();
+                        }
+                    }
+                }else {
+                    Toast.makeText(context,"请停放至校内公共停车区域，或重启手机定位服务",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+
+    public void initmPopupWindowView() {
+
+        // 获取自定义布局文件的视图
+        View customView = getLayoutInflater().inflate(R.layout.pop_menu, null, false);
+        // 创建PopupWindow宽度和高度
+        RelativeLayout pop_win_bg = (RelativeLayout) customView.findViewById(R.id.pop_win_bg);
+        ImageView iv_popup_window_back = (ImageView) customView.findViewById(R.id.popupWindow_back);
+        // 获取截图的Bitmap
+        Bitmap bitmap = UtilScreenCapture.getDrawing(this);
+        if (bitmap != null) {
+            // 将截屏Bitma放入ImageView
+            iv_popup_window_back.setImageBitmap(bitmap);
+            // 将ImageView进行高斯模糊【25是最高模糊等级】【0x77000000是蒙上一层颜色，此参数可不填】
+            UtilBitmap.blurImageView(this, iv_popup_window_back, 10,0xAA000000);
+        } else {
+            // 获取的Bitmap为null时，用半透明代替
+            iv_popup_window_back.setBackgroundColor(0x77000000);
+        }
+        // 打开弹窗
+        UtilAnim.showToUp(pop_win_bg, iv_popup_window_back);
+        // 创建PopupWindow宽度和高度
+        final PopupWindow popupwindow = new PopupWindow(customView, LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT, true);
+        /**
+         * 设置动画效果 ,从上到下加载方式等，不设置自动的下拉，最好 [动画效果不好，不加实现下拉效果，不错]
+         */
+        popupwindow.setAnimationStyle(R.style.PopupAnimation);
+        popupwindow.setOutsideTouchable(false);
+
+        LinearLayout feedbackLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_feedbackLayout);
+        LinearLayout helpLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_helpLayout);
+        final LinearLayout callLayout = (LinearLayout)customView.findViewById(R.id.pop_menu_callLayout);
+        TextView cancleBtn = (TextView)customView.findViewById(R.id.pop_menu_cancleBtn);
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.pop_menu_feedbackLayout:
+                        UIHelper.goToAct(context,FeedbackActivity.class);
+                        break;
+                    case R.id.pop_menu_helpLayout:
+                        WindowManager windowManager = getWindowManager();
+                        Display display = windowManager.getDefaultDisplay();
+                        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+                        lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+                        dialog.getWindow().setAttributes(lp);
+                        dialog.show();
+                        break;
+                    case R.id.pop_menu_callLayout:
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            int checkPermission = CurRoadBikingActivity.this.checkSelfPermission(Manifest.permission.CALL_PHONE);
+                            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                                if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
+                                    requestPermissions(new String[] { Manifest.permission.CALL_PHONE }, 0);
+                                } else {
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(CurRoadBikingActivity.this);
+                                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开拨打电话权限！")
+                                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                            CurRoadBikingActivity.this.requestPermissions(
+                                                    new String[] { Manifest.permission.CALL_PHONE }, 0);
+                                        }
+                                    });
+                                    customBuilder.create().show();
+                                }
+                                return;
+                            }
+                        }
+                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(CurRoadBikingActivity.this);
+                        customBuilder.setTitle("温馨提示").setMessage("确认拨打" + "0519-86999222" + "吗?")
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                Intent intent=new Intent();
+                                intent.setAction(Intent.ACTION_CALL);
+                                intent.setData(Uri.parse("tel:" + "0519-86999222"));
+                                startActivity(intent);
+                            }
+                        });
+                        customBuilder.create().show();
+                        break;
+                    case R.id.pop_menu_cancleBtn:
+
+                        break;
+                }
+                popupwindow.dismiss();
+            }
+        };
+
+        feedbackLayout.setOnClickListener(listener);
+        helpLayout.setOnClickListener(listener);
+        callLayout.setOnClickListener(listener);
+        cancleBtn.setOnClickListener(listener);
+
+        popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    @Override
+    protected void submit(final Context context, String uid,String access_token){
+
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        params.put("oid",oid);
+        params.put("latitude",referLatitude);
+        params.put("longitude",referLongitude);
+        if (macList.size() > 0){
+            params.put("xinbiao",macList.get(0));
+        }
+        HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在提交");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.e("Test","结束用车:"+responseString);
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        SharedPreferencesUrls.getInstance().putString("type","");
+                        SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+                        SharedPreferencesUrls.getInstance().putString("biking_latitude","");
+                        SharedPreferencesUrls.getInstance().putString("biking_longitude","");
+
+//                        if (myLocation != null){
+//                            addMaplocation(myLocation.latitude,myLocation.longitude);
+//                        }
+                        if ("1".equals(result.getData())){
+                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
+                                UIHelper.goToAct(context, FeedbackActivity.class);
+//                                UIHelper.goToAct(context, Main2Activity.class);
+//                                scrollToFinishActivity();
+                            }else {
+                                Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+                                intent.putExtra("oid",oid);
+                                startActivity(intent);
+                            }
+                        }else {
+                            Toast.makeText(context,"恭喜您,还车成功,请支付!",Toast.LENGTH_SHORT).show();
+                            UIHelper.goToAct(context,CurRoadBikedActivity.class);
+                        }
+                        scrollToFinishActivity();
+
+
+                    }else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    private void getCurrentorder(String uid, String access_token){
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                   loadingDialog.setTitle("正在加载");
+                   loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        Toast.makeText(context,"数据更新成功",Toast.LENGTH_SHORT).show();
+                       if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+
+                           Toast.makeText(context,"当前无行程",Toast.LENGTH_SHORT).show();
+                           BaseApplication.getInstance().getIBLE().refreshCache();
+                           BaseApplication.getInstance().getIBLE().close();
+                           BaseApplication.getInstance().getIBLE().disconnect();
+
+                           scrollToFinishActivity();
+                       }else {
+                           CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
+                           bikeCode = bean.getCodenum();
+                           bikeCodeText.setText(bikeCode);
+                           time.setText(bean.getSt_time());
+                           oid = bean.getOid();
+                           osn = bean.getOsn();
+                           password = bean.getPassword();
+                           type = bean.getType();
+                           if ("1".equals(bean.getType())){
+                               hintText.setText("还车须至校园地图红色覆盖区，关锁并拨乱密码后点击结束！");
+                               lookPsdBtn.setText("查看密码");
+                           }else {
+                               hintText.setText("还车须至校园地图红色覆盖区，关锁后距车一米内点击结束！");
+                               m_nowMac = bean.getMacinfo();
+                               lookPsdBtn.setText("再次开锁");
+                               if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                   Toast.makeText(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+                                   scrollToFinishActivity();
+                               }
+                               //蓝牙锁
+                               BluetoothManager bluetoothManager =
+                                       (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+
+                               mBluetoothAdapter = bluetoothManager.getAdapter();
+                               if (mBluetoothAdapter == null) {
+                                   Toast.makeText(CurRoadBikingActivity.this, "获取蓝牙失败", Toast.LENGTH_SHORT).show();
+                                   scrollToFinishActivity();
+                                   return;
+                               }
+                               if (macList.size() != 0){
+                                   macList.clear();
+                               }
+                               UUID[] uuids = {Config.xinbiaoUUID};
+                               mBluetoothAdapter.startLeScan(uuids,mLeScanCallback);
+                           }
+                           if (isFrist){
+                               isFrist = false;
+                                if (oid != null && !"".equals(oid)){
+//                                    Intent intent=new Intent(CurRoadBikingActivity.this,ServiceReceiver.class);
+//                                    intent.setAction("MY_SERVICE");
+//                                    intent.putExtra("oid",oid);
+//                                    intent.putExtra("osn",osn);
+//                                    PendingIntent sender = PendingIntent.getBroadcast(CurRoadBikingActivity.this, 0, intent, 0);
+//                                    AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+//                                    am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 10*1000, sender);
+                                }else {
+//                                    Intent intent=new Intent(CurRoadBikingActivity.this,ServiceReceiver.class);
+//                                    intent.setAction("MY_SERVICE");
+//                                    intent.putExtra("oid","");
+//                                    intent.putExtra("osn",osn);
+//                                    PendingIntent sender = PendingIntent.getBroadcast(CurRoadBikingActivity.this, 0, intent, 0);
+//                                    AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+//                                    am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 10*1000, sender);
+                                }
+                           }
+                       }
+                    } else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+        @Override
+        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+           if (!macList.contains(parseAdvData(rssi,scanRecord))){
+               macList.add(parseAdvData(rssi,scanRecord));
+           }
+        }
+    };
+    private void addChooseMarker() {
+        // 加入自定义标签
+        MarkerOptions centerMarkerOption = new MarkerOptions().position(myLocation).icon(successDescripter);
+        centerMarker = aMap.addMarker(centerMarkerOption);
+    }
+
+    /**
+     * 设置一些amap的属性
+     */
+    private void setUpMap() {
+        aMap.setLocationSource(this);// 设置定位监听
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+    }
+    boolean isFrist1 = true;
+    @Override
+    protected void onResume() {
+        isForeground = true;
+        isStop = false;
+        if (isFrist1){
+            isFrist1 = false;
+            isRefresh = false;
+        }else {
+            isRefresh = true;
+        }
+        super.onResume();
+        mapView.onResume();
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            refreshLayout.setVisibility(View.GONE);
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
+            UIHelper.goToAct(context,LoginActivity.class);
+        }else {
+            getCurrentorder(uid,access_token);
+            refreshLayout.setVisibility(View.VISIBLE);
+        }
+
+        registerReceiver(Config.initFilter());
+        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+    }
+
+    @Override
+    protected void onPause() {
+        isForeground = false;
+        super.onPause();
+        mapView.onPause();
+
+        try {
+            if (internalReceiver != null) {
+                unregisterReceiver(internalReceiver);
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+        }
+
+        Toast.makeText(this, "biking====onPause", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onDestroy() {
+//        isStop = true;
+        isForeground = false;
+        super.onDestroy();
+        mapView.onDestroy();
+        if(null != mlocationClient){
+            mlocationClient.onDestroy();
+        }
+        if (!"1".equals(type)){
+            if (mLeScanCallback != null && mBluetoothAdapter != null) {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                mLeScanCallback = null;
+            }
+        }
+//        if (broadcastReceiver != null) {
+//            unregisterReceiver(broadcastReceiver);
+//            broadcastReceiver = null;
+//        }
+        m_myHandler.removeCallbacksAndMessages(null);
+
+    }
+
+    private void setUpLocationStyle() {
+        // 自定义系统定位蓝点
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
+        myLocationStyle.strokeWidth(0);
+        myLocationStyle.strokeColor(R.color.main_theme_color);
+        myLocationStyle.radiusFillColor(Color.TRANSPARENT);
+        aMap.setMyLocationStyle(myLocationStyle);
+    }
+    /**
+     * 定位成功后回调函数
+     */
+    @Override
+    public void onLocationChanged(AMapLocation amapLocation) {
+        super.onLocationChanged(amapLocation);
+        if (mListener != null && amapLocation != null) {
+            if (amapLocation != null
+                    && amapLocation.getErrorCode() == 0) {
+                if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()){
+                    String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","");
+                    String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude","");
+                    if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)){
+                        if (AMapUtils.calculateLineDistance(new LatLng(
+                                Double.parseDouble(latitude),Double.parseDouble(longitude)
+                        ),new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude())) > 10){
+
+                            SharedPreferencesUrls.getInstance().putString("biking_latitude",""+amapLocation.getLatitude());
+                            SharedPreferencesUrls.getInstance().putString("biking_longitude",""+amapLocation.getLongitude());
+                            addMaplocation(amapLocation.getLatitude(),amapLocation.getLongitude());
+                        }
+                    }
+                    if (mListener != null) {
+                        mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+                    }
+                    referLatitude = amapLocation.getLatitude();
+                    referLongitude = amapLocation.getLongitude();
+                    myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
+                    if (mFirstFix) {
+                        mFirstFix = false;
+                        schoolrangeList();
+                        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+                    } else {
+                        centerMarker.remove();
+                        mCircle.remove();
+                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                            isContainsList.clear();
+                        }
+                        for ( int i = 0; i < pOptions.size(); i++){
+                            isContainsList.add(pOptions.get(i).contains(myLocation));
+                        }
+                    }
+                    addChooseMarker();
+                    addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
+                }else {
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    scrollToFinishActivity();
+                                }
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            CurRoadBikingActivity.this.requestPermissions(
+                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                                    REQUEST_CODE_ASK_PERMISSIONS);
+                        }
+                    });
+                    customBuilder.create().show();
+                }
+            }
+        }
+    }
+
+    /**
+     * 学校范围电子栅栏
+     *
+     * */
+    private void schoolrangeList(){
+        RequestParams params = new RequestParams();
+        HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray jsonArray = new JSONArray(result.getData());
+                        if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
+                            isContainsList.clear();
+                        }
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            List<LatLng> list = new ArrayList<>();
+                            for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
+                                JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
+                                LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
+                                        Double.parseDouble(jsonObject.getString("longitude")));
+                                list.add(latLng);
+                            }
+                            Polygon polygon = null;
+                            PolygonOptions pOption = new PolygonOptions();
+                            pOption.addAll(list);
+                            polygon = aMap.addPolygon(pOption.strokeWidth(2)
+                                    .strokeColor(Color.argb(160, 255, 0, 0))
+                                    .fillColor(Color.argb(160, 255, 0, 0)));
+                            pOptions.add(polygon);
+                            isContainsList.add(polygon.contains(myLocation));
+                        }
+                    }else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * 上传骑行坐标
+     * */
+    private void addMaplocation(double latitude,double longitude){
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+            RequestParams params = new RequestParams();
+            params.put("uid",uid);
+            params.put("access_token",access_token);
+            params.put("oid",oid);
+            params.put("osn",osn);
+            params.put("latitude",latitude);
+            params.put("longitude",longitude);
+            HttpHelper.post(context, Urls.addMaplocation, params, new TextHttpResponseHandler() {
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                        if (result.getFlag().equals("Success")) {
+                            if (myLocation != null){
+                                SharedPreferencesUrls.getInstance().putString("biking_latitude",""+myLocation.latitude);
+                                SharedPreferencesUrls.getInstance().putString("biking_longitude",""+myLocation.longitude);
+                            }
+                        }
+                    }catch (Exception e){
+
+                    }
+                }
+            });
+        }
+    }
+    /**
+     * 激活定位
+     */
+    @Override
+    public void activate(OnLocationChangedListener listener) {
+        mListener = listener;
+        if (mlocationClient == null) {
+            mlocationClient = new AMapLocationClient(this);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位监听
+            mlocationClient.setLocationListener(this);
+            mLocationOption.setInterval(2 * 1000);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+            mlocationClient.startLocation();
+        }
+    }
+
+    /**
+     * 停止定位
+     */
+    @Override
+    public void deactivate() {
+        mListener = null;
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
+    }
+
+    /**
+     * 添加Circle
+     * @param latlng  坐标
+     * @param radius  半径
+     */
+    private void addCircle(LatLng latlng, double radius) {
+        CircleOptions options = new CircleOptions();
+        options.strokeWidth(1f);
+        options.fillColor(FILL_COLOR);
+        options.strokeColor(STROKE_COLOR);
+        options.center(latlng);
+        options.radius(radius);
+        mCircle = aMap.addCircle(options);
+    }
+
+    private ValueAnimator animator = null;
+
+    private void animMarker() {
+        isMovingMarker = false;
+        if (animator != null) {
+            animator.start();
+            return;
+        }
+        animator = ValueAnimator.ofFloat(mapView.getHeight() / 2, mapView.getHeight() / 2 - 30);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.setDuration(150);
+        animator.setRepeatCount(1);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Float value = (Float) animation.getAnimatedValue();
+                centerMarker.setPositionByPixels(mapView.getWidth() / 2, Math.round(value));
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                centerMarker.setIcon(successDescripter);
+            }
+        });
+        animator.start();
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK)
+        {
+            switch (requestCode) {
+                case 288:{
+                    break;
+                }
+                case 188:{
+                   if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在连接");
+                        lockLoading.show();
+                   }
+                   m_myHandler.postDelayed(new Runnable() {
+                       @Override
+                       public void run() {
+                           if (lockLoading != null && lockLoading.isShowing()){
+                               lockLoading.dismiss();
+                           }
+                       }
+                   }, 10 * 1000);
+                    if (!TextUtils.isEmpty(m_nowMac)) {
+                         if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                connect();
+                         }
+                    }
+                   if (macList.size() != 0){
+                       macList.clear();
+                   }
+                   UUID[] uuids = {Config.xinbiaoUUID};
+                   mBluetoothAdapter.startLeScan(uuids,mLeScanCallback);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lockLoading != null && lockLoading.isShowing()) {
+                                lockLoading.dismiss();
+                            }
+                            if (!isStop){
+                                Toast.makeText(context,"设备连接失败，请重试！",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, 10 * 1000);
+                   break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }else if( requestCode == 188){
+            Toast.makeText(this, "需要打开蓝牙", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+    private void initSite(){
+        RequestParams params = new RequestParams();
+        HttpHelper.get(context, Urls.stopSite, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray array = new JSONArray(result.getData());
+                        for (Marker marker : siteMarkerList){
+                            if (marker != null){
+                                marker.remove();
+                            }
+                        }
+                        if (!siteMarkerList.isEmpty() || 0 != siteMarkerList.size()){
+                            siteMarkerList.clear();
+                        }
+                        if (0 == array.length()){
+                            Toast.makeText(context,"附近没有停车点",Toast.LENGTH_SHORT).show();
+                        }else {
+                            for (int i = 0; i < array.length(); i++){
+                                NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
+                                // 加入自定义标签
+                                MarkerOptions siteMarkerOption = new MarkerOptions().position(new LatLng(
+                                        Double.parseDouble(bean.getLatitude()),Double.parseDouble(bean.getLongitude()))).icon(siteDescripter);
+                                Marker bikeMarker = aMap.addMarker(siteMarkerOption);
+                                siteMarkerList.add(bikeMarker);
+                            }
+                        }
+                    } else {
+                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.e("Test","异常:"+e);
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            scrollToFinishActivity();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+    @SuppressLint("NewApi")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    if (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        if (aMap == null) {
+                            aMap = mapView.getMap();
+                            setUpMap();
+                        }
+                        aMap.getUiSettings().setZoomControlsEnabled(false);
+                        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+                        aMap.getUiSettings()
+                                .setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(20);// 设置缩放监听
+                        aMap.moveCamera(cameraUpdate);
+                        setUpLocationStyle();
+                    }
+                } else {
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里允许获取定位权限！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    finishMine();
+                                }
+                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent localIntent = new Intent();
+                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+                            startActivity(localIntent);
+                            finishMine();
+                        }
+                    });
+                    customBuilder.create().show();
+                }
+                break;
+            case 188:{
+                if (!PublicWay.BLE_CONNECT_STATUS){
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("正在连接");
+                        loadingDialog.show();
+                    }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lockLoading != null && lockLoading.isShowing()) {
+                                lockLoading.dismiss();
+                            }
+                        }
+                    }, 10 * 1000);
+                       if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                           connect();
+                       }
+                    }
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+    private String parseAdvData(int rssi, byte[] scanRecord) {
+        byte[] bytes = ParseLeAdvData.adv_report_parse(ParseLeAdvData.BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA, scanRecord);
+        if (bytes[0] == 0x01 && bytes[1] == 0x02) {
+            return bytes2hex03(bytes);
+        }
+        return "";
+    }
+    /**
+     * 方式三
+     *
+     * @param bytes
+     * @return
+     */
+    public static String bytes2hex03(byte[] bytes)
+    {
+        final String HEX = "0123456789abcdef";
+        StringBuilder sb = new StringBuilder(bytes.length * 2);
+        for (byte b : bytes)
+        {
+            // 取出这个字节的高4位，然后与0x0f与运算，得到一个0-15之间的数据，通过HEX.charAt(0-15)即为16进制数
+            sb.append(HEX.charAt((b >> 4) & 0x0f));
+            // 取出这个字节的低位，与0x0f与运算，得到一个0-15之间的数据，通过HEX.charAt(0-15)即为16进制数
+            sb.append(HEX.charAt(b & 0x0f));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 链接设备
+     * 1. 先进行搜索设备，匹配mac地址是否能搜索到
+     * 2. 搜索到就链接设备，取消倒计时；
+     * 3. 搜索不到就执行直接连接设备
+     */
+    @Override
+    protected void connect() {
+        BaseApplication.getInstance().getIBLE().stopScan();
+        m_myHandler.sendEmptyMessage(0x99);
+        BaseApplication.getInstance().getIBLE().startScan(new OnDeviceSearchListener() {
+            @Override
+            public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
+                if (device==null||TextUtils.isEmpty(device.getAddress()))return;
+                if (m_nowMac.equalsIgnoreCase(device.getAddress())){
+                    m_myHandler.removeMessages(0x99);
+                    BaseApplication.getInstance().getIBLE().stopScan();
+                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+                }
+            }
+        });
+    }
+//    @Override
+//    public void onConnect() {
+//
+//    }
+    @Override
+    public void onTimeOut() {
+
+    }
+//    @Override
+//    public void onDisconnect(int state) {
+//        m_myHandler.sendEmptyMessageDelayed(0, 1000);
+//    }
+//    @Override
+//    public void onServicesDiscovered(String name, String address) {
+//        getToken();
+//    }
+//    /**
+//     * 获取token
+//     */
+//    private void getToken() {
+//        m_myHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                BaseApplication.getInstance().getIBLE().getToken();
+//            }
+//        }, 500);
+//    }
+
+//    @Override
+//    public void onReceive(Context context, Intent intent) {}
+
+    @Override
+    protected void handleReceiver(Context context, Intent intent) {
+        String action = intent.getAction();
+        String data = intent.getStringExtra("data");
+        switch (action) {
+            case Config.TOKEN_ACTION:
+                m_myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        BaseApplication.getInstance().getIBLE().getBattery();
+                    }
+                }, 500);
+                if (null != lockLoading && lockLoading.isShowing()) {
+                    lockLoading.dismiss();
+                    //lockLoading = null;
+                }
+                isStop = true;
+                Toast.makeText(CurRoadBikingActivity.this,">>>设备连接成功"+flag,Toast.LENGTH_SHORT).show();
+                switch (flag){
+                    case 0:
+                        break;
+                    case 1:
+                        //开锁
+                        if (loadingDialog != null && !loadingDialog.isShowing()) {
+                            loadingDialog.setTitle("正在开锁");
+                            loadingDialog.show();
+                        }
+                        BaseApplication.getInstance().getIBLE().openLock();
+                        break;
+                    case 2:
+                        BaseApplication.getInstance().getIBLE().getLockStatus();
+                        break;
+                    default:
+                        break;
+                }
+                flag = 0;
+                break;
+            case Config.BATTERY_ACTION:
+
+                break;
+            case Config.OPEN_ACTION:
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                if (lockLoading != null && lockLoading.isShowing()){
+                    lockLoading.dismiss();
+                }
+                if (TextUtils.isEmpty(data)) {
+                    Toast.makeText(context,"开锁失败,请重试",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context,"恭喜您,开锁成功!",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case Config.CLOSE_ACTION:
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                if (lockLoading != null && lockLoading.isShowing()){
+                    lockLoading.dismiss();
+                }
+                if (TextUtils.isEmpty(data)) {
+
+                } else {
+
+                }
+                break;
+            case Config.LOCK_STATUS_ACTION:
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                if (lockLoading != null && lockLoading.isShowing()){
+                    lockLoading.dismiss();
+                }
+                if (TextUtils.isEmpty(data)) {
+
+                    Toast.makeText(context,"====锁已关闭",Toast.LENGTH_SHORT).show();
+
+                    //锁已关闭
+                    submit(context, uid,access_token);
+
+                } else {
+                    //锁已开启
+                    Toast.makeText(context,"您还未上锁，请给车上锁后还车",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case Config.LOCK_RESULT:
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                if (lockLoading != null && lockLoading.isShowing()){
+                    lockLoading.dismiss();
+                }
+                Toast.makeText(context,"biking===恭喜您，您已成功上锁",Toast.LENGTH_SHORT).show();
+
+                endBtn();
+
+                break;
+        }
+    }
+
+    /**
+     * 广播
+     * */
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//      broadcastReceiver2 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            String data = intent.getStringExtra("data");
+            switch (action) {
+                case Config.TOKEN_ACTION:
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            BaseApplication.getInstance().getIBLE().getBattery();
+                        }
+                    }, 500);
+                    if (null != lockLoading && lockLoading.isShowing()) {
+                        lockLoading.dismiss();
+                        //lockLoading = null;
+                    }
+                    isStop = true;
+                    Toast.makeText(CurRoadBikingActivity.this,"设备连接成功"+flag,Toast.LENGTH_SHORT).show();
+                    switch (flag){
+                        case 0:
+                            break;
+                        case 1:
+                            //开锁
+                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                loadingDialog.setTitle("正在开锁");
+                                loadingDialog.show();
+                            }
+                            BaseApplication.getInstance().getIBLE().openLock();
+                            break;
+                        case 2:
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                            break;
+                        default:
+                            break;
+                    }
+                    flag = 0;
+                    break;
+                case Config.BATTERY_ACTION:
+
+                    break;
+                case Config.OPEN_ACTION:
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+                    if (TextUtils.isEmpty(data)) {
+                        Toast.makeText(context,"开锁失败,请重试",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context,"恭喜您,开锁成功!",Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case Config.CLOSE_ACTION:
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+                    if (TextUtils.isEmpty(data)) {
+
+                    } else {
+
+                    }
+                    break;
+                case Config.LOCK_STATUS_ACTION:
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+                    if (TextUtils.isEmpty(data)) {
+
+                        Toast.makeText(context,"====锁已关闭",Toast.LENGTH_SHORT).show();
+
+                        //锁已关闭
+                        submit(context, uid,access_token);
+
+                    } else {
+                        //锁已开启
+                        Toast.makeText(context,"您还未上锁，请给车上锁后还车",Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case Config.LOCK_RESULT:
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+                    Toast.makeText(context,"恭喜您，您已成功上锁",Toast.LENGTH_SHORT).show();
+
+                    endBtn();
+
+                    break;
+            }
+        }
+    };
+
+//    Handler m_myHandler = new Handler(new Handler.Callback() {
+//        @Override
+//        public boolean handleMessage(Message mes) {
+//            switch (mes.what) {
+//                case 0:
+//                    if (!BaseApplication.getInstance().getIBLE().isEnable()){
+//
+//                        break;
+//                    }
+//                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+//                    break;
+//                case 1:
+//
+//                    break;
+//                case 2:
+//                    break;
+//                case 3:
+//                    break;
+//                case 9:
+//                    break;
+//                case 0x99://搜索超时
+//                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
+//                    break;
+//                default:
+//                    break;
+//            }
+//            return false;
+//        }
+//    });
+
+
+}
