@@ -47,10 +47,18 @@ public class BaseApplication extends Application {
 	private static BaseApplication app;
 	private PackageInfo packageInfo;
 	private IBLE bleManager;
-
+	private boolean debug = false;
 
 	public static  BaseApplication getInstance() {
 		return app;
+	}
+
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 
 	@Override
@@ -63,6 +71,8 @@ public class BaseApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		app = this;
+
+		setDebug(false);
 
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);

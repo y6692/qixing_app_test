@@ -110,6 +110,7 @@ import cn.qimate.bike.service.MyService;
 import cn.qimate.bike.util.PublicWay;
 import cn.qimate.bike.util.SHA1;
 import cn.qimate.bike.util.SystemUtil;
+import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
@@ -210,16 +211,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		}).start();
 		initView();
 
-//		registerReceiver(Config.initFilter());
-//		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("uid","")+"<==>"+SharedPreferencesUrls.getInstance().getString("access_token",""));
 
-
-		Toast.makeText(this, SharedPreferencesUrls.getInstance().getString("uid","")+"<==>"+SharedPreferencesUrls.getInstance().getString("access_token",""), Toast.LENGTH_SHORT).show();
-
-//		internalReceiver = null;
-
-//		registerReceiver(Config.initFilter());
-//		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 	}
 
 	@Override
@@ -228,12 +221,18 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		super.onResume();
 		context = this;
 
-		Toast.makeText(this, "main====onResume", Toast.LENGTH_SHORT).show();
+		ToastUtil.showMessage(this, "main====onResume");
 
 		closeBroadcast();
 
-		registerReceiver(Config.initFilter());
-		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+		try {
+			registerReceiver(Config.initFilter());
+			GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+		} catch (Exception e) {
+			ToastUtil.showMessage(this, "eee===="+e);
+		}
+
+
 
 		JPushInterface.onResume(this);
 		mapView.onResume();
@@ -295,9 +294,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		try {
 			if (internalReceiver != null) {
 				unregisterReceiver(internalReceiver);
+				internalReceiver = null;
 			}
 		} catch (Exception e) {
-			Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+			ToastUtil.showMessage(this, "eee===="+e);
 		}
 	}
 
@@ -306,23 +306,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		isForeground = false;
 		super.onPause();
 
-
-
-
 		JPushInterface.onPause(this);
 		mapView.onPause();
 		deactivate();
 //		mFirstFix = false;
 
-
-
-
-
-        Toast.makeText(this, "main====onPause", Toast.LENGTH_SHORT).show();
+		ToastUtil.showMessage(this, "main====onPause");
 
 	}
-
-
 
 	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -341,11 +332,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		if (ok) {//开了定位服务
 			if (Build.VERSION.SDK_INT >= 23) { //判断是否为android6.0系统版本，如果是，需要动态添加权限
 				if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PERMISSION_GRANTED) {// 没有权限，申请权限。
-//					Toast.makeText(this, "====", Toast.LENGTH_SHORT).show();
+//					ToastUtil.showMessage(this, "====");
 
 //					ActivityCompat.requestPermissions(this, LOCATIONGPS, BAIDU_READ_PHONE_STATE);
-
-
 
 				} else {
 					getLocation();//getLocation为定位方法
@@ -354,7 +343,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				getLocation();//getLocation为定位方法
 			}
 		} else {
-			Toast.makeText(this, "系统检测到未开启GPS定位服务,请开启", Toast.LENGTH_SHORT).show();
+			ToastUtil.showMessageApp(this, "系统检测到未开启GPS定位服务,请开启");
 			Intent intent = new Intent();
 			intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 			startActivityForResult(intent, PRIVATE_CODE);
@@ -705,10 +694,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(
 						SharedPreferencesUrls.getInstance().getString("access_token",""))){
 					UIHelper.goToAct(context,LoginActivity.class);
-					Toast.makeText(context,"请先登录你的账号",Toast.LENGTH_SHORT).show();
+					ToastUtil.showMessageApp(context,"请先登录你的账号");
 					return;
 				}
-				UIHelper.goToAct(context,PersonAlterActivity.class);
+				UIHelper.goToAct(context, PersonAlterActivity.class);
 				break;
 			case R.id.mainUI_marqueeLayout:
 
@@ -724,29 +713,29 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 
 				if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-					Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+					ToastUtil.showMessageApp(context,"请先登录账号");
 					UIHelper.goToAct(context,LoginActivity.class);
 					return;
 				}
 				if (SharedPreferencesUrls.getInstance().getString("iscert","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
 					switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert",""))){
 						case 1:
-							Toast.makeText(context,"您还未认证,请先认证",Toast.LENGTH_SHORT).show();
+							ToastUtil.showMessageApp(context,"您还未认证,请先认证");
 							UIHelper.goToAct(context,RealNameAuthActivity.class);
 							break;
 						case 2:
 							getCurrentorder(uid,access_token);
 							break;
 						case 3:
-							Toast.makeText(context,"认证被驳回，请重新认证",Toast.LENGTH_SHORT).show();
+							ToastUtil.showMessageApp(context,"认证被驳回，请重新认证");
 							UIHelper.goToAct(context,RealNameAuthActivity.class);
 							break;
 						case 4:
-							Toast.makeText(context,"认证审核中",Toast.LENGTH_SHORT).show();
+							ToastUtil.showMessageApp(context,"认证审核中");
 							break;
 					}
 				}else {
-					Toast.makeText(context,"您还未认证,请先认证",Toast.LENGTH_SHORT).show();
+					ToastUtil.showMessage(context,"您还未认证,请先认证");
 				}
 				break;
             case R.id.mainUI_linkServiceLayout:
@@ -760,6 +749,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
 						switch (Tag){
 							case 0:
+								closeBroadcast();
+
 								UIHelper.goToAct(context, CurRoadBikingActivity.class);
 								break;
 							case 1:
@@ -868,7 +859,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			Toast.makeText(context, "刷新成功", Toast.LENGTH_SHORT).show();
+			ToastUtil.showMessage(context, "刷新成功");
 		}
 	}
 
@@ -1015,13 +1006,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
 
 //							m_nowMac = bean.getMacinfo();
-//							Toast.makeText(context, "###===="+m_nowMac, Toast.LENGTH_SHORT).show();
+//							ToastUtil.showMessage(context, "###===="+m_nowMac);
 
 							if ("1".equals(bean.getStatus())){
 								SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
 								if (loadingDialog != null && loadingDialog.isShowing()){
 									loadingDialog.dismiss();
 								}
+								closeBroadcast();
 								UIHelper.goToAct(context, CurRoadBikingActivity.class);
 							}else {
 								SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
@@ -1032,7 +1024,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							}
 						}
 					} else {
-						Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+						ToastUtil.showMessage(context,result.getMsg());
 					}
 				} catch (Exception e) {
 				}
@@ -1186,7 +1178,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 								}
 							}
 						} else {
-							Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+							ToastUtils.show(result.getMsg());
 						}
 					} catch (Exception e) {
 					}
@@ -1238,7 +1230,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							bikeMarkerList.clear();
 						}
 						if (0 == array.length()){
-							Toast.makeText(context,"附近没有自行车",Toast.LENGTH_SHORT).show();
+							ToastUtils.show("附近没有自行车");
 						}else {
 							for (int i = 0; i < array.length(); i++){
 								NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
@@ -1250,7 +1242,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							}
 						}
 					} else {
-						Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+						ToastUtils.show(result.getMsg());
 					}
 				} catch (Exception e) {
 
@@ -1332,7 +1324,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							}
 						}
 					} else {
-						Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+						ToastUtils.show(result.getMsg());
 					}
 				} catch (Exception e) {
 				}
@@ -1359,7 +1351,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	protected void onDestroy() {
 		super.onDestroy();
 
-		Toast.makeText(context, "main===onDestroy", Toast.LENGTH_SHORT).show();
+		ToastUtil.showMessage(context, "main===onDestroy");
 
 		mapView.onDestroy();
 		if(null != mlocationClient){
@@ -1375,12 +1367,13 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //			broadcastReceiver2 = null;
 //		}
 
-//		try {
-//			if (internalReceiver != null) {
-//				unregisterReceiver(internalReceiver);
-//			}
-//		} catch (Exception e) {
-//		}
+		try {
+			if (internalReceiver != null) {
+				unregisterReceiver(internalReceiver);
+				internalReceiver = null;
+			}
+		} catch (Exception e) {
+		}
 
 	}
 	private void setUpLocationStyle() {
@@ -1688,17 +1681,17 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					lockLoading.dismiss();
 				}
 //					isStop = true;
-				Toast.makeText(context,"main===设备连接成功",Toast.LENGTH_SHORT).show();
+				ToastUtil.showMessage(context,"main===设备连接成功");
 
 				break;
 			case Config.BATTERY_ACTION:
-//					Toast.makeText(context,"####===2",Toast.LENGTH_SHORT).show();
+//					ToastUtil.showMessage(context,"####===2");
 				break;
 			case Config.OPEN_ACTION:
-				Toast.makeText(context,"####===3",Toast.LENGTH_SHORT).show();
+				ToastUtil.showMessage(context,"####===3");
 				break;
 			case Config.CLOSE_ACTION:
-				Toast.makeText(context,"####===4",Toast.LENGTH_SHORT).show();
+				ToastUtil.showMessage(context,"####===4");
 				break;
 			case Config.LOCK_STATUS_ACTION:
 //				if (CurRoadBikingActivity.instance.loadingDialog != null && CurRoadBikingActivity.instance.loadingDialog.isShowing()){
@@ -1717,14 +1710,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 				if (TextUtils.isEmpty(data)) {
 
-					Toast.makeText(context,"====锁已关闭",Toast.LENGTH_SHORT).show();
+					ToastUtil.showMessageApp(context,"main====锁已关闭");
 
 					//锁已关闭
 					submit(context, uid, access_token);
 
 				} else {
 					//锁已开启
-					Toast.makeText(context,"您还未上锁，请给车上锁后还车",Toast.LENGTH_SHORT).show();
+					ToastUtil.showMessageApp(context,"main====您还未上锁，请给车上锁后还车");
 				}
 				break;
 			case Config.LOCK_RESULT:
@@ -1742,11 +1735,13 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					lockLoading.dismiss();
 				}
 
-				if(context instanceof  CurRoadStartActivity){
-					Toast.makeText(context,"s===恭喜您，您已成功上锁", Toast.LENGTH_SHORT).show();
-				}else{
-					Toast.makeText(context,"####===恭喜您，您已成功上锁", Toast.LENGTH_SHORT).show();
-				}
+//				if(context instanceof  CurRoadStartActivity){
+//					ToastUtil.showMessage(context,"s===恭喜您，您已成功上锁");
+//				}else{
+//					ToastUtil.showMessage(context,"####===恭喜您，您已成功上锁");
+//				}
+
+				ToastUtil.showMessageApp(context,"main===恭喜您，您已成功上锁");
 
 				endBtn(context);
 

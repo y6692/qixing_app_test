@@ -79,6 +79,7 @@ import cn.qimate.bike.core.widget.MyGridView;
 import cn.qimate.bike.img.NetUtil;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
@@ -763,12 +764,12 @@ public class FeedbackActivity
             content = other + "。";
         }
         if (content == null || "".equals(content)){
-            Toast.makeText(context,"请选择问题类型或者描述问题",Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessageApp(context,"请选择问题类型或者描述问题");
             return;
         }
         params.put("content",content);
         if (imageUrlList.size() == 0 || imageUrlList.isEmpty()){
-            Toast.makeText(context,"请上传照片",Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessageApp(context,"请上传照片");
             return;
         }
         params.put("desc_img",imageUrlList);
@@ -795,7 +796,7 @@ public class FeedbackActivity
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        Toast.makeText(context,"谢谢您的反馈,工作人员将很快处理",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"谢谢您的反馈,工作人员将很快处理");
                         scrollToFinishActivity();
 
                         new Thread(new Runnable() {
@@ -805,7 +806,7 @@ public class FeedbackActivity
                             }
                         }).start();
                     } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context, result.getMsg());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -894,7 +895,7 @@ public class FeedbackActivity
                             }
 //                            }
                         }else {
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
                         }
                     } catch (NullPointerException e) {
                         e.printStackTrace();// 用户点击取消操作
@@ -915,7 +916,7 @@ public class FeedbackActivity
                         }
 //                    }
                     }else {
-                        Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
                     }
 //                }
                 break;
@@ -1011,7 +1012,7 @@ public class FeedbackActivity
         public void run() {
 
             if (TextUtils.isEmpty(imgUrl)) {
-                Toast.makeText(context, "还没有设置上传服务器的路径！", Toast.LENGTH_SHORT).show();
+                ToastUtil.showMessageApp(context, "还没有设置上传服务器的路径！");
                 return;
             }
             Map<String, String> textParams = new HashMap<>();
@@ -1059,7 +1060,7 @@ public class FeedbackActivity
                     InputStream is = conn.getInputStream();
                     resultStr = NetUtil.readString(is);
                 } else {
-                    Toast.makeText(context, "请求URL失败！", Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(context, "请求URL失败！");
                 }
             } catch (Exception e) {
 
@@ -1088,7 +1089,7 @@ public class FeedbackActivity
                             // 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图，3为三分之一
                             option.inSampleSize = 1;
                             imageUrlList.add(jsonObject.optString("data"));
-                            Toast.makeText(context, "图片上传成功", Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context, "图片上传成功");
 
                             if ((TagsList.size() == 0 || TagsList.isEmpty())&&(
                                     restCauseEdit.getText().toString().trim() == null
@@ -1107,7 +1108,7 @@ public class FeedbackActivity
 
                             myAdapter.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(context, jsonObject.optString("msg"), Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context, jsonObject.optString("msg"));
                         }
 
                     } catch (JSONException e) {
@@ -1176,7 +1177,7 @@ public class FeedbackActivity
                         }
                         startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                     }else {
-                        Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
                     }
                     break;
                 // 相册选择图片
@@ -1199,7 +1200,7 @@ public class FeedbackActivity
 //                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 //                        startActivityForResult(pickIntent, REQUESTCODE_PICK);
 //                    }else {
-//                        Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+//                        ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
 //                    }
                     break;
                 default:
@@ -1257,7 +1258,7 @@ public class FeedbackActivity
                             }
                             startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                         }else {
-                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
                         }
                     }
                 } else {
@@ -1366,7 +1367,7 @@ public class FeedbackActivity
             locationClient.setLocationListener(locationListener);
             startLocation();
         }else {
-            Toast.makeText(context,"暂无网络连接，请连接网络",Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessageApp(context,"暂无网络连接，请连接网络");
             return;
         }
     }
@@ -1426,7 +1427,7 @@ public class FeedbackActivity
                     return;
                 }
             } else {
-                Toast.makeText(context,"定位失败",Toast.LENGTH_SHORT).show();
+                ToastUtil.showMessageApp(context,"定位失败");
                 finishMine();
             }
         }
@@ -1481,7 +1482,7 @@ public class FeedbackActivity
     protected void onDestroy() {
         super.onDestroy();
 
-        Toast.makeText(context,">>>>>>",Toast.LENGTH_SHORT).show();
+        ToastUtil.showMessage(context,">>>>>>");
 
 
         destroyLocation();

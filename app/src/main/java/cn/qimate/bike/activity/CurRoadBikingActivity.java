@@ -97,6 +97,7 @@ import cn.qimate.bike.model.NearbyBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.PublicWay;
+import cn.qimate.bike.util.ToastUtil;
 import cn.qimate.bike.util.UtilAnim;
 import cn.qimate.bike.util.UtilBitmap;
 import cn.qimate.bike.util.UtilScreenCapture;
@@ -216,7 +217,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                unregisterReceiver(internalReceiver);
 //            }
 //        } catch (Exception e) {
-//            Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+//            ToastUtil.showMessage(this, "eee===="+e);
 //        }
 
 //        registerReceiver(Config.initFilter());
@@ -233,7 +234,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         macList = new ArrayList<>();
         initView();
 
-//        Toast.makeText(this, "===="+m_nowMac, Toast.LENGTH_SHORT).show();
+//        ToastUtil.showMessage(this, "===="+m_nowMac);
 
     }
 
@@ -251,16 +252,23 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         mapView.onResume();
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
             refreshLayout.setVisibility(View.GONE);
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
+            ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
             getCurrentorder(uid,access_token);
             refreshLayout.setVisibility(View.VISIBLE);
         }
 
-        Toast.makeText(this, "biking===="+internalReceiver, Toast.LENGTH_SHORT).show();
+        ToastUtil.showMessage(this, "biking===="+internalReceiver);
 
-
+        try {
+            if (internalReceiver != null) {
+                unregisterReceiver(internalReceiver);
+                internalReceiver = null;
+            }
+        } catch (Exception e) {
+            ToastUtil.showMessage(this, "eee===="+e);
+        }
 
         registerReceiver(Config.initFilter());
         GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -272,7 +280,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         super.onPause();
         mapView.onPause();
 
-        Toast.makeText(this, "biking====onPause", Toast.LENGTH_SHORT).show();
+        ToastUtil.showMessage(this, "biking====onPause");
 
         if (loadingDialog != null && loadingDialog.isShowing()){
             loadingDialog.dismiss();
@@ -293,7 +301,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         super.onDestroy();
         mapView.onDestroy();
 
-        Toast.makeText(this, "biking====onDestroy", Toast.LENGTH_SHORT).show();
+        ToastUtil.showMessage(this, "biking====onDestroy");
 
 
         if(null != mlocationClient){
@@ -313,9 +321,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         try {
             if (internalReceiver != null) {
                 unregisterReceiver(internalReceiver);
+                internalReceiver = null;
             }
         } catch (Exception e) {
-            Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessage(this, "eee===="+e);
         }
 
         m_myHandler.removeCallbacksAndMessages(null);
@@ -455,7 +464,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         uid = SharedPreferencesUrls.getInstance().getString("uid","");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-        Toast.makeText(CurRoadBikingActivity.this, uid+"===="+access_token, Toast.LENGTH_SHORT).show();
+        ToastUtil.showMessage(this, uid+"===="+access_token);
     }
     private View.OnClickListener myOnClickLister = new View.OnClickListener() {
         @Override
@@ -509,7 +518,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }else {
                     flag = 1;
                     if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                        Toast.makeText(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
                         scrollToFinishActivity();
                     }
                     //蓝牙锁
@@ -534,8 +543,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }
                 break;
             case R.id.curRoadUI_biking_endBtn:
-                endBtn(context);
-//                endBtn();
+//                endBtn(context);
+                endBtn();
                 break;
             case R.id.curRoadUI_biking_linkServiceLayout:
             case R.id.curRoadUI_biking_linkService_btn:
@@ -574,11 +583,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
+            ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
 
-            Toast.makeText(context,macList.size()+"==="+isContainsList,Toast.LENGTH_SHORT);
+            ToastUtil.showMessage(context,macList.size()+"==="+isContainsList);
 
             if (isContainsList.contains(true)){
                 if ("1".equals(type)){
@@ -598,7 +607,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }else {
                     flag = 2;
                     if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                        Toast.makeText(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
                         scrollToFinishActivity();
                     }
                     //蓝牙锁
@@ -612,6 +621,29 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             loadingDialog.show();
                         }
 
+                        m_myHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showMessage(CurRoadBikingActivity.this, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
+
+                                if (loadingDialog != null && loadingDialog.isShowing()){
+                                    loadingDialog.dismiss();
+                                }
+
+                                if (!BaseApplication.getInstance().getIBLE().getLockStatus()){
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                    customBuilder.setTitle("连接失败").setMessage(">>>关锁后，请离车1米内重试或在右上角提交")
+                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    customBuilder.create().show();
+                                }
+
+                            }
+                        }, 10 * 1000);
+
                         BaseApplication.getInstance().getIBLE().getLockStatus();
                     }else {
 
@@ -623,7 +655,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         m_myHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(CurRoadBikingActivity.this, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus(), Toast.LENGTH_SHORT).show();
+                                ToastUtil.showMessage(CurRoadBikingActivity.this, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
 
                                 if (lockLoading != null && lockLoading.isShowing()){
                                     lockLoading.dismiss();
@@ -668,7 +700,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
                     }
                 }else {
-                    Toast.makeText(context,"请停放至校内公共停车区域，或重启手机定位服务",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
                 }
             }
         }
@@ -826,7 +858,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                            addMaplocation(myLocation.latitude,myLocation.longitude);
 //                        }
                         if ("1".equals(result.getData())){
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context, result.getMsg());
                             if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
                                 UIHelper.goToAct(context, FeedbackActivity.class);
 //                                UIHelper.goToAct(context, Main2Activity.class);
@@ -837,7 +869,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 startActivity(intent);
                             }
                         }else {
-                            Toast.makeText(context,"恭喜您,还车成功,请支付!",Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
                             UIHelper.goToAct(context,CurRoadBikedActivity.class);
                         }
 //                        finish();
@@ -845,7 +877,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 
                     }else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context, result.getMsg());
                     }
                 }catch (Exception e){
 
@@ -882,16 +914,16 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        Toast.makeText(context,"数据更新成功",Toast.LENGTH_SHORT).show();
-                       if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+                        ToastUtil.showMessageApp(context,"数据更新成功");
+                        if ("[]".equals(result.getData()) || 0 == result.getData().length()){
 
-                           Toast.makeText(context,"当前无行程",Toast.LENGTH_SHORT).show();
-                           BaseApplication.getInstance().getIBLE().refreshCache();
-                           BaseApplication.getInstance().getIBLE().close();
-                           BaseApplication.getInstance().getIBLE().disconnect();
+                            ToastUtil.showMessageApp(context,"当前无行程");
+                            BaseApplication.getInstance().getIBLE().refreshCache();
+                            BaseApplication.getInstance().getIBLE().close();
+                            BaseApplication.getInstance().getIBLE().disconnect();
 
-                           scrollToFinishActivity();
-                       }else {
+                            scrollToFinishActivity();
+                        }else {
                            CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
                            bikeCode = bean.getCodenum();
                            bikeCodeText.setText(bikeCode);
@@ -908,7 +940,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                m_nowMac = bean.getMacinfo();
                                lookPsdBtn.setText("再次开锁");
                                if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                   Toast.makeText(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+                                   ToastUtil.showMessageApp(CurRoadBikingActivity.this, "您的设备不支持蓝牙4.0");
                                    scrollToFinishActivity();
                                }
                                //蓝牙锁
@@ -917,7 +949,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                mBluetoothAdapter = bluetoothManager.getAdapter();
                                if (mBluetoothAdapter == null) {
-                                   Toast.makeText(CurRoadBikingActivity.this, "获取蓝牙失败", Toast.LENGTH_SHORT).show();
+                                   ToastUtil.showMessageApp(CurRoadBikingActivity.this, "获取蓝牙失败");
                                    scrollToFinishActivity();
                                    return;
                                }
@@ -949,7 +981,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                            }
                        }
                     } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,result.getMsg());
                     }
                 } catch (Exception e) {
                 }
@@ -1131,7 +1163,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             isContainsList.add(polygon.contains(myLocation));
                         }
                     }else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context, result.getMsg());
                     }
                 }catch (Exception e){
                 }
@@ -1302,7 +1334,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                 lockLoading.dismiss();
                             }
                             if (!isStop){
-                                Toast.makeText(context,"设备连接失败，请重试！",Toast.LENGTH_SHORT).show();
+                                ToastUtil.showMessageApp(context,"设备连接失败，请重试！");
                             }
                         }
                     }, 10 * 1000);
@@ -1313,7 +1345,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }
             }
         }else if( requestCode == 188){
-            Toast.makeText(this, "需要打开蓝牙", Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessageApp(this, "需要打开蓝牙");
             finish();
         }
     }
@@ -1349,7 +1381,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             siteMarkerList.clear();
                         }
                         if (0 == array.length()){
-                            Toast.makeText(context,"附近没有停车点",Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context,"附近没有停车点");
                         }else {
                             for (int i = 0; i < array.length(); i++){
                                 NearbyBean bean = JSON.parseObject(array.getJSONObject(i).toString(), NearbyBean.class);
@@ -1361,7 +1393,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             }
                         }
                     } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context, result.getMsg());
                     }
                 } catch (Exception e) {
                     Log.e("Test","异常:"+e);
@@ -1544,7 +1576,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     //lockLoading = null;
                 }
                 isStop = true;
-                Toast.makeText(CurRoadBikingActivity.this,"biking===设备连接成功",Toast.LENGTH_SHORT).show();
+                ToastUtil.showMessageApp(CurRoadBikingActivity.this,"biking===设备连接成功");
                 switch (flag){
                     case 0:
                         break;
@@ -1575,9 +1607,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     lockLoading.dismiss();
                 }
                 if (TextUtils.isEmpty(data)) {
-                    Toast.makeText(context,"开锁失败,请重试",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(context,"开锁失败,请重试");
                 } else {
-                    Toast.makeText(context,"恭喜您,开锁成功!",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                 }
                 break;
             case Config.CLOSE_ACTION:
@@ -1602,14 +1634,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }
                 if (TextUtils.isEmpty(data)) {
 
-                    Toast.makeText(context,"====锁已关闭",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(context,"biking====锁已关闭");
 
                     //锁已关闭
                     submit(context, uid,access_token);
 
                 } else {
                     //锁已开启
-                    Toast.makeText(context,"您还未上锁，请给车上锁后还车",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(context,"biking====您还未上锁，请给车上锁后还车");
                 }
                 break;
             case Config.LOCK_RESULT:
@@ -1619,7 +1651,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if (lockLoading != null && lockLoading.isShowing()){
                     lockLoading.dismiss();
                 }
-                Toast.makeText(context,"biking===恭喜您，您已成功上锁",Toast.LENGTH_SHORT).show();
+                ToastUtil.showMessageApp(context,"biking===恭喜您，您已成功上锁");
 
                 endBtn();
 
@@ -1649,7 +1681,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         //lockLoading = null;
                     }
                     isStop = true;
-                    Toast.makeText(CurRoadBikingActivity.this,"设备连接成功"+flag,Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
                     switch (flag){
                         case 0:
                             break;
@@ -1680,9 +1712,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         lockLoading.dismiss();
                     }
                     if (TextUtils.isEmpty(data)) {
-                        Toast.makeText(context,"开锁失败,请重试",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"开锁失败,请重试");
                     } else {
-                        Toast.makeText(context,"恭喜您,开锁成功!",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                     }
                     break;
                 case Config.CLOSE_ACTION:
@@ -1707,14 +1739,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
                     if (TextUtils.isEmpty(data)) {
 
-                        Toast.makeText(context,"====锁已关闭",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"biking====锁已关闭");
 
                         //锁已关闭
                         submit(context, uid,access_token);
 
                     } else {
                         //锁已开启
-                        Toast.makeText(context,"您还未上锁，请给车上锁后还车",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"biking====您还未上锁，请给车上锁后还车");
                     }
                     break;
                 case Config.LOCK_RESULT:
@@ -1724,7 +1756,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     if (lockLoading != null && lockLoading.isShowing()){
                         lockLoading.dismiss();
                     }
-                    Toast.makeText(context,"恭喜您，您已成功上锁",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(context,"恭喜您，您已成功上锁");
 
                     endBtn();
 

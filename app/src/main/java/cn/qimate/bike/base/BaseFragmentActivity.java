@@ -75,6 +75,7 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
+import cn.qimate.bike.util.ToastUtil;
 
 import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
 import static cn.qimate.bike.core.common.Urls.schoolrangeList;
@@ -134,7 +135,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
 
-		Toast.makeText(this, "===="+m_nowMac, Toast.LENGTH_SHORT).show();
+//		ToastUtil.showMessage(this, "===="+m_nowMac);
 
         uid = SharedPreferencesUrls.getInstance().getString("uid","");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
@@ -159,21 +160,9 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 
 	@Override
 	protected void onDestroy() {
-
-		// 结束Activity从堆栈中移除
-
-//		Toast.makeText(context, "###====finish", Toast.LENGTH_SHORT).show();
-
-//		if (broadcastReceiver2 != null) {
-//			unregisterReceiver(broadcastReceiver2);
-//			broadcastReceiver2 = null;
-//		}
-
-
-
 		super.onDestroy();
 
-//		Toast.makeText(context, "base===onDestroy==="+type, Toast.LENGTH_SHORT).show();
+//		ToastUtil.showMessage(context, "base===onDestroy==="+type);
 
 		if (!"1".equals(type)){
 			if (mLeScanCallback != null && mBluetoothAdapter != null) {
@@ -187,7 +176,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //				unregisterReceiver(internalReceiver);
 //			}
 //		} catch (Exception e) {
-//			Toast.makeText(context, "eee==="+e, Toast.LENGTH_SHORT).show();
+//			ToastUtil.showMessage(context, "eee==="+e);
 //		}
 
 		AppManager.getAppManager().finishActivity(this);
@@ -218,10 +207,10 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 				try {
 					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 					if (result.getFlag().equals("Success")) {
-						Toast.makeText(context,"数据更新成功",Toast.LENGTH_SHORT).show();
+						ToastUtil.showMessageApp(context,"数据更新成功");
 						if ("[]".equals(result.getData()) || 0 == result.getData().length()){
 
-//							Toast.makeText(context,"当前无行程",Toast.LENGTH_SHORT).show();
+//							ToastUtil.showMessageApp(context,"当前无行程");
 //							BaseApplication.getInstance().getIBLE().refreshCache();
 //							BaseApplication.getInstance().getIBLE().close();
 //							BaseApplication.getInstance().getIBLE().disconnect();
@@ -244,24 +233,23 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //								hintText.setText("还车须至校园地图红色覆盖区，关锁后距车一米内点击结束！");
 								m_nowMac = bean.getMacinfo();
 
-//								Toast.makeText(context, "###===="+m_nowMac, Toast.LENGTH_SHORT).show();
+//								ToastUtil.showMessage(context, "###===="+m_nowMac);
 
 //								connect();
 
 //								lookPsdBtn.setText("再次开锁");
 								if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-									Toast.makeText(context, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+									ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
 									finish();
 //									scrollToFinishActivity();
 								}
 								//蓝牙锁
-								BluetoothManager bluetoothManager =
-										(BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+								BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
 								mBluetoothAdapter = bluetoothManager.getAdapter();
 
 								if (mBluetoothAdapter == null) {
-									Toast.makeText(context, "获取蓝牙失败", Toast.LENGTH_SHORT).show();
+									ToastUtil.showMessageApp(context, "获取蓝牙失败");
 									finish();
 //									scrollToFinishActivity();
 									return;
@@ -286,7 +274,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //							}
 						}
 					} else {
-						Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+						ToastUtil.showMessageApp(context, result.getMsg());
 					}
 				} catch (Exception e) {
 				}
@@ -462,10 +450,10 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
                         SharedPreferencesUrls.getInstance().putString("biking_longitude","");
 
                         if ("1".equals(result.getData())){
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+							ToastUtil.showMessageApp(context, result.getMsg());
                             if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
 
-								Toast.makeText(context,"context==="+context,Toast.LENGTH_SHORT).show();
+								ToastUtil.showMessage(context,"context==="+context);
 
 								if(context instanceof CurRoadStartActivity){
 									CurRoadStartActivity.isEnd = true;
@@ -481,13 +469,13 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
                                 startActivity(intent);
                             }
                         }else {
-                            Toast.makeText(context,"恭喜您,还车成功,请支付!",Toast.LENGTH_SHORT).show();
+							ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
                             UIHelper.goToAct(context,CurRoadBikedActivity.class);
                         }
 //                        scrollToFinishActivity();
 
                     }else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+						ToastUtil.showMessageApp(context,result.getMsg());
                     }
                 }catch (Exception e){
 
@@ -510,15 +498,14 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
+			ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
-			Toast.makeText(context,uid+"==="+access_token,Toast.LENGTH_SHORT).show();
-			Toast.makeText(context,macList+"==="+isContainsList,Toast.LENGTH_SHORT);
-            Toast.makeText(context,macList.size()+"==="+isContainsList.contains(true),Toast.LENGTH_SHORT);
+			ToastUtil.showMessage(context,uid+"==="+access_token);
+			ToastUtil.showMessage(context,macList+"==="+isContainsList);
+			ToastUtil.showMessage(context,macList.size()+"==="+isContainsList.contains(true));
 
             if (isContainsList.contains(true)){
-//			if (true){
                 if ("1".equals(type)){
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
                     customBuilder.setTitle("温馨提示").setMessage("还车必须到校内关锁并拨乱数字密码，距车一米内在APP点击结束!")
@@ -536,7 +523,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
                 }else {
 //                    flag = 2;
                     if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                        Toast.makeText(context, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+						ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                         finish();
 //                        scrollToFinishActivity();
                     }
@@ -567,7 +554,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
                         m_myHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus(), Toast.LENGTH_SHORT).show();
+								ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
 
                                 if (lockLoading != null && lockLoading.isShowing()){
                                     lockLoading.dismiss();
@@ -612,7 +599,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
                         }
                     }
                 }else {
-                    Toast.makeText(context,"请停放至校内公共停车区域，或重启手机定位服务==="+isContainsList.size()+"==="+macList.size(), Toast.LENGTH_SHORT).show();
+					ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
                 }
             }
         }
@@ -768,7 +755,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 							isContainsList.add(polygon.contains(myLocation));
 						}
 					}else {
-						Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+						ToastUtil.showMessageApp(context,result.getMsg());
 					}
 				}catch (Exception e){
 				}
@@ -856,17 +843,17 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //					lockLoading.dismiss();
 //				}
 ////					isStop = true;
-//				Toast.makeText(context,"base===设备连接成功",Toast.LENGTH_SHORT).show();
+//				ToastUtil.showMessageApp(context,"base===设备连接成功");
 //
 //				break;
 //			case Config.BATTERY_ACTION:
-////					Toast.makeText(context,"####===2",Toast.LENGTH_SHORT).show();
+////					ToastUtil.showMessage(context,"####===2");
 //				break;
 //			case Config.OPEN_ACTION:
-//				Toast.makeText(context,"####===3",Toast.LENGTH_SHORT).show();
+//				ToastUtil.showMessage(context,"####===3");
 //				break;
 //			case Config.CLOSE_ACTION:
-//				Toast.makeText(context,"####===4",Toast.LENGTH_SHORT).show();
+//				ToastUtil.showMessage(context,"####===4");
 //				break;
 //			case Config.LOCK_STATUS_ACTION:
 ////				if (CurRoadBikingActivity.instance.loadingDialog != null && CurRoadBikingActivity.instance.loadingDialog.isShowing()){
@@ -885,14 +872,14 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //
 //				if (TextUtils.isEmpty(data)) {
 //
-//					Toast.makeText(context,"====锁已关闭",Toast.LENGTH_SHORT).show();
+//					ToastUtil.showMessageApp(context,"====锁已关闭");
 //
 //					//锁已关闭
 //					submit(context, uid, access_token);
 //
 //				} else {
 //					//锁已开启
-//					Toast.makeText(context,"您还未上锁，请给车上锁后还车",Toast.LENGTH_SHORT).show();
+//					ToastUtil.showMessageApp(context,"您还未上锁，请给车上锁后还车");
 //				}
 //				break;
 //			case Config.LOCK_RESULT:
@@ -910,11 +897,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //					lockLoading.dismiss();
 //				}
 //
-//				if(context instanceof  CurRoadStartActivity){
-//					Toast.makeText(context,"s===恭喜您，您已成功上锁", Toast.LENGTH_SHORT).show();
-//				}else{
-//					Toast.makeText(context,"####===恭喜您，您已成功上锁", Toast.LENGTH_SHORT).show();
-//				}
+//				ToastUtil.showMessageApp(context,"####===恭喜您，您已成功上锁");
 //
 //				endBtn(context);
 //
@@ -946,5 +929,6 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 
 		}
 	};
+
 
 }

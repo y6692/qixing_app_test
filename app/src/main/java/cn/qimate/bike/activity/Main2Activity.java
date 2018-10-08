@@ -9,6 +9,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.bike.util.ToastUtil;
 
 public class Main2Activity extends SwipeBackActivity {
 
@@ -25,7 +26,7 @@ public class Main2Activity extends SwipeBackActivity {
     protected void onResume() {
         super.onResume();
 
-        Toast.makeText(this, "main2====" + internalReceiver, Toast.LENGTH_SHORT).show();
+        ToastUtil.showMessage(this, "main2====" + internalReceiver);
 
 //        try {
 //            if (internalReceiver != null) {

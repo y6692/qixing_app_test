@@ -77,6 +77,7 @@ import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.PublicWay;
 import cn.qimate.bike.util.SystemUtil;
+import cn.qimate.bike.util.ToastUtil;
 
 /**
  * @author vondear
@@ -211,14 +212,15 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
 
-        Toast.makeText(this, "scaner===="+internalReceiver, Toast.LENGTH_SHORT).show();
+        ToastUtil.showMessage(this, "scaner===="+internalReceiver);
 
         try {
             if (internalReceiver != null) {
                 unregisterReceiver(internalReceiver);
+                internalReceiver = null;
             }
         } catch (Exception e) {
-            Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessage(this, "eee===="+e);
         }
 
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
@@ -305,7 +307,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             case R.id.pop_circlesMenu_positiveButton:
                 String bikeNum = bikeNumEdit.getText().toString().trim();
                 if (bikeNum == null || "".equals(bikeNum)){
-                    Toast.makeText(this,"请输入单车编号",Toast.LENGTH_SHORT).show();
+                    ToastUtil.showMessageApp(this,"请输入单车编号");
                     return;
                 }
                 InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -448,7 +450,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         }else {
             RequestParams params = new RequestParams();
@@ -491,7 +493,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 codenum = jsonObject.getString("codenum");
                                 m_nowMac = jsonObject.getString("macinfo");
                                 if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                    Toast.makeText(context, "您的设备不支持蓝牙4.0", Toast.LENGTH_SHORT).show();
+                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     scrollToFinishActivity();
                                 }
                                 //蓝牙锁
@@ -501,7 +503,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 mBluetoothAdapter = bluetoothManager.getAdapter();
 
                                 if (mBluetoothAdapter == null) {
-                                    Toast.makeText(context, "获取蓝牙失败", Toast.LENGTH_SHORT).show();
+                                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
                                     scrollToFinishActivity();
                                     return;
                                 }
@@ -535,7 +537,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
         }else {
             RequestParams params = new RequestParams();
@@ -561,7 +563,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         if (result.getFlag().equals("Success")) {
                             BaseApplication.getInstance().getIBLE().openLock();
                         } else {
-                            Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                            ToastUtil.showMessageApp(context, result.getMsg());
                             if (loadingDialog != null && loadingDialog.isShowing()){
                                 loadingDialog.dismiss();
                             }
@@ -596,7 +598,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 }
             }
         }else if( requestCode == 188){
-            Toast.makeText(this, "需要打开蓝牙", Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessageApp(this, "需要打开蓝牙");
             scrollToFinishActivity();
         }
     }
@@ -740,10 +742,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         loadingDialog.dismiss();
                     }
                     if (TextUtils.isEmpty(data)) {
-                        Toast.makeText(context,"开锁失败,请重试",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"开锁失败,请重试");
                         scrollToFinishActivity();
                     } else {
-                        Toast.makeText(context,"恭喜您,开锁成功!",Toast.LENGTH_SHORT).show();
+                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                         UIHelper.goToAct(context,CurRoadStartActivity.class);
                         scrollToFinishActivity();
                     }
