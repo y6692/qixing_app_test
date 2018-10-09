@@ -112,6 +112,9 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 
 //        registerReceiver(Config.initFilter());
 //        GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+
+//        ToastUtil.showMessageApp(this, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
+
     }
 
     @Override

@@ -327,54 +327,54 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	private void initView() {
 
-		LocationManager lm = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
-		boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		if (ok) {//开了定位服务
-			if (Build.VERSION.SDK_INT >= 23) { //判断是否为android6.0系统版本，如果是，需要动态添加权限
-				if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PERMISSION_GRANTED) {// 没有权限，申请权限。
-//					ToastUtil.showMessage(this, "====");
-
-//					ActivityCompat.requestPermissions(this, LOCATIONGPS, BAIDU_READ_PHONE_STATE);
-
-				} else {
-					getLocation();//getLocation为定位方法
-				}
-			} else {
-				getLocation();//getLocation为定位方法
-			}
-		} else {
-			ToastUtil.showMessageApp(this, "系统检测到未开启GPS定位服务,请开启");
-			Intent intent = new Intent();
-			intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-			startActivityForResult(intent, PRIVATE_CODE);
-		}
-
-//		if (Build.VERSION.SDK_INT >= 23) {
-//			int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-//			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-//				if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-//					requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-//							REQUEST_CODE_ASK_PERMISSIONS);
+//		LocationManager lm = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+//		boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//		if (ok) {//开了定位服务
+//			if (Build.VERSION.SDK_INT >= 23) { //判断是否为android6.0系统版本，如果是，需要动态添加权限
+//				if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PERMISSION_GRANTED) {// 没有权限，申请权限。
+////					ToastUtil.showMessage(this, "====");
+//
+////					ActivityCompat.requestPermissions(this, LOCATIONGPS, BAIDU_READ_PHONE_STATE);
+//
 //				} else {
-//					CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-//					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-//							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//								public void onClick(DialogInterface dialog, int which) {
-//									dialog.cancel();
-//								}
-//							}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//						public void onClick(DialogInterface dialog, int which) {
-//							dialog.cancel();
-//							MainActivity.this.requestPermissions(
-//									new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-//									REQUEST_CODE_ASK_PERMISSIONS);
-//						}
-//					});
-//					customBuilder.create().show();
+//					getLocation();//getLocation为定位方法
 //				}
-//				return;
+//			} else {
+//				getLocation();//getLocation为定位方法
 //			}
+//		} else {
+//			ToastUtil.showMessageApp(this, "系统检测到未开启GPS定位服务,请开启");
+//			Intent intent = new Intent();
+//			intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//			startActivityForResult(intent, PRIVATE_CODE);
 //		}
+
+		if (Build.VERSION.SDK_INT >= 23) {
+			int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+				if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+					requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+							REQUEST_CODE_ASK_PERMISSIONS);
+				} else {
+					CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+								}
+							}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							MainActivity.this.requestPermissions(
+									new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+									REQUEST_CODE_ASK_PERMISSIONS);
+						}
+					});
+					customBuilder.create().show();
+				}
+				return;
+			}
+		}
 
 
 		loadingDialog = new LoadingDialog(context);
@@ -1392,23 +1392,24 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	 */
 	@Override
 	public void activate(OnLocationChangedListener listener) {
-		mListener = listener;
-		if (mlocationClient == null) {
-			mlocationClient = new AMapLocationClient(this);
-			mLocationOption = new AMapLocationClientOption();
-			//设置定位监听
-			mlocationClient.setLocationListener(this);
-			//设置为高精度定位模式
-			mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-			mLocationOption.setInterval(60 * 1000);
-			//设置定位参数
-			mlocationClient.setLocationOption(mLocationOption);
-			// 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-			// 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-			// 在定位结束后，在合适的生命周期调用onDestroy()方法
-			// 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-			mlocationClient.startLocation();
-		}
+	    super.activate(listener);
+//		mListener = listener;
+//		if (mlocationClient == null) {
+//			mlocationClient = new AMapLocationClient(this);
+//			mLocationOption = new AMapLocationClientOption();
+//			//设置定位监听
+//			mlocationClient.setLocationListener(this);
+//			//设置为高精度定位模式
+//			mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+//			mLocationOption.setInterval(60 * 1000);
+//			//设置定位参数
+//			mlocationClient.setLocationOption(mLocationOption);
+//			// 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+//			// 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+//			// 在定位结束后，在合适的生命周期调用onDestroy()方法
+//			// 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+//			mlocationClient.startLocation();
+//		}
 	}
 
 	/**
@@ -1417,28 +1418,28 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	@Override
 	public void onLocationChanged(AMapLocation amapLocation) {
 		super.onLocationChanged(amapLocation);
-		if (mListener != null && amapLocation != null) {
-			if (amapLocation != null
-					&& amapLocation.getErrorCode() == 0) {
-				if (mListener != null) {
-					mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-				}
-				myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
-				if (mFirstFix){
-					mFirstFix = false;
-					addChooseMarker();
-					addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
-					initNearby(amapLocation.getLatitude(),amapLocation.getLongitude());
-				} else {
-					centerMarker.setPosition(myLocation);
-					mCircle.setCenter(myLocation);
-				}
-				aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
-				//保存经纬度到本地
-				SharedPreferencesUrls.getInstance().putString("latitude",""+amapLocation.getLatitude());
-				SharedPreferencesUrls.getInstance().putString("longitude",""+amapLocation.getLongitude());
-			}
-		}
+//		if (mListener != null && amapLocation != null) {
+//			if (amapLocation != null
+//					&& amapLocation.getErrorCode() == 0) {
+//				if (mListener != null) {
+//					mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+//				}
+//				myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
+//				if (mFirstFix){
+//					mFirstFix = false;
+//					addChooseMarker();
+//					addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
+//					initNearby(amapLocation.getLatitude(),amapLocation.getLongitude());
+//				} else {
+//					centerMarker.setPosition(myLocation);
+//					mCircle.setCenter(myLocation);
+//				}
+//				aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+//				//保存经纬度到本地
+//				SharedPreferencesUrls.getInstance().putString("latitude",""+amapLocation.getLatitude());
+//				SharedPreferencesUrls.getInstance().putString("longitude",""+amapLocation.getLongitude());
+//			}
+//		}
 	}
 
 	/**

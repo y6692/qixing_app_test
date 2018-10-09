@@ -80,8 +80,10 @@ import cn.qimate.bike.util.ToastUtil;
 import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
 import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 
-public class BaseFragmentActivity extends AppCompatActivity implements LocationSource,AMapLocationListener
-		,OnConnectionListener
+public class BaseFragmentActivity extends AppCompatActivity implements
+		LocationSource,
+ 		AMapLocationListener,
+ 		OnConnectionListener
 {
 
 	private static final int MSG_SET_ALIAS = 1001;
@@ -95,6 +97,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 
 	public static String m_nowMac = "";  //"A8:1B:6A:B4:E7:C9"
 	public static String oid = "";
+	public static String osn = "";
 	public static String type = "";
 
 	public static List<Boolean> isContainsList;
@@ -103,13 +106,15 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 	private LatLng myLocation = null;
 	private boolean mFirstFix = true;
 	protected OnLocationChangedListener mListener;
+	protected AMapLocationClient mlocationClient;
+	protected AMapLocationClientOption mLocationOption;
 	protected AMap aMap;
 
 	protected String uid = "";
     protected String access_token = "";
 
-    private double referLatitude = 0.0;
-    private double referLongitude = 0.0;
+	public static double referLatitude = 0.0;
+	public static double referLongitude = 0.0;
 
 	private BluetoothAdapter mBluetoothAdapter;
 	public static LoadingDialog loadingDialog;
@@ -140,10 +145,12 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
         uid = SharedPreferencesUrls.getInstance().getString("uid","");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-		if(context instanceof MainActivity || context instanceof ActivityScanerCode || context instanceof CurRoadStartActivity || context instanceof CurRoadBikingActivity){
+        //|| context instanceof CurRoadStartActivity || context instanceof ActivityScanerCode  || context instanceof CurRoadBikingActivity
+
+		if(context instanceof MainActivity || context instanceof CurRoadStartActivity || context instanceof ActivityScanerCode  || context instanceof CurRoadBikingActivity){
 			if("".equals(m_nowMac)){
 				getCurrentorder(uid, access_token);
-			}else{
+			}else if(context instanceof MainActivity){
 				connect();
 			}
 		}
@@ -209,6 +216,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 					if (result.getFlag().equals("Success")) {
 						ToastUtil.showMessageApp(context,"数据更新成功");
 						if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+							ToastUtil.showMessage(context,"mmmmmmmm");
 
 //							ToastUtil.showMessageApp(context,"当前无行程");
 //							BaseApplication.getInstance().getIBLE().refreshCache();
@@ -223,7 +231,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //							bikeCodeText.setText(bikeCode);
 //							time.setText(bean.getSt_time());
 							oid = bean.getOid();
-//							osn = bean.getOsn();
+							osn = bean.getOsn();
 //							password = bean.getPassword();
 							type = bean.getType();
 							if ("1".equals(bean.getType())){
@@ -258,7 +266,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 								if (!mBluetoothAdapter.isEnabled()) {
 									Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 									startActivityForResult(enableBtIntent, 188);
-								}else{
+								}else if(context instanceof MainActivity){
 									connect();
 								}
 
@@ -277,6 +285,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 						ToastUtil.showMessageApp(context, result.getMsg());
 					}
 				} catch (Exception e) {
+					ToastUtil.showMessageApp(context, "ee>>>>"+e);
 				}
 				if (loadingDialog != null && loadingDialog.isShowing()){
 					loadingDialog.dismiss();
@@ -414,11 +423,11 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
     protected void submit(final Context context, String uid, String access_token){
 
         RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
-        params.put("oid",oid);
-        params.put("latitude",referLatitude);
-        params.put("longitude",referLongitude);
+        params.put("uid", uid);
+        params.put("access_token", access_token);
+        params.put("oid", oid);
+        params.put("latitude", referLatitude);
+        params.put("longitude", referLongitude);
         if (macList.size() > 0){
             params.put("xinbiao",macList.get(0));
         }
@@ -475,7 +484,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //                        scrollToFinishActivity();
 
                     }else {
-						ToastUtil.showMessageApp(context,result.getMsg());
+						ToastUtil.showMessageApp(context, "base===="+result.getMsg());
                     }
                 }catch (Exception e){
 
@@ -489,12 +498,6 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 
 
     public void endBtn(final Context context){
-
-//		loadingDialog = new LoadingDialog(context);
-//		loadingDialog.setCancelable(false);
-//		loadingDialog.setCanceledOnTouchOutside(false);
-
-
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
@@ -599,7 +602,17 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
                         }
                     }
                 }else {
-					ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
+//					ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
+
+					CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+					customBuilder.setTitle("温馨提示").setMessage("请停放至校内公共停车区域，或重启手机定位服务")
+							.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+								}
+							});
+					customBuilder.create().show();
+
                 }
             }
         }
@@ -610,23 +623,23 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 	 */
 	@Override
 	public void activate(OnLocationChangedListener listener) {
-//		mListener = listener;
-//		if (mlocationClient == null) {
-//			mlocationClient = new AMapLocationClient(this);
-//			mLocationOption = new AMapLocationClientOption();
-//			//设置定位监听
-//			mlocationClient.setLocationListener(this);
-//			mLocationOption.setInterval(2 * 1000);
-//			//设置为高精度定位模式
-//			mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-//			//设置定位参数
-//			mlocationClient.setLocationOption(mLocationOption);
-//			// 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-//			// 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-//			// 在定位结束后，在合适的生命周期调用onDestroy()方法
-//			// 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-//			mlocationClient.startLocation();
-//		}
+		mListener = listener;
+		if (mlocationClient == null) {
+			mlocationClient = new AMapLocationClient(this);
+			mLocationOption = new AMapLocationClientOption();
+			//设置定位监听
+			mlocationClient.setLocationListener(this);
+			mLocationOption.setInterval(2 * 1000);
+			//设置为高精度定位模式
+			mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+			//设置定位参数
+			mlocationClient.setLocationOption(mLocationOption);
+			// 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+			// 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+			// 在定位结束后，在合适的生命周期调用onDestroy()方法
+			// 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+			mlocationClient.startLocation();
+		}
 	}
 
 	/**
@@ -647,7 +660,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 
 							SharedPreferencesUrls.getInstance().putString("biking_latitude",""+amapLocation.getLatitude());
 							SharedPreferencesUrls.getInstance().putString("biking_longitude",""+amapLocation.getLongitude());
-//							addMaplocation(amapLocation.getLatitude(),amapLocation.getLongitude());
+							addMaplocation(amapLocation.getLatitude(),amapLocation.getLongitude());
 						}
 					}
 					if (mListener != null) {
@@ -705,6 +718,47 @@ public class BaseFragmentActivity extends AppCompatActivity implements LocationS
 //		}
 //		mlocationClient = null;
 	}
+
+	/**
+	 *
+	 * 上传骑行坐标
+	 * */
+	private void addMaplocation(double latitude,double longitude){
+		String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+		if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+			RequestParams params = new RequestParams();
+			params.put("uid",uid);
+			params.put("access_token",access_token);
+			params.put("oid",oid);
+			params.put("osn",osn);
+			params.put("latitude",latitude);
+			params.put("longitude",longitude);
+			HttpHelper.post(context, Urls.addMaplocation, params, new TextHttpResponseHandler() {
+				@Override
+				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+				}
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, String responseString) {
+					try {
+						ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+						if (result.getFlag().equals("Success")) {
+							if (myLocation != null){
+								SharedPreferencesUrls.getInstance().putString("biking_latitude",""+myLocation.latitude);
+								SharedPreferencesUrls.getInstance().putString("biking_longitude",""+myLocation.longitude);
+							}
+						}
+					}catch (Exception e){
+
+					}
+				}
+			});
+		}
+	}
+
+
 
 	/**
 	 * 学校范围电子栅栏

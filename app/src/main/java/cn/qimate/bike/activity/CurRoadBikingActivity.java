@@ -700,7 +700,16 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
                     }
                 }else {
-                    ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
+//                    ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
+
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                    customBuilder.setTitle("温馨提示").setMessage("请停放至校内公共停车区域，或重启手机定位服务")
+                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    customBuilder.create().show();
                 }
             }
         }
@@ -944,8 +953,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                    scrollToFinishActivity();
                                }
                                //蓝牙锁
-                               BluetoothManager bluetoothManager =
-                                       (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                               BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
                                mBluetoothAdapter = bluetoothManager.getAdapter();
                                if (mBluetoothAdapter == null) {
@@ -1053,7 +1061,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
      */
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        super.onLocationChanged(amapLocation);
+//        super.onLocationChanged(amapLocation);
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {

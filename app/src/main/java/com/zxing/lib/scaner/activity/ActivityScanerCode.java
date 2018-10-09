@@ -211,7 +211,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-
         ToastUtil.showMessage(this, "scaner===="+internalReceiver);
 
         try {
