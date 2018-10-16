@@ -65,6 +65,8 @@ public class Urls {
 	public static String messageList = host + "/index.php?g=App&m=User&a=messageList";
 	/**获取当前行程订单(未付款)*/
 	public static String getCurrentorder = host + "/index.php?g=App&m=User&a=getCurrentorder";
+	/**获取反馈意见状态*/
+	public static String getFeedbackStatus = host + "/index.php?a=feedback_status&m=Index&g=App";
 	/**充值记录*/
 	public static String rechargeLog = host + "/index.php?g=App&m=User&a=rechargeLog";
 	/**获取认证信息状态*/

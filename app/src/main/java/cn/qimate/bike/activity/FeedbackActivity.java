@@ -374,16 +374,9 @@ public class FeedbackActivity
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mainUI_title_backBtn:
+                closeBle();
+
                 scrollToFinishActivity();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        m_myHandler.sendEmptyMessage(1);
-                    }
-                }).start();
-
-
                 break;
             case R.id.feedbackUI_type_Tag1:
                 if (isSelected1){
@@ -797,14 +790,10 @@ public class FeedbackActivity
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         ToastUtil.showMessageApp(context,"谢谢您的反馈,工作人员将很快处理");
+                        closeBle();
+
                         scrollToFinishActivity();
 
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                m_myHandler.sendEmptyMessage(1);
-                            }
-                        }).start();
                     } else {
                         ToastUtil.showMessageApp(context, result.getMsg());
                     }
@@ -1294,23 +1283,24 @@ public class FeedbackActivity
 
 //            finish();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-//                    m_myHandler.sendEmptyMessage(1);
-                    m_myHandler.sendEmptyMessageDelayed(1, 1000);
+            closeBle();
 
-                    try {
-                        if (internalReceiver != null) {
-                            unregisterReceiver(internalReceiver);
-                        }
-                    } catch (Exception e) {
-                    }
-
-                    scrollToFinishActivity();
-
+            try {
+                if (internalReceiver != null) {
+                    unregisterReceiver(internalReceiver);
                 }
-            }).start();
+            } catch (Exception e) {
+            }
+
+            scrollToFinishActivity();
+
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//
+//                }
+//            }).start();
 
 
 
@@ -1478,6 +1468,17 @@ public class FeedbackActivity
         }
     }
 
+    private void closeBle(){
+        if(SharedPreferencesUrls.getInstance().getBoolean("isStop",false)){  //骑行结束才能关蓝牙
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    m_myHandler.sendEmptyMessage(1);
+                }
+            }).start();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -1487,12 +1488,7 @@ public class FeedbackActivity
 
         destroyLocation();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                m_myHandler.sendEmptyMessage(1);
-            }
-        }).start();
+        closeBle();
 
     }
 }

@@ -291,7 +291,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            scrollToFinishActivity();
+
 
             new Thread(new Runnable() {
                 @Override
@@ -299,6 +299,8 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
                     m_myHandler.sendEmptyMessage(1);
                 }
             }).start();
+
+            scrollToFinishActivity();
 
 
             return true;

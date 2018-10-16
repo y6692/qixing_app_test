@@ -2,6 +2,7 @@ package cn.qimate.bike.base;
 
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,11 +12,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.IBinder;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.impl.AndroidBle;
 import com.sunshine.blelibrary.inter.IBLE;
+import com.sunshine.blelibrary.inter.OnDeviceSearchListener;
 import com.sunshine.blelibrary.service.BLEService;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 import com.umeng.socialize.PlatformConfig;
@@ -97,7 +100,11 @@ public class BaseApplication extends Application {
 			SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
 		}
 		ToastUtils.init(getApplicationContext());
+
+
+
 	}
+
 
 	// 各个平台的配置，建议放在全局Application或者程序入口
 	{

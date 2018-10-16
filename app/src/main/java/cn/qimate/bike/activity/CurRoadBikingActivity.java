@@ -145,8 +145,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
 
-    private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
-    private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
+    public static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
+    public static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
     private boolean mFirstFix = true;
     private LatLng myLocation = null;
     private Circle mCircle;
@@ -193,6 +193,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private int imageWith = 0;
     private List<String> macList;
     private int flag = 0;
+    boolean isFrist1 = true;
+    private CustomDialog customDialog;
 
     int k=0;
 
@@ -203,7 +205,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         setContentView(R.layout.ui_cur_road_biking);
         context = this;
 //        instance = this;
-
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         IntentFilter filter = new IntentFilter("data.broadcast.action");
@@ -236,6 +237,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 //        ToastUtil.showMessage(this, "===="+m_nowMac);
 
+        CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+        customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等");
+        customDialog = customBuilder.create();
+
     }
 
     @Override
@@ -255,7 +260,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
-            getCurrentorder(uid,access_token);
+            getCurrentorderBiking(uid,access_token);
             refreshLayout.setVisibility(View.VISIBLE);
         }
 
@@ -269,6 +274,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         } catch (Exception e) {
             ToastUtil.showMessage(this, "eee===="+e);
         }
+
+        getFeedbackStatus();
 
         registerReceiver(Config.initFilter());
         GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -336,10 +343,59 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            getCurrentorder(SharedPreferencesUrls.getInstance().getString("uid",""),
-                    SharedPreferencesUrls.getInstance().getString("access_token",""));
+            getCurrentorderBiking(SharedPreferencesUrls.getInstance().getString("uid",""), SharedPreferencesUrls.getInstance().getString("access_token",""));
+
+            getFeedbackStatus();
         }
     };
+
+
+    private void getFeedbackStatus(){
+        RequestParams params = new RequestParams();
+        params.put("telphone",SharedPreferencesUrls.getInstance().getString("userName",""));
+        HttpHelper.get(context, Urls.getFeedbackStatus, params, new TextHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+//						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",false));
+
+                        if("2".equals(result.data) && !SharedPreferencesUrls.getInstance().getBoolean("isStop",false)){
+                            customDialog.show();
+                        }else{
+                            customDialog.dismiss();
+                        }
+
+
+                    } else {
+                        ToastUtil.showMessageApp(context, result.getMsg());
+                    }
+                } catch (Exception e) {
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
     private void initView(){
         if (Build.VERSION.SDK_INT >= 23) {
             int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -419,8 +475,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
-        aMap.getUiSettings()
-                .setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(20);// 设置缩放监听
         aMap.moveCamera(cameraUpdate);
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
@@ -531,6 +586,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             loadingDialog.setTitle("正在开锁");
                             loadingDialog.show();
                         }
+
+//                        openLock();
+
                         BaseApplication.getInstance().getIBLE().openLock();
                     }else {
                         if (lockLoading != null && !lockLoading.isShowing()){
@@ -566,7 +624,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if (uid1 == null || "".equals(uid1) || access_token1 == null || "".equals(access_token1)){
                     UIHelper.goToAct(context,LoginActivity.class);
                 }else {
-                    getCurrentorder(SharedPreferencesUrls.getInstance().getString("uid",""),
+                    getCurrentorderBiking(SharedPreferencesUrls.getInstance().getString("uid",""),
                             SharedPreferencesUrls.getInstance().getString("access_token",""));
                 }
                 break;
@@ -578,6 +636,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 break;
         }
     }
+
 
     public void endBtn(){
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
@@ -675,9 +734,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             }
                         }, 10 * 1000);
 
-                        if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                            connect();
-                        }
+//                        if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//
+//                        }
+
+                        connect();
 
                     }
                 }
@@ -859,6 +920,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         SharedPreferencesUrls.getInstance().putString("type","");
+                        SharedPreferencesUrls.getInstance().putString("m_nowMac","");
                         SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
                         SharedPreferencesUrls.getInstance().putString("biking_latitude","");
                         SharedPreferencesUrls.getInstance().putString("biking_longitude","");
@@ -898,7 +960,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         });
     }
 
-    private void getCurrentorder(String uid, String access_token){
+    private void getCurrentorderBiking(String uid, String access_token){
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
@@ -1023,7 +1085,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
     }
-    boolean isFrist1 = true;
+
 
 
 

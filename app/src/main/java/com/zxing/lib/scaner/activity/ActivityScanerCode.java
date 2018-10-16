@@ -213,14 +213,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         super.onResume();
         ToastUtil.showMessage(this, "scaner===="+internalReceiver);
 
-        try {
-            if (internalReceiver != null) {
-                unregisterReceiver(internalReceiver);
-                internalReceiver = null;
-            }
-        } catch (Exception e) {
-            ToastUtil.showMessage(this, "eee===="+e);
-        }
+//        try {
+//            if (internalReceiver != null) {
+//                unregisterReceiver(internalReceiver);
+//                internalReceiver = null;
+//            }
+//        } catch (Exception e) {
+//            ToastUtil.showMessage(this, "eee===="+e);
+//        }
 
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
@@ -561,6 +561,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                         if (result.getFlag().equals("Success")) {
                             BaseApplication.getInstance().getIBLE().openLock();
+
+                            SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+
                         } else {
                             ToastUtil.showMessageApp(context, result.getMsg());
                             if (loadingDialog != null && loadingDialog.isShowing()){
@@ -679,7 +682,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             String action = intent.getAction();
             String data = intent.getStringExtra("data");
             switch (action) {
-                case com.sunshine.blelibrary.config.Config.TOKEN_ACTION:
+                case Config.TOKEN_ACTION:
 
                     if(isOpen){
                         break;
@@ -729,14 +732,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     }).setHint(false);
                     customBuilder.create().show();
                     break;
-                case com.sunshine.blelibrary.config.Config.BATTERY_ACTION:
+                case Config.BATTERY_ACTION:
                     if (!TextUtils.isEmpty(data)) {
                         quantity = String.valueOf(Integer.parseInt(data, 16));
                     }else {
                         quantity = "";
                     }
                     break;
-                case com.sunshine.blelibrary.config.Config.OPEN_ACTION:
+                case Config.OPEN_ACTION:
                     if (loadingDialog != null && loadingDialog.isShowing()){
                         loadingDialog.dismiss();
                     }
@@ -749,19 +752,19 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         scrollToFinishActivity();
                     }
                     break;
-                case com.sunshine.blelibrary.config.Config.CLOSE_ACTION:
+                case Config.CLOSE_ACTION:
                     if (TextUtils.isEmpty(data)) {
                     } else {
                     }
                     break;
-                case com.sunshine.blelibrary.config.Config.LOCK_STATUS_ACTION:
+                case Config.LOCK_STATUS_ACTION:
                     if (TextUtils.isEmpty(data)) {
 
                     } else {
 
                     }
                     break;
-                case com.sunshine.blelibrary.config.Config.LOCK_RESULT:
+                case Config.LOCK_RESULT:
                     if (TextUtils.isEmpty(data)) {
                     } else {
 

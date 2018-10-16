@@ -25,11 +25,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.amap.api.maps.model.Polygon;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 
 import org.apache.http.Header;
+
+import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
@@ -75,6 +78,12 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
     private TextView hintText1;
     private TextView hintText2;
     public static CurRoadStartActivity instance;
+
+    private String oid = "";
+    private String osn = "";
+    private String type = "";
+//    private double referLatitude = 0.0;
+//    private double referLongitude = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,7 +211,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
-            getCurrentorder(uid,access_token);
+            getCurrentorderStart(uid,access_token);
         }
         backImg.setOnClickListener(this);
         linkServiceBtn.setOnClickListener(this);
@@ -331,7 +340,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                     ToastUtil.showMessageApp(context,"start====锁已关闭");
 
                     //锁已关闭
-                    submit(context, uid, access_token);
+                    submit(uid, access_token);
 
                 } else {
                     //锁已开启
@@ -348,10 +357,204 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                 ToastUtil.showMessageApp(context,"start===恭喜您，您已成功上锁");
 
 
-                endBtn(context);
+                endBtn();
 
 
                 break;
+        }
+    }
+
+    protected void submit(String uid, String access_token){
+
+        RequestParams params = new RequestParams();
+        params.put("uid", uid);
+        params.put("access_token", access_token);
+        params.put("oid", oid);
+        params.put("latitude", referLatitude);
+        params.put("longitude", referLongitude);
+        if (macList.size() > 0){
+            params.put("xinbiao",macList.get(0));
+        }
+        HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在提交");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.e("Test","结束用车:"+responseString);
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+
+                        SharedPreferencesUrls.getInstance().putString("type","");
+                        SharedPreferencesUrls.getInstance().putString("m_nowMac","");
+                        SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+                        SharedPreferencesUrls.getInstance().putString("biking_latitude","");
+                        SharedPreferencesUrls.getInstance().putString("biking_longitude","");
+
+                        if ("1".equals(result.getData())){
+                            ToastUtil.showMessageApp(context, result.getMsg());
+                            if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
+
+                                ToastUtil.showMessage(context,"context==="+context);
+
+                                if(context instanceof CurRoadStartActivity){
+                                    CurRoadStartActivity.isEnd = true;
+                                    CurRoadStartActivity.instance.finish();
+                                }
+
+                                UIHelper.goToAct(context, FeedbackActivity.class);
+//								UIHelper.goToAct(context, Main2Activity.class);
+//                                scrollToFinishActivity();
+                            }else {
+                                Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
+                                intent.putExtra("oid",oid);
+                                startActivity(intent);
+                            }
+                        }else {
+                            ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
+                            UIHelper.goToAct(context,CurRoadBikedActivity.class);
+                        }
+//                        scrollToFinishActivity();
+
+                    }else {
+                        ToastUtil.showMessageApp(context, "base===="+result.getMsg());
+                    }
+                }catch (Exception e){
+
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    public void endBtn(){
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            ToastUtil.showMessageApp(context,"请先登录账号");
+            UIHelper.goToAct(context,LoginActivity.class);
+        }else {
+            ToastUtil.showMessage(context,uid+"==="+access_token);
+            ToastUtil.showMessage(context,macList+"==="+isContainsList);
+            ToastUtil.showMessage(context,macList.size()+"==="+isContainsList.contains(true));
+
+            if (isContainsList.contains(true)){
+                if ("1".equals(type)){
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("温馨提示").setMessage("还车必须到校内关锁并拨乱数字密码，距车一米内在APP点击结束!")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            submit(context, uid,access_token);
+                        }
+                    });
+                    customBuilder.create().show();
+                }else {
+//                    flag = 2;
+                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                        finish();
+//                        scrollToFinishActivity();
+                    }
+                    //蓝牙锁
+                    if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                        BaseApplication.getInstance().getIBLE().enableBluetooth();
+                        return;
+                    }
+                    if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+
+                        if (loadingDialog != null && !loadingDialog.isShowing()){
+                            loadingDialog.setTitle("请稍等");
+                            loadingDialog.show();
+                        }
+
+                        BaseApplication.getInstance().getIBLE().getLockStatus();
+                    }else {
+
+                        if (lockLoading != null && !lockLoading.isShowing()){
+                            lockLoading.setTitle("正在连接");
+                            lockLoading.show();
+                        }
+
+                        m_myHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
+
+                                if (lockLoading != null && lockLoading.isShowing()){
+                                    lockLoading.dismiss();
+                                }
+
+                                if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                    customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                    customBuilder.create().show();
+                                }
+
+                            }
+                        }, 10 * 1000);
+
+                        if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                            connect();
+                        }
+
+                    }
+                }
+            }else {
+                if (macList.size() > 0 && !"1".equals(type)){
+                    if (!TextUtils.isEmpty(m_nowMac)) {
+                        //蓝牙锁
+                        if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                            BaseApplication.getInstance().getIBLE().enableBluetooth();
+                            return;
+                        }
+                        if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        }else {
+                            if (lockLoading != null && !lockLoading.isShowing()){
+                                lockLoading.setTitle("正在连接");
+                                lockLoading.show();
+                            }
+                            connect();
+                        }
+                    }
+                }else {
+//					ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
+
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                    customBuilder.setTitle("温馨提示").setMessage("请停放至校内公共停车区域，或重启手机定位服务")
+                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    customBuilder.create().show();
+
+                }
+            }
         }
     }
 
@@ -452,7 +655,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         };
     };
 
-    private void getCurrentorder(String uid, String access_token){
+    private void getCurrentorderStart(String uid, String access_token){
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
@@ -478,6 +681,16 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
+
+                        oid = bean.getOid();
+                        osn = bean.getOsn();
+                        type = bean.getType();
+
+                        SharedPreferencesUrls.getInstance().putString("oid", oid);
+                        SharedPreferencesUrls.getInstance().putString("osn", osn);
+                        SharedPreferencesUrls.getInstance().putString("type", type);
+
+
                         bikeCode.setText(bean.getCodenum());
                         if ("1".equals(bean.getType())){
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
@@ -522,6 +735,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
             }
         });
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

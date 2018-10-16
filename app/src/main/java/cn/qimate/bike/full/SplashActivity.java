@@ -2,6 +2,8 @@ package cn.qimate.bike.full;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -42,6 +45,7 @@ import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.base.BaseActivity;
+import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.Md5Helper;
@@ -51,6 +55,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.util.ToastUtil;
 
 @SuppressLint("NewApi")
 public class SplashActivity extends BaseActivity {
@@ -81,6 +86,36 @@ public class SplashActivity extends BaseActivity {
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
+
+
+
+
+//		ToastUtil.showMessageApp(this, "==="+m_nowMac);
+
+//		if(!"".equals(m_nowMac)){
+//
+//			if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//				ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//				finish();
+//			}
+//			//蓝牙锁
+//			BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//			mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//			if (mBluetoothAdapter == null) {
+//				ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//				finish();
+//				return;
+//			}
+//
+//			if (!mBluetoothAdapter.isEnabled()) {
+//				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//				startActivityForResult(enableBtIntent, 188);
+//			}else{
+//				connect();
+//			}
+//		}
+
 		loadingImage = findViewById(R.id.plash_loading_main);
 		skipLayout = findViewById(R.id.plash_loading_skipLayout);
 		skipTime = findViewById(R.id.plash_loading_skipTime);
@@ -101,6 +136,112 @@ public class SplashActivity extends BaseActivity {
 		}
 		init();
 	}
+
+	@Override
+	protected void onResume() {
+		isForeground = true;
+		super.onResume();
+		JPushInterface.onResume(this);
+
+//		try {
+//			registerReceiver(Config.initFilter());
+//			GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+//		} catch (Exception e) {
+//			ToastUtil.showMessage(this, "eee===="+e);
+//		}
+	}
+
+	@Override
+	protected void onPause() {
+		isForeground = false;
+		super.onPause();
+		JPushInterface.onPause(this);
+
+//		try {
+//			if (internalReceiver != null) {
+//				unregisterReceiver(internalReceiver);
+//				internalReceiver = null;
+//			}
+//		} catch (Exception e) {
+//			ToastUtil.showMessage(this, "eee===="+e);
+//		}
+	}
+
+	@Override
+	protected void handleReceiver(Context context, Intent intent) {
+		// 广播处理
+		if (intent == null) {
+			return;
+		}
+
+		String action = intent.getAction();
+		String data = intent.getStringExtra("data");
+		switch (action) {
+			case Config.TOKEN_ACTION:
+
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						BaseApplication.getInstance().getIBLE().getBattery();
+					}
+				}, 500);
+				if (null != lockLoading && lockLoading.isShowing()) {
+					lockLoading.dismiss();
+				}
+				ToastUtil.showMessageApp(context,"splash===设备连接成功");
+
+				break;
+			case Config.BATTERY_ACTION:
+//				BaseApplication.getInstance().getIBLE().getLockStatus();
+
+
+				break;
+			case Config.OPEN_ACTION:
+				ToastUtil.showMessage(context,"splash===3");
+				break;
+			case Config.CLOSE_ACTION:
+				ToastUtil.showMessage(context,"splash===4");
+				break;
+			case Config.LOCK_STATUS_ACTION:
+
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+				if (lockLoading != null && lockLoading.isShowing()){
+					lockLoading.dismiss();
+				}
+
+				if (TextUtils.isEmpty(data)) {
+
+					ToastUtil.showMessageApp(context,"splash====锁已关闭");
+
+					//锁已关闭
+					submit(context, uid, access_token);
+
+				} else {
+					//锁已开启
+					ToastUtil.showMessageApp(context,"splash====您还未上锁，请给车上锁后还车");
+				}
+				break;
+			case Config.LOCK_RESULT:
+
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+				if (lockLoading != null && lockLoading.isShowing()){
+					lockLoading.dismiss();
+				}
+
+
+				ToastUtil.showMessageApp(context,"splash===恭喜您，您已成功上锁");
+
+				endBtn(context);
+
+				break;
+		}
+	}
+
+
 	private void init() {
 		/**
 		 *
@@ -420,19 +561,7 @@ public class SplashActivity extends BaseActivity {
 		JPushInterface.init(getApplicationContext()); // 初始化 JPush
 	}
 
-	@Override
-	protected void onResume() {
-		isForeground = true;
-		super.onResume();
-		JPushInterface.onResume(this);
-	}
 
-	@Override
-	protected void onPause() {
-		isForeground = false;
-		super.onPause();
-		JPushInterface.onPause(this);
-	}
 
 	@Override
 	protected void onDestroy() {
