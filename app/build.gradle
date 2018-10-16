@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+def static releaseTime() {
+    //return new Date().format("yyyyMMdd_HH:mm", TimeZone.getTimeZone("UTC"))
+    return new Date().format("yyyyMMdd_HHmm")
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
@@ -44,7 +49,7 @@ android {
 
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "7MA.apk"
+                    outputFileName = "7MA_${releaseTime()}.apk"
                 }
             }
         }

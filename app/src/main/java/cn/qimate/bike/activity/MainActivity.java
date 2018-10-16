@@ -233,9 +233,13 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		initView();
 //		openGPSSettings();
 
+		if(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
+			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
+		}
+
 		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
 
-		ToastUtil.showMessageApp(this, "==="+m_nowMac);
+//		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+m_nowMac);
 
 		if(!"".equals(m_nowMac)){
 
@@ -287,7 +291,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			return;
 		}
 
-		ToastUtil.showMessage(this, "main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",false));
+		ToastUtil.showMessage(this, "main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 
 		closeBroadcast();
 		try {
@@ -468,9 +472,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				try {
 					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 					if (result.getFlag().equals("Success")) {
-//						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",false));
+//						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 
-						if("2".equals(result.data) && !SharedPreferencesUrls.getInstance().getBoolean("isStop",false)){
+						if("2".equals(result.data) && !SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
 							customDialog.show();
 						}else{
 							customDialog.dismiss();

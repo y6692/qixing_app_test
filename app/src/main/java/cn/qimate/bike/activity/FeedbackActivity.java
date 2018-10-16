@@ -1469,7 +1469,7 @@ public class FeedbackActivity
     }
 
     private void closeBle(){
-        if(SharedPreferencesUrls.getInstance().getBoolean("isStop",false)){  //骑行结束才能关蓝牙
+        if(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){  //骑行结束才能关蓝牙
             new Thread(new Runnable() {
                 @Override
                 public void run() {

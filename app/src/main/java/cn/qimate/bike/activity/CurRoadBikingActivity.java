@@ -375,9 +375,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-//						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",false));
+//						ToastUtil.showMessageApp(context,"数据更新成功==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 
-                        if("2".equals(result.data) && !SharedPreferencesUrls.getInstance().getBoolean("isStop",false)){
+                        if("2".equals(result.data) && !SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
                             customDialog.show();
                         }else{
                             customDialog.dismiss();

@@ -90,7 +90,7 @@ public class SplashActivity extends BaseActivity {
 
 
 
-//		ToastUtil.showMessageApp(this, "==="+m_nowMac);
+		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
 
 //		if(!"".equals(m_nowMac)){
 //
