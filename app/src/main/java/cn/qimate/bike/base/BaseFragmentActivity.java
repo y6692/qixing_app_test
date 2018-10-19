@@ -127,11 +127,18 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 	public static LoadingDialog loadingDialog;
 	public static LoadingDialog lockLoading;
 
+	protected int tz = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
+
 
 //		registerReceiver(Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -336,7 +343,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 			}
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, String responseString) {
-				Log.e("Test","结束用车:"+responseString);
+				Log.e("base===","结束用车:"+responseString);
 				try {
 					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
 					if (result.getFlag().equals("Success")) {
@@ -358,17 +365,32 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 									CurRoadStartActivity.instance.finish();
 								}
 
+								tz = 1;
 								UIHelper.goToAct(context, FeedbackActivity.class);
 //								UIHelper.goToAct(context, Main2Activity.class);
 //                              scrollToFinishActivity();
+
+								Log.e("base===","base===Feedback");
 							}else {
+								tz = 2;
 								Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
 								intent.putExtra("oid",oid);
 								startActivity(intent);
+
+								Log.e("base===","base===HistoryRoadDetail==="+oid);
 							}
 						}else {
 							ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
-							UIHelper.goToAct(context,CurRoadBikedActivity.class);
+
+							tz = 3;
+							UIHelper.goToAct(context, CurRoadBikedActivity.class);
+
+//							Intent intent = new Intent(getApplicationContext(),  CurRoadBikedActivity.class);
+//							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//							startActivity(intent);
+
+
+							Log.e("base===","base===CurRoadBiked");
 						}
 //                        scrollToFinishActivity();
 
@@ -461,9 +483,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 							}
 						}, 10 * 1000);
 
-						if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-							connect();
-						}
+						connect();
 
 					}
 				}
@@ -489,7 +509,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 //					ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
 
 					CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-					customBuilder.setTitle("温馨提示").setMessage("请停放至校内公共停车区域，或重启手机定位服务")
+					customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
 							.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.cancel();

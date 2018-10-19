@@ -132,6 +132,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         super.onResume();
 
         ToastUtil.showMessage(this, "start===="+internalReceiver);
+        Log.e("start===", "start====onResume");
 
         try {
             if (internalReceiver != null) {
@@ -152,12 +153,15 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         super.onPause();
 
         ToastUtil.showMessage(this, "start====onPause");
+        Log.e("start===", "start====onPause");
     }
 
     @Override
     protected void onDestroy() {
         isEnd = true;
         super.onDestroy();
+
+        Log.e("start===", "start====onDestroy");
 
         try {
             if (internalReceiver != null) {
@@ -298,10 +302,6 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 //            }
 //        });
 //    }
-
-    /**
-     * 广播
-     * */
 
     @Override
     protected void handleReceiver(Context context, Intent intent) {
@@ -517,9 +517,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                             }
                         }, 10 * 1000);
 
-                        if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                            connect();
-                        }
+                        connect();
 
                     }
                 }
@@ -545,7 +543,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 //					ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
 
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("请停放至校内公共停车区域，或重启手机定位服务")
+                    customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
                             .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -557,13 +555,6 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
             }
         }
     }
-
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
-    };
 
 
     @Override
@@ -627,13 +618,6 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                 break;
         }
     }
-
-//    public static void finish2(Context context) {
-//        isEnd = true;
-//        UIHelper.goToAct(context, CurRoadBikingActivity.class);
-//        scrollToFinishActivity();
-//        finish();
-//    }
 
 
     Handler handler = new Handler() {

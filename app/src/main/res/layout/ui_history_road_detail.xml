@@ -194,7 +194,7 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="@dimen/sp12"
                                 android:textColor="@color/tx_black"
-                                android:text="不限使用次数和时长，封顶5元/天"
+                                android:text="还车须至校内地图红色区域，封顶5元/天"
                                 android:layout_marginTop="@dimen/dp5"/>
                         </LinearLayout>
                     </LinearLayout>

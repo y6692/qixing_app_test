@@ -58,7 +58,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="不限使用次数和时长，封顶5元/天"
+                android:text="还车须至校内地图红色区域，封顶5元/天"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp10"
                 android:maxLines="1"

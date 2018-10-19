@@ -7,6 +7,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -26,6 +27,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -200,12 +202,26 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	private CustomDialog customDialog2;
 	private boolean isConnect = false;
 	private int flag = 0;
+	private int flag2 = 0;
+	boolean isFrist1 = true;
 
 
 	@Override
 	@TargetApi(23)
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+//				| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+//
+//		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+//				| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+//				| WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
+//
+//		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+		WindowManager.LayoutParams winParams = getWindow().getAttributes();
+		winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
 		setContentView(R.layout.ui_main);
 		context = this;
 
@@ -214,13 +230,18 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		pOptions = new ArrayList<>();
 
 
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		filter.addAction(Intent.ACTION_USER_PRESENT);
+		registerReceiver(mScreenReceiver, filter);
 
 
 		mapView = (MapView) findViewById(R.id.mainUI_map);
 		mapView.onCreate(savedInstanceState);// 此方法必须重写
 		bikeMarkerList = new ArrayList<>();
 		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
-		IntentFilter filter = new IntentFilter("data.broadcast.action");
+		filter = new IntentFilter("data.broadcast.action");
 		registerReceiver(broadcastReceiver, filter);
 		imageWith = (int)(getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 		new Thread(new Runnable() {
@@ -261,14 +282,15 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				startActivityForResult(enableBtIntent, 188);
 			}else{
-				connect();
-			}
 
-			if (macList.size() != 0){
-				macList.clear();
+				connect();
+
+				if (macList.size() != 0){
+					macList.clear();
+				}
+				UUID[] uuids = {Config.xinbiaoUUID};
+				mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 			}
-			UUID[] uuids = {Config.xinbiaoUUID};
-			mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 		}
 
 		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName","")+"==="+SharedPreferencesUrls.getInstance().getString("uid","")+"<==>"+SharedPreferencesUrls.getInstance().getString("access_token",""));
@@ -277,13 +299,139 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等");
 		customDialog = customBuilder.create();
 
-
 	}
+
+	BroadcastReceiver mScreenReceiver =  new BroadcastReceiver() {
+		private String action = null;
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			action = intent.getAction();
+			if (Intent.ACTION_SCREEN_ON.equals(action)) { // 开屏
+
+				ToastUtil.showMessage(context, "===on");
+				Log.e("main===", "===on");
+
+			} else if (Intent.ACTION_SCREEN_OFF.equals(action)) { // 锁屏
+
+				ToastUtil.showMessage(context, "===off");
+				Log.e("main===", "===off");
+
+				try {
+					registerReceiver(Config.initFilter());
+					GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+				} catch (Exception e) {
+					ToastUtil.showMessage(context, "eee===="+e);
+				}
+
+			} else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
+
+				ToastUtil.showMessage(context, "===present");
+				Log.e("main===", tz+">>>present==="+m_nowMac);
+
+				if(tz==1){
+					UIHelper.goToAct(MainActivity.this, FeedbackActivity.class);
+					Log.e("main===","main===Feedback");
+				}else if(tz==2){
+					intent = new Intent(MainActivity.this, HistoryRoadDetailActivity.class);
+					intent.putExtra("oid",oid);
+					startActivity(intent);
+					Log.e("main===","main===HistoryRoadDetail");
+				}else if(tz==3){
+					UIHelper.goToAct(MainActivity.this, CurRoadBikedActivity.class);
+					Log.e("main===","main===CurRoadBiked");
+				}
+
+
+				if(!"".equals(m_nowMac)){
+
+					if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+						ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+						finish();
+					}
+					//蓝牙锁
+					BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+					mBluetoothAdapter = bluetoothManager.getAdapter();
+
+					Log.e("main===", "present===1");
+
+					if (mBluetoothAdapter == null) {
+						ToastUtil.showMessageApp(context, "获取蓝牙失败");
+						finish();
+						return;
+					}
+
+					Log.e("main===", "present===2");
+
+					if (!mBluetoothAdapter.isEnabled()) {
+						Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+						startActivityForResult(enableBtIntent, 188);
+					}else{
+
+						Log.e("main===", "present===3");
+
+						connect();
+
+						if (macList.size() != 0){
+							macList.clear();
+						}
+						UUID[] uuids = {Config.xinbiaoUUID};
+						mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+					}
+
+				}
+
+			}
+
+		}
+
+	};
+
+	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid",""), SharedPreferencesUrls.getInstance().getString("access_token",""));
+
+			getFeedbackStatus();
+
+//			PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+//			boolean screenOn = pm.isScreenOn();
+//			if (!screenOn) {
+//				// 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+//				PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
+//				wl.acquire();
+//				wl.release(); // 释放
+//			}
+//
+//			// 屏幕解锁
+//			KeyguardManager keyguardManager = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
+//			KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
+//			// 屏幕锁定
+//			keyguardLock.disableKeyguard(); // 解锁
+
+//			t(context);
+
+//			Intent i = new Intent(context, FeedbackActivity.class);
+//			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			context.startActivity(i);
+//
+//			Log.e("main===", "main====Feedback2");
+
+		}
+	};
 
 	@Override
 	protected void onResume() {
 		isForeground = true;
+		if (isFrist1){
+			isFrist1 = false;
+		}else {
+		}
 		super.onResume();
+		JPushInterface.onResume(this);
+		mapView.onResume();
+
 		context = this;
 
 		if(flag==1){
@@ -291,10 +439,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			return;
 		}
 
-		ToastUtil.showMessage(this, "main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+		ToastUtil.showMessageApp(this, "main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+		Log.e("main===", "main====onResume");
 
 		closeBroadcast();
 		try {
+//            registerReceiver(broadcastReceiver1, Config.initFilter());
 			registerReceiver(Config.initFilter());
 			GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 		} catch (Exception e) {
@@ -304,8 +454,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		getFeedbackStatus();
 
 
-		JPushInterface.onResume(this);
-		mapView.onResume();
+
 		String uid = SharedPreferencesUrls.getInstance().getString("uid","");
 		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 		String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays","");
@@ -317,7 +466,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			refreshLayout.setVisibility(View.GONE);
 			rechargeBtn.setVisibility(View.GONE);
 		}else {
-
 //			getCurrentorder2(uid,access_token);
 
 			refreshLayout.setVisibility(View.VISIBLE);
@@ -357,10 +505,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				cartBtn.setVisibility(View.GONE);
 			}else {
 				cartBtn.setVisibility(View.VISIBLE);
-				cartBtn.setText("免费"+specialdays+"天,每次前半个小时免费,点击续费");
+				cartBtn.setText("免费"+specialdays+"天,每次前一个小时免费,点击续费");
 			}
 		}
-
 	}
 
 
@@ -375,6 +522,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //		mFirstFix = false;
 
 		ToastUtil.showMessage(this, "main====onPause");
+		Log.e("main===", "main====onPause");
 
 		if (loadingDialog != null && loadingDialog.isShowing()){
 			loadingDialog.dismiss();
@@ -387,15 +535,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	}
 
-	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid",""), SharedPreferencesUrls.getInstance().getString("access_token",""));
-
-			getFeedbackStatus();
-		}
-	};
 
 	/**
 	 * 方法必须重写
@@ -506,6 +646,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 				case 188:
 					connect();
+
+					if (macList.size() != 0){
+						macList.clear();
+					}
+					UUID[] uuids = {Config.xinbiaoUUID};
+					mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 
 					break;
 
@@ -782,6 +928,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		closeBtn.setOnClickListener(myOnClickLister);
 
 	}
+
 	private OnClickListener myOnClickLister = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -1242,11 +1389,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 
-//	@Override
-//	protected void getCurrentorder(String uid, String access_token) {
-//		super.getCurrentorder(uid, access_token);
-//	}
-
 	protected void getCurrentorder2(String uid, String access_token){
 		RequestParams params = new RequestParams();
 		params.put("uid",uid);
@@ -1647,7 +1789,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			mlocationClient.setLocationListener(this);
 			//设置为高精度定位模式
 			mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-			mLocationOption.setInterval(60 * 1000);
+			mLocationOption.setInterval(2 * 1000);
 			//设置定位参数
 			mlocationClient.setLocationOption(mLocationOption);
 			// 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
@@ -1665,6 +1807,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //		super.onLocationChanged(amapLocation);
 
 		if (mListener != null && amapLocation != null) {
+
+			if((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
+
+			Log.e("main===",amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
 
 			if (amapLocation != null && amapLocation.getErrorCode() == 0) {
 
@@ -1712,6 +1858,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					}
 
 					aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+
+//					if(isConnect){
+//						BaseApplication.getInstance().getIBLE().getLockStatus();
+//					}
 
 //					addChooseMarker();
 //					addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
@@ -2071,6 +2221,136 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		}
 	}
 
+
+    BroadcastReceiver broadcastReceiver1 = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null) {
+                return;
+            }
+
+            String action = intent.getAction();
+            String data = intent.getStringExtra("data");
+            switch (action) {
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+
+                    ToastUtil.showMessageApp(context,"main===蓝牙断开");
+                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+                    switch(blueState){
+
+                        case BluetoothAdapter.STATE_TURNING_ON:
+                            break;
+
+                        case BluetoothAdapter.STATE_ON:
+                            break;
+
+                        case BluetoothAdapter.STATE_TURNING_OFF:
+                            ToastUtil.showMessageApp(context,"main===TURNING_OFF");
+                            break;
+
+                        case BluetoothAdapter.STATE_OFF:
+                            ToastUtil.showMessageApp(context,"main===OFF");
+                            break;
+                    }
+
+                    break;
+                case Config.TOKEN_ACTION:
+                    isConnect = true;
+
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            BaseApplication.getInstance().getIBLE().getBattery();
+                        }
+                    }, 500);
+                    if (null != lockLoading && lockLoading.isShowing()) {
+                        lockLoading.dismiss();
+                    }
+//					isStop = true;
+                    ToastUtil.showMessageApp(context,"main===设备连接成功");
+
+
+                    break;
+                case Config.BATTERY_ACTION:
+//				ToastUtil.showMessage(context,"####===2");
+
+//				BaseApplication.getInstance().getIBLE().getConnectStatus();
+
+//				if(BaseApplication.getInstance().getIBLE().getConnectStatus()){
+//					BaseApplication.getInstance().getIBLE().getLockStatus();
+//				}
+
+                    if(isConnect){
+                        BaseApplication.getInstance().getIBLE().getLockStatus();
+                    }
+
+
+                    break;
+                case Config.OPEN_ACTION:
+                    ToastUtil.showMessage(context,"####===3");
+                    break;
+                case Config.CLOSE_ACTION:
+                    ToastUtil.showMessage(context,"####===4");
+                    break;
+                case Config.LOCK_STATUS_ACTION:
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
+                    if (TextUtils.isEmpty(data)) {
+
+                        ToastUtil.showMessageApp(context,"main====锁已关闭");
+                        Log.e("main===","main===锁已关闭");
+
+                        //锁已关闭
+                        submit(context, uid, access_token);
+
+                    } else {
+                        //锁已开启
+                        ToastUtil.showMessageApp(context,"main====您还未上锁，请给车上锁后还车");
+                    }
+                    break;
+                case Config.LOCK_RESULT:
+
+                    PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+                    boolean screenOn = pm.isScreenOn();
+                    if (!screenOn) {
+                        // 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+                        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
+                        wl.acquire();
+                        wl.release(); // 释放
+                    }
+
+                    // 屏幕解锁
+                    KeyguardManager keyguardManager = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
+                    KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
+                    // 屏幕锁定
+                    keyguardLock.disableKeyguard(); // 解锁
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
+                    ToastUtil.showMessageApp(context,"main===恭喜您，您已成功上锁");
+                    Log.e("main===","main===恭喜您，您已成功上锁");
+
+//                    t(context);
+
+                    endBtn(context);
+
+                    break;
+            }
+        }
+    };
+
 	@Override
 	protected void handleReceiver(Context context, Intent intent) {
 		// 广播处理
@@ -2081,6 +2361,28 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		String action = intent.getAction();
 		String data = intent.getStringExtra("data");
 		switch (action) {
+			case BluetoothAdapter.ACTION_STATE_CHANGED:
+
+				ToastUtil.showMessageApp(context,"main===蓝牙断开");
+				int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+				switch(blueState){
+
+					case BluetoothAdapter.STATE_TURNING_ON:
+						break;
+
+					case BluetoothAdapter.STATE_ON:
+						break;
+
+					case BluetoothAdapter.STATE_TURNING_OFF:
+						ToastUtil.showMessageApp(context,"main===TURNING_OFF");
+						break;
+
+					case BluetoothAdapter.STATE_OFF:
+						ToastUtil.showMessageApp(context,"main===OFF");
+						break;
+				}
+
+				break;
 			case Config.TOKEN_ACTION:
 				isConnect = true;
 
@@ -2096,8 +2398,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //					isStop = true;
 				ToastUtil.showMessageApp(context,"main===设备连接成功");
 
-//				ToastUtil.showMessage(context,">>>"+BaseApplication.getInstance().getIBLE().getConnectStatus());
-//				endBtn(context);
 
 				break;
 			case Config.BATTERY_ACTION:
@@ -2133,6 +2433,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				if (TextUtils.isEmpty(data)) {
 
 					ToastUtil.showMessageApp(context,"main====锁已关闭");
+					Log.e("main===","main===锁已关闭");
 
 					//锁已关闭
 					submit(context, uid, access_token);
@@ -2144,6 +2445,26 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				break;
 			case Config.LOCK_RESULT:
 
+				PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+				boolean screenOn = pm.isScreenOn();
+				if (!screenOn) {
+					// 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+					PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
+					wl.acquire();
+//					wl.acquire(10000); // 点亮屏幕
+					wl.release(); // 释放
+				}
+
+				// 屏幕解锁
+				KeyguardManager keyguardManager = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
+				KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
+//				KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("unLock");
+				// 屏幕锁定
+//				keyguardLock.reenableKeyguard();
+				keyguardLock.disableKeyguard(); // 解锁
+
+
+
 				if (loadingDialog != null && loadingDialog.isShowing()){
 					loadingDialog.dismiss();
 				}
@@ -2153,10 +2474,26 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 
 				ToastUtil.showMessageApp(context,"main===恭喜您，您已成功上锁");
+                Log.e("main===","main===恭喜您，您已成功上锁");
+
+				//t();
+//				flag2 = 1;
 
 				endBtn(context);
 
 				break;
 		}
 	}
+
+
+	private void t(Context context){
+//		UIHelper.goToAct(MainActivity.this, FeedbackActivity.class);
+
+		Log.e("main===","main===Feedback");
+
+		Intent intent = new Intent(context, FeedbackActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
+
 }
