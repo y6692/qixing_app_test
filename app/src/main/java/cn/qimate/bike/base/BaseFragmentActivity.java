@@ -109,7 +109,6 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 	public static List<Polygon> pOptions;
 	private LatLng myLocation = null;
 	private boolean mFirstFix = true;
-//	protected OnLocationChangedListener mListener;
 	protected AMapLocationClient mlocationClient;
 	protected AMapLocationClientOption mLocationOption;
 	protected AMap aMap;
@@ -159,10 +158,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements
         uid = SharedPreferencesUrls.getInstance().getString("uid","");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
-		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
-		type = SharedPreferencesUrls.getInstance().getString("type", "");
+
 
 
         //|| context instanceof CurRoadStartActivity || context instanceof ActivityScanerCode  || context instanceof CurRoadBikingActivity
@@ -207,115 +203,11 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 		AppManager.getAppManager().finishActivity(this);
 	}
 
-	private void getCurrentorder(String uid, String access_token){
-		RequestParams params = new RequestParams();
-		params.put("uid",uid);
-		params.put("access_token",access_token);
-		HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
-			@Override
-			public void onStart() {
-				if (loadingDialog != null && !loadingDialog.isShowing()) {
-					loadingDialog.setTitle("正在加载");
-					loadingDialog.show();
-				}
-			}
-			@Override
-			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-				UIHelper.ToastError(context, throwable.toString());
-			}
 
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, String responseString) {
-				try {
-					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-					if (result.getFlag().equals("Success")) {
-						ToastUtil.showMessageApp(context,"数据更新成功");
-						if ("[]".equals(result.getData()) || 0 == result.getData().length()){
-							ToastUtil.showMessage(context,"mmmmmmmm");
-
-//							ToastUtil.showMessageApp(context,"当前无行程");
-//							BaseApplication.getInstance().getIBLE().refreshCache();
-//							BaseApplication.getInstance().getIBLE().close();
-//							BaseApplication.getInstance().getIBLE().disconnect();
-//
-//							finish();
-//							scrollToFinishActivity();
-						}else {
-							CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
-//							bikeCode = bean.getCodenum();
-//							bikeCodeText.setText(bikeCode);
-//							time.setText(bean.getSt_time());
-							oid = bean.getOid();
-							osn = bean.getOsn();
-//							password = bean.getPassword();
-							type = bean.getType();
-
-
-
-
-
-							if ("1".equals(bean.getType())){
-//								hintText.setText("还车须至校园地图红色覆盖区，关锁并拨乱密码后点击结束！");
-//								lookPsdBtn.setText("查看密码");
-							}else {
-//								hintText.setText("还车须至校园地图红色覆盖区，关锁后距车一米内点击结束！");
-								m_nowMac = bean.getMacinfo();
-
-//								ToastUtil.showMessage(context, "###===="+m_nowMac);
-
-//								connect();
-
-//								lookPsdBtn.setText("再次开锁");
-//								if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//									ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//									finish();
-//								}
-//								//蓝牙锁
-//								BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//
-//								mBluetoothAdapter = bluetoothManager.getAdapter();
-//
-//								if (mBluetoothAdapter == null) {
-//									ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//									finish();
-//									return;
-//								}
-//
-//								if (!mBluetoothAdapter.isEnabled()) {
-//									Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//									startActivityForResult(enableBtIntent, 188);
-//								}else if(context instanceof MainActivity){
-//									connect();
-//								}
-
-
-								if (macList.size() != 0){
-									macList.clear();
-								}
-								UUID[] uuids = {Config.xinbiaoUUID};
-								mBluetoothAdapter.startLeScan(uuids,mLeScanCallback);
-							}
-//							if (isFrist){
-//								isFrist = false;
-//							}
-						}
-					} else {
-						ToastUtil.showMessageApp(context, result.getMsg());
-					}
-				} catch (Exception e) {
-					ToastUtil.showMessageApp(context, "ee>>>>"+e);
-				}
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-			}
-		});
-	}
 
 	protected void submit(final Context context, String uid, String access_token){
+
+		Log.e("base===",oid+"==="+referLatitude+"==="+referLongitude);
 
 		RequestParams params = new RequestParams();
 		params.put("uid", uid);
@@ -350,6 +242,9 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 
 						SharedPreferencesUrls.getInstance().putString("type","");
 						SharedPreferencesUrls.getInstance().putString("m_nowMac","");
+						SharedPreferencesUrls.getInstance().putString("oid","");
+						SharedPreferencesUrls.getInstance().putString("osn","");
+						SharedPreferencesUrls.getInstance().putString("type","");
 						SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
 						SharedPreferencesUrls.getInstance().putString("biking_latitude","");
 						SharedPreferencesUrls.getInstance().putString("biking_longitude","");
@@ -810,65 +705,6 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 
 
 
-	/**
-	 * 学校范围电子栅栏
-	 *
-	 * */
-	private void schoolrangeList(){
-		RequestParams params = new RequestParams();
-		HttpHelper.get(context, schoolrangeList, params, new TextHttpResponseHandler() {
-			@Override
-			public void onStart() {
-				if (loadingDialog != null && !loadingDialog.isShowing()) {
-					loadingDialog.setTitle("正在加载");
-					loadingDialog.show();
-				}
-			}
-			@Override
-			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-				UIHelper.ToastError(context, throwable.toString());
-			}
-
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, String responseString) {
-				try {
-					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-					if (result.getFlag().equals("Success")) {
-						JSONArray jsonArray = new JSONArray(result.getData());
-						if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
-							isContainsList.clear();
-						}
-						for (int i = 0; i < jsonArray.length(); i++) {
-							List<LatLng> list = new ArrayList<>();
-							for (int j = 0; j < jsonArray.getJSONArray(i).length(); j ++){
-								JSONObject jsonObject = jsonArray.getJSONArray(i).getJSONObject(j);
-								LatLng latLng = new LatLng(Double.parseDouble(jsonObject.getString("latitude")),
-										Double.parseDouble(jsonObject.getString("longitude")));
-								list.add(latLng);
-							}
-							Polygon polygon = null;
-							PolygonOptions pOption = new PolygonOptions();
-							pOption.addAll(list);
-							polygon = aMap.addPolygon(pOption.strokeWidth(2)
-									.strokeColor(Color.argb(160, 255, 0, 0))
-									.fillColor(Color.argb(160, 255, 0, 0)));
-							pOptions.add(polygon);
-							isContainsList.add(polygon.contains(myLocation));
-						}
-					}else {
-						ToastUtil.showMessageApp(context,result.getMsg());
-					}
-				}catch (Exception e){
-				}
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-			}
-		});
-	}
 
 	@Override
 	public void onDisconnect(int state) {

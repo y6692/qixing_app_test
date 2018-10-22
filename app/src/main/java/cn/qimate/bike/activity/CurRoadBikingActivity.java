@@ -197,6 +197,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private CustomDialog customDialog;
 
     int k=0;
+    int near = 1;
 
     @Override
     @TargetApi(23)
@@ -921,6 +922,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     if (result.getFlag().equals("Success")) {
                         SharedPreferencesUrls.getInstance().putString("type","");
                         SharedPreferencesUrls.getInstance().putString("m_nowMac","");
+                        SharedPreferencesUrls.getInstance().putString("oid","");
+                        SharedPreferencesUrls.getInstance().putString("osn","");
+                        SharedPreferencesUrls.getInstance().putString("type","");
                         SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
                         SharedPreferencesUrls.getInstance().putString("biking_latitude","");
                         SharedPreferencesUrls.getInstance().putString("biking_longitude","");
@@ -1125,8 +1129,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     public void onLocationChanged(AMapLocation amapLocation) {
 //        super.onLocationChanged(amapLocation);
         if (mListener != null && amapLocation != null) {
-            if (amapLocation != null
-                    && amapLocation.getErrorCode() == 0) {
+
+            if((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
+
+
+            if (amapLocation != null && amapLocation.getErrorCode() == 0) {
                 if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()){
                     String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","");
                     String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude","");
@@ -1162,6 +1169,21 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
                     addChooseMarker();
                     addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
+
+//                    BaseApplication.getInstance().getIBLE().getLockStatus();
+
+                    if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near==1){
+                        endBtn();
+                    }else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near==0){
+                        endBtn();
+                    }
+
+                    if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)){
+                        near = 0;
+                    }else{
+                        near = 1;
+                    }
+
                 }else {
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
                     customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")

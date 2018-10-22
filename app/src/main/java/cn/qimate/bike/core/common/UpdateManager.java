@@ -47,6 +47,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
+import cn.qimate.bike.util.ToastUtil;
 
 /**
  * 应用程序更新工具包
@@ -161,6 +162,9 @@ public class UpdateManager {
 					if (0 == result.getErrcode()) {
 						mUpdate = JSON.parseObject(result.getData(), Update.class);
 						if (mUpdate != null) {
+
+							ToastUtil.showMessageApp(context, curVersionName+"==="+mUpdate.getAppVersion());
+
 							if (!curVersionName.equals(mUpdate.getAppVersion())) {
 								if ("2".equals(mUpdate.isForce())) {
 									showDownloadDialog();

@@ -204,7 +204,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	private int flag = 0;
 	private int flag2 = 0;
 	boolean isFrist1 = true;
+	private int near = 1;
 
+	TextView title;
 
 	@Override
 	@TargetApi(23)
@@ -291,7 +293,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				UUID[] uuids = {Config.xinbiaoUUID};
 				mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 			}
+		}else{
+
 		}
+
+
+//		getCurrentorder(uid, access_token);
+
+
 
 		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName","")+"==="+SharedPreferencesUrls.getInstance().getString("uid","")+"<==>"+SharedPreferencesUrls.getInstance().getString("access_token",""));
 
@@ -299,6 +308,114 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等");
 		customDialog = customBuilder.create();
 
+	}
+
+	private void getCurrentorder(String uid, String access_token){
+		RequestParams params = new RequestParams();
+		params.put("uid",uid);
+		params.put("access_token",access_token);
+		HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
+			@Override
+			public void onStart() {
+				if (loadingDialog != null && !loadingDialog.isShowing()) {
+					loadingDialog.setTitle("正在加载");
+					loadingDialog.show();
+				}
+			}
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+				UIHelper.ToastError(context, throwable.toString());
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String responseString) {
+				try {
+					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+					if (result.getFlag().equals("Success")) {
+						ToastUtil.showMessageApp(context,"数据更新成功");
+						if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+							ToastUtil.showMessage(context,"mmmmmmmm");
+
+//							ToastUtil.showMessageApp(context,"当前无行程");
+//							BaseApplication.getInstance().getIBLE().refreshCache();
+//							BaseApplication.getInstance().getIBLE().close();
+//							BaseApplication.getInstance().getIBLE().disconnect();
+//
+//							finish();
+//							scrollToFinishActivity();
+						}else {
+							CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
+//							bikeCode = bean.getCodenum();
+//							bikeCodeText.setText(bikeCode);
+//							time.setText(bean.getSt_time());
+							oid = bean.getOid();
+							osn = bean.getOsn();
+//							password = bean.getPassword();
+							type = bean.getType();
+
+
+
+
+
+							if ("1".equals(bean.getType())){
+//								hintText.setText("还车须至校园地图红色覆盖区，关锁并拨乱密码后点击结束！");
+//								lookPsdBtn.setText("查看密码");
+							}else {
+//								hintText.setText("还车须至校园地图红色覆盖区，关锁后距车一米内点击结束！");
+								m_nowMac = bean.getMacinfo();
+
+//								ToastUtil.showMessage(context, "###===="+m_nowMac);
+
+//								connect();
+
+//								lookPsdBtn.setText("再次开锁");
+//								if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//									ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//									finish();
+//								}
+//								//蓝牙锁
+//								BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//
+//								mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//								if (mBluetoothAdapter == null) {
+//									ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//									finish();
+//									return;
+//								}
+//
+//								if (!mBluetoothAdapter.isEnabled()) {
+//									Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//									startActivityForResult(enableBtIntent, 188);
+//								}else if(context instanceof MainActivity){
+//									connect();
+//								}
+
+
+								if (macList.size() != 0){
+									macList.clear();
+								}
+								UUID[] uuids = {Config.xinbiaoUUID};
+								mBluetoothAdapter.startLeScan(uuids,mLeScanCallback);
+							}
+//							if (isFrist){
+//								isFrist = false;
+//							}
+						}
+					} else {
+						ToastUtil.showMessageApp(context, result.getMsg());
+					}
+				} catch (Exception e) {
+					ToastUtil.showMessageApp(context, "ee>>>>"+e);
+				}
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+			}
+		});
 	}
 
 	BroadcastReceiver mScreenReceiver =  new BroadcastReceiver() {
@@ -424,10 +541,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	@Override
 	protected void onResume() {
 		isForeground = true;
-		if (isFrist1){
-			isFrist1 = false;
-		}else {
-		}
+//		if (isFrist1){
+//			isFrist1 = false;
+//		}else {
+//		}
 		super.onResume();
 		JPushInterface.onResume(this);
 		mapView.onResume();
@@ -439,7 +556,11 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			return;
 		}
 
-		ToastUtil.showMessageApp(this, "main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
+		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
+		type = SharedPreferencesUrls.getInstance().getString("type", "");
+
+		ToastUtil.showMessage(this, oid+">>>"+osn+">>>main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
 		Log.e("main===", "main====onResume");
 
 		closeBroadcast();
@@ -850,6 +971,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 		advImageView.setLayoutParams(params4);
 
+		title = (TextView) findViewById(R.id.mainUI_title);
 		leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
 		rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
         myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
@@ -1806,13 +1928,19 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	public void onLocationChanged(AMapLocation amapLocation) {
 //		super.onLocationChanged(amapLocation);
 
+//		title.setText(mListener+"==="+amapLocation);
+
 		if (mListener != null && amapLocation != null) {
 
 			if((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-			Log.e("main===",amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
+//			title.setText(amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
+			Log.e("main===1",amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
 
 			if (amapLocation != null && amapLocation.getErrorCode() == 0) {
+
+//				title.setText(amapLocation.getErrorCode()+">>>"+amapLocation.getLongitude());
+				Log.e("main===2",amapLocation.getErrorCode()+">>>"+amapLocation.getLongitude());
 
 				if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()){
 					String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","");
@@ -1842,6 +1970,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						initNearby(amapLocation.getLatitude(),amapLocation.getLongitude());
 
 //						aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+						aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
 					} else {
 //						centerMarker.remove();
 //						mCircle.remove();
@@ -1857,11 +1986,26 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						}
 					}
 
-					aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+//					aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
 
 //					if(isConnect){
 //						BaseApplication.getInstance().getIBLE().getLockStatus();
 //					}
+
+					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near==1){
+						endBtn(context);
+					}else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near==0){
+						endBtn(context);
+					}
+
+					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)){
+						near = 0;
+					}else{
+						near = 1;
+					}
+
+//					BaseApplication.getInstance().getIBLE().getConnectStatus();
+//					connect();
 
 //					addChooseMarker();
 //					addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
@@ -2374,11 +2518,11 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						break;
 
 					case BluetoothAdapter.STATE_TURNING_OFF:
-						ToastUtil.showMessageApp(context,"main===TURNING_OFF");
+						ToastUtil.showMessage(context,"main===TURNING_OFF");
 						break;
 
 					case BluetoothAdapter.STATE_OFF:
-						ToastUtil.showMessageApp(context,"main===OFF");
+						ToastUtil.showMessage(context,"main===OFF");
 						break;
 				}
 
