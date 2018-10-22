@@ -443,7 +443,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 			} else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
 
-				ToastUtil.showMessage(context, "===present");
+				ToastUtil.showMessageApp(context, "===present");
 				Log.e("main===", tz+">>>present==="+m_nowMac);
 
 				if(tz==1){
@@ -546,8 +546,25 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //		}else {
 //		}
 		super.onResume();
+
+
+
+
+		if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)){
+			near = 0;
+		}else{
+			near = 1;
+		}
+
+		ToastUtil.showMessage(this, isContainsList.contains(true)+">>>"+near+">>>main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+		Log.e("main===", "main====onResume");
+
+
 		JPushInterface.onResume(this);
 		mapView.onResume();
+		if (aMap != null) {
+			setUpMap();
+		}
 
 		context = this;
 
@@ -560,8 +577,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
 		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
-		ToastUtil.showMessage(this, oid+">>>"+osn+">>>main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
-		Log.e("main===", "main====onResume");
+
 
 		closeBroadcast();
 		try {
@@ -639,6 +655,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 		JPushInterface.onPause(this);
 		mapView.onPause();
+		deactivate();
 //		deactivate();
 //		mFirstFix = false;
 
@@ -1928,7 +1945,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	public void onLocationChanged(AMapLocation amapLocation) {
 //		super.onLocationChanged(amapLocation);
 
-//		title.setText(mListener+"==="+amapLocation);
+
+//		title.setText(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+isContainsList.contains(true)+"==="+macList.size()+"》》》"+near);
 
 		if (mListener != null && amapLocation != null) {
 
@@ -1992,11 +2010,18 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //						BaseApplication.getInstance().getIBLE().getLockStatus();
 //					}
 
-					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near==1){
-						endBtn(context);
-					}else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near==0){
-						endBtn(context);
+					if(!SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
+						if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near==1){
+							ToastUtil.showMessage(context,"main---》》》里");
+//							endBtn(context);
+							BaseApplication.getInstance().getIBLE().getLockStatus();
+						}else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near==0){
+							ToastUtil.showMessage(context,"main---》》》外");
+//							endBtn(context);
+							BaseApplication.getInstance().getIBLE().getLockStatus();
+						}
 					}
+
 
 					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)){
 						near = 0;
@@ -2366,135 +2391,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 
-    BroadcastReceiver broadcastReceiver1 = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent == null) {
-                return;
-            }
-
-            String action = intent.getAction();
-            String data = intent.getStringExtra("data");
-            switch (action) {
-                case BluetoothAdapter.ACTION_STATE_CHANGED:
-
-                    ToastUtil.showMessageApp(context,"main===蓝牙断开");
-                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
-                    switch(blueState){
-
-                        case BluetoothAdapter.STATE_TURNING_ON:
-                            break;
-
-                        case BluetoothAdapter.STATE_ON:
-                            break;
-
-                        case BluetoothAdapter.STATE_TURNING_OFF:
-                            ToastUtil.showMessageApp(context,"main===TURNING_OFF");
-                            break;
-
-                        case BluetoothAdapter.STATE_OFF:
-                            ToastUtil.showMessageApp(context,"main===OFF");
-                            break;
-                    }
-
-                    break;
-                case Config.TOKEN_ACTION:
-                    isConnect = true;
-
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            BaseApplication.getInstance().getIBLE().getBattery();
-                        }
-                    }, 500);
-                    if (null != lockLoading && lockLoading.isShowing()) {
-                        lockLoading.dismiss();
-                    }
-//					isStop = true;
-                    ToastUtil.showMessageApp(context,"main===设备连接成功");
-
-
-                    break;
-                case Config.BATTERY_ACTION:
-//				ToastUtil.showMessage(context,"####===2");
-
-//				BaseApplication.getInstance().getIBLE().getConnectStatus();
-
-//				if(BaseApplication.getInstance().getIBLE().getConnectStatus()){
-//					BaseApplication.getInstance().getIBLE().getLockStatus();
-//				}
-
-                    if(isConnect){
-                        BaseApplication.getInstance().getIBLE().getLockStatus();
-                    }
-
-
-                    break;
-                case Config.OPEN_ACTION:
-                    ToastUtil.showMessage(context,"####===3");
-                    break;
-                case Config.CLOSE_ACTION:
-                    ToastUtil.showMessage(context,"####===4");
-                    break;
-                case Config.LOCK_STATUS_ACTION:
-
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-
-                    if (TextUtils.isEmpty(data)) {
-
-                        ToastUtil.showMessageApp(context,"main====锁已关闭");
-                        Log.e("main===","main===锁已关闭");
-
-                        //锁已关闭
-                        submit(context, uid, access_token);
-
-                    } else {
-                        //锁已开启
-                        ToastUtil.showMessageApp(context,"main====您还未上锁，请给车上锁后还车");
-                    }
-                    break;
-                case Config.LOCK_RESULT:
-
-                    PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-                    boolean screenOn = pm.isScreenOn();
-                    if (!screenOn) {
-                        // 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
-                        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
-                        wl.acquire();
-                        wl.release(); // 释放
-                    }
-
-                    // 屏幕解锁
-                    KeyguardManager keyguardManager = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
-                    KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
-                    // 屏幕锁定
-                    keyguardLock.disableKeyguard(); // 解锁
-
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-
-                    ToastUtil.showMessageApp(context,"main===恭喜您，您已成功上锁");
-                    Log.e("main===","main===恭喜您，您已成功上锁");
-
-//                    t(context);
-
-                    endBtn(context);
-
-                    break;
-            }
-        }
-    };
-
 	@Override
 	protected void handleReceiver(Context context, Intent intent) {
 		// 广播处理
@@ -2507,7 +2403,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		switch (action) {
 			case BluetoothAdapter.ACTION_STATE_CHANGED:
 
-				ToastUtil.showMessageApp(context,"main===蓝牙断开");
+				ToastUtil.showMessage(context,"main===蓝牙CHANGED");
 				int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
 				switch(blueState){
 

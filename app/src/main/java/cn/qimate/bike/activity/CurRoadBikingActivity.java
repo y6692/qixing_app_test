@@ -765,7 +765,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                    ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
 
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+                    customBuilder.setTitle("温馨提示").setMessage("biking===还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
                             .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
@@ -1172,11 +1172,16 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
 //                    BaseApplication.getInstance().getIBLE().getLockStatus();
 
-                    if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near==1){
-                        endBtn();
-                    }else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near==0){
-                        endBtn();
+                    if(!SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
+                        if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near==1){
+                            ToastUtil.showMessage(context,"biking---》》》里");
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        }else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near==0){
+                            ToastUtil.showMessage(context,"biking---》》》外");
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        }
                     }
+
 
                     if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)){
                         near = 0;
@@ -1754,108 +1759,108 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     /**
      * 广播
      * */
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//      broadcastReceiver2 = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            String data = intent.getStringExtra("data");
-            switch (action) {
-                case Config.TOKEN_ACTION:
-                    m_myHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            BaseApplication.getInstance().getIBLE().getBattery();
-                        }
-                    }, 500);
-                    if (null != lockLoading && lockLoading.isShowing()) {
-                        lockLoading.dismiss();
-                        //lockLoading = null;
-                    }
-                    isStop = true;
-                    ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
-                    switch (flag){
-                        case 0:
-                            break;
-                        case 1:
-                            //开锁
-                            if (loadingDialog != null && !loadingDialog.isShowing()) {
-                                loadingDialog.setTitle("正在开锁");
-                                loadingDialog.show();
-                            }
-                            BaseApplication.getInstance().getIBLE().openLock();
-                            break;
-                        case 2:
-                            BaseApplication.getInstance().getIBLE().getLockStatus();
-                            break;
-                        default:
-                            break;
-                    }
-                    flag = 0;
-                    break;
-                case Config.BATTERY_ACTION:
-
-                    break;
-                case Config.OPEN_ACTION:
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-                    if (TextUtils.isEmpty(data)) {
-                        ToastUtil.showMessageApp(context,"开锁失败,请重试");
-                    } else {
-                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-                    }
-                    break;
-                case Config.CLOSE_ACTION:
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-                    if (TextUtils.isEmpty(data)) {
-
-                    } else {
-
-                    }
-                    break;
-                case Config.LOCK_STATUS_ACTION:
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-                    if (TextUtils.isEmpty(data)) {
-
-                        ToastUtil.showMessageApp(context,"biking====锁已关闭");
-
-                        //锁已关闭
-                        submit(context, uid,access_token);
-
-                    } else {
-                        //锁已开启
-                        ToastUtil.showMessageApp(context,"biking====您还未上锁，请给车上锁后还车");
-                    }
-                    break;
-                case Config.LOCK_RESULT:
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-                    ToastUtil.showMessageApp(context,"恭喜您，您已成功上锁");
-
-                    endBtn();
-
-                    break;
-            }
-        }
-    };
+//    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+////      broadcastReceiver2 = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            String data = intent.getStringExtra("data");
+//            switch (action) {
+//                case Config.TOKEN_ACTION:
+//                    m_myHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            BaseApplication.getInstance().getIBLE().getBattery();
+//                        }
+//                    }, 500);
+//                    if (null != lockLoading && lockLoading.isShowing()) {
+//                        lockLoading.dismiss();
+//                        //lockLoading = null;
+//                    }
+//                    isStop = true;
+//                    ToastUtil.showMessageApp(CurRoadBikingActivity.this,"设备连接成功");
+//                    switch (flag){
+//                        case 0:
+//                            break;
+//                        case 1:
+//                            //开锁
+//                            if (loadingDialog != null && !loadingDialog.isShowing()) {
+//                                loadingDialog.setTitle("正在开锁");
+//                                loadingDialog.show();
+//                            }
+//                            BaseApplication.getInstance().getIBLE().openLock();
+//                            break;
+//                        case 2:
+//                            BaseApplication.getInstance().getIBLE().getLockStatus();
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                    flag = 0;
+//                    break;
+//                case Config.BATTERY_ACTION:
+//
+//                    break;
+//                case Config.OPEN_ACTION:
+//                    if (loadingDialog != null && loadingDialog.isShowing()){
+//                        loadingDialog.dismiss();
+//                    }
+//                    if (lockLoading != null && lockLoading.isShowing()){
+//                        lockLoading.dismiss();
+//                    }
+//                    if (TextUtils.isEmpty(data)) {
+//                        ToastUtil.showMessageApp(context,"开锁失败,请重试");
+//                    } else {
+//                        ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+//                    }
+//                    break;
+//                case Config.CLOSE_ACTION:
+//                    if (loadingDialog != null && loadingDialog.isShowing()){
+//                        loadingDialog.dismiss();
+//                    }
+//                    if (lockLoading != null && lockLoading.isShowing()){
+//                        lockLoading.dismiss();
+//                    }
+//                    if (TextUtils.isEmpty(data)) {
+//
+//                    } else {
+//
+//                    }
+//                    break;
+//                case Config.LOCK_STATUS_ACTION:
+//                    if (loadingDialog != null && loadingDialog.isShowing()){
+//                        loadingDialog.dismiss();
+//                    }
+//                    if (lockLoading != null && lockLoading.isShowing()){
+//                        lockLoading.dismiss();
+//                    }
+//                    if (TextUtils.isEmpty(data)) {
+//
+//                        ToastUtil.showMessageApp(context,"biking====锁已关闭");
+//
+//                        //锁已关闭
+//                        submit(context, uid,access_token);
+//
+//                    } else {
+//                        //锁已开启
+//                        ToastUtil.showMessageApp(context,"biking====您还未上锁，请给车上锁后还车");
+//                    }
+//                    break;
+//                case Config.LOCK_RESULT:
+//                    if (loadingDialog != null && loadingDialog.isShowing()){
+//                        loadingDialog.dismiss();
+//                    }
+//                    if (lockLoading != null && lockLoading.isShowing()){
+//                        lockLoading.dismiss();
+//                    }
+//                    ToastUtil.showMessageApp(context,"恭喜您，您已成功上锁");
+//
+//                    endBtn();
+//
+//                    break;
+//            }
+//        }
+//    };
 
     Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override

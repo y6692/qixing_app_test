@@ -404,7 +404,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 //					ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
 
 					CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-					customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+					customBuilder.setTitle("温馨提示").setMessage("main===还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
 							.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.cancel();
