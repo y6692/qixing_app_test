@@ -195,6 +195,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private int flag = 0;
     boolean isFrist1 = true;
     private CustomDialog customDialog;
+    private CustomDialog customDialog3;
 
     int k=0;
     int near = 1;
@@ -241,6 +242,15 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
         customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等");
         customDialog = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog3 = customBuilder.create();
 
     }
 
@@ -762,16 +772,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
                     }
                 }else {
-//                    ToastUtil.showMessageApp(context,"请停放至校内公共停车区域，或重启手机定位服务");
-
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                    customBuilder.setTitle("温馨提示").setMessage("biking===还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
-                            .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    customBuilder.create().show();
+                    customDialog3.show();
                 }
             }
         }
@@ -887,7 +888,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
-    @Override
     protected void submit(final Context context, String uid,String access_token){
 
         RequestParams params = new RequestParams();
@@ -959,6 +959,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }
                 if (loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
+                }
+                if (customDialog3 != null && customDialog3.isShowing()){
+                    customDialog3.dismiss();
                 }
             }
         });

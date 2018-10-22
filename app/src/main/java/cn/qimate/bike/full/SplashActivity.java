@@ -167,79 +167,79 @@ public class SplashActivity extends BaseActivity {
 //		}
 	}
 
-	@Override
-	protected void handleReceiver(Context context, Intent intent) {
-		// 广播处理
-		if (intent == null) {
-			return;
-		}
-
-		String action = intent.getAction();
-		String data = intent.getStringExtra("data");
-		switch (action) {
-			case Config.TOKEN_ACTION:
-
-				handler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						BaseApplication.getInstance().getIBLE().getBattery();
-					}
-				}, 500);
-				if (null != lockLoading && lockLoading.isShowing()) {
-					lockLoading.dismiss();
-				}
-				ToastUtil.showMessageApp(context,"splash===设备连接成功");
-
-				break;
-			case Config.BATTERY_ACTION:
-//				BaseApplication.getInstance().getIBLE().getLockStatus();
-
-
-				break;
-			case Config.OPEN_ACTION:
-				ToastUtil.showMessage(context,"splash===3");
-				break;
-			case Config.CLOSE_ACTION:
-				ToastUtil.showMessage(context,"splash===4");
-				break;
-			case Config.LOCK_STATUS_ACTION:
-
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-				if (lockLoading != null && lockLoading.isShowing()){
-					lockLoading.dismiss();
-				}
-
-				if (TextUtils.isEmpty(data)) {
-
-					ToastUtil.showMessageApp(context,"splash====锁已关闭");
-
-					//锁已关闭
-					submit(context, uid, access_token);
-
-				} else {
-					//锁已开启
-					ToastUtil.showMessageApp(context,"splash====您还未上锁，请给车上锁后还车");
-				}
-				break;
-			case Config.LOCK_RESULT:
-
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-				if (lockLoading != null && lockLoading.isShowing()){
-					lockLoading.dismiss();
-				}
-
-
-				ToastUtil.showMessageApp(context,"splash===恭喜您，您已成功上锁");
-
-				endBtn(context);
-
-				break;
-		}
-	}
+//	@Override
+//	protected void handleReceiver(Context context, Intent intent) {
+//		// 广播处理
+//		if (intent == null) {
+//			return;
+//		}
+//
+//		String action = intent.getAction();
+//		String data = intent.getStringExtra("data");
+//		switch (action) {
+//			case Config.TOKEN_ACTION:
+//
+//				handler.postDelayed(new Runnable() {
+//					@Override
+//					public void run() {
+//						BaseApplication.getInstance().getIBLE().getBattery();
+//					}
+//				}, 500);
+//				if (null != lockLoading && lockLoading.isShowing()) {
+//					lockLoading.dismiss();
+//				}
+//				ToastUtil.showMessageApp(context,"splash===设备连接成功");
+//
+//				break;
+//			case Config.BATTERY_ACTION:
+////				BaseApplication.getInstance().getIBLE().getLockStatus();
+//
+//
+//				break;
+//			case Config.OPEN_ACTION:
+//				ToastUtil.showMessage(context,"splash===3");
+//				break;
+//			case Config.CLOSE_ACTION:
+//				ToastUtil.showMessage(context,"splash===4");
+//				break;
+//			case Config.LOCK_STATUS_ACTION:
+//
+//				if (loadingDialog != null && loadingDialog.isShowing()){
+//					loadingDialog.dismiss();
+//				}
+//				if (lockLoading != null && lockLoading.isShowing()){
+//					lockLoading.dismiss();
+//				}
+//
+//				if (TextUtils.isEmpty(data)) {
+//
+//					ToastUtil.showMessageApp(context,"splash====锁已关闭");
+//
+//					//锁已关闭
+//					submit(context, uid, access_token);
+//
+//				} else {
+//					//锁已开启
+//					ToastUtil.showMessageApp(context,"splash====您还未上锁，请给车上锁后还车");
+//				}
+//				break;
+//			case Config.LOCK_RESULT:
+//
+//				if (loadingDialog != null && loadingDialog.isShowing()){
+//					loadingDialog.dismiss();
+//				}
+//				if (lockLoading != null && lockLoading.isShowing()){
+//					lockLoading.dismiss();
+//				}
+//
+//
+//				ToastUtil.showMessageApp(context,"splash===恭喜您，您已成功上锁");
+//
+//				endBtn(context);
+//
+//				break;
+//		}
+//	}
 
 
 	private void init() {
