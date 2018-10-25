@@ -548,13 +548,15 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			return;
 		}
 
+		uid = SharedPreferencesUrls.getInstance().getString("uid","");
+		access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
 		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
 		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
 		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
 		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
-
-		ToastUtil.showMessageApp(this, oid+">>>"+osn+">>>"+type+">>>main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+">>>"+m_nowMac);
+		ToastUtil.showMessageApp(this, oid+">>>"+osn+">>>"+type+">>>main===onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+">>>"+m_nowMac);
 		Log.e("main===", "main====onResume");
 
 
@@ -2463,7 +2465,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					if (!isContainsList.contains(true) && macList.size() <= 0){
 						customDialog3.show();
 					}else{
-						submit(context, uid, access_token);
+						submit(uid, access_token);
 					}
 
 
@@ -2506,18 +2508,15 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				ToastUtil.showMessageApp(context,"main===恭喜您，您已成功上锁");
                 Log.e("main===","main===恭喜您，您已成功上锁");
 
-				//t();
-//				flag2 = 1;
-
 				endBtn(context);
 
 				break;
 		}
 	}
 
-	protected void submit(final Context context, String uid, String access_token){
+	protected void submit(String uid, String access_token){
 
-		Log.e("base===",oid+"==="+referLatitude+"==="+referLongitude);
+		Log.e("base===",uid+"==="+access_token+"==="+oid+"==="+referLatitude+"==="+referLongitude);
 
 		RequestParams params = new RequestParams();
 		params.put("uid", uid);
@@ -2626,9 +2625,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			ToastUtil.showMessage(context,macList+"==="+isContainsList);
 			ToastUtil.showMessage(context,macList.size()+"==="+isContainsList.contains(true));
 
-
-
-
 			if (isContainsList.contains(true)){
 				if ("1".equals(type)){
 					CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
@@ -2640,7 +2636,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.cancel();
-							submit(context, uid,access_token);
+							submit(uid,access_token);
 						}
 					});
 					customBuilder.create().show();

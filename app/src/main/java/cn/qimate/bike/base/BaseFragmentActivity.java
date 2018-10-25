@@ -155,8 +155,13 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 //		ToastUtil.showMessage(this, "===="+m_nowMac);
 
-        uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+		uid = SharedPreferencesUrls.getInstance().getString("uid","");
+		access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+
+		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
+		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
+		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
 
         //|| context instanceof CurRoadStartActivity || context instanceof ActivityScanerCode  || context instanceof CurRoadBikingActivity
