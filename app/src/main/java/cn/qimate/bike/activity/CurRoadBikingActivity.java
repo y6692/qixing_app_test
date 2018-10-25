@@ -532,8 +532,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         initSite();
 
-
-
         uid = SharedPreferencesUrls.getInstance().getString("uid","");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
@@ -1152,7 +1150,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()){
                     String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","");
                     String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude","");
+
+
+
+
                     if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)){
+
+                        ToastUtil.showMessageApp(this, latitude+"==="+longitude);
+
                         if (AMapUtils.calculateLineDistance(new LatLng(
                                 Double.parseDouble(latitude),Double.parseDouble(longitude)
                         ),new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude())) > 10){
@@ -1539,8 +1544,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         }
                         aMap.getUiSettings().setZoomControlsEnabled(false);
                         aMap.getUiSettings().setMyLocationButtonEnabled(false);
-                        aMap.getUiSettings()
-                                .setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+                        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
                         CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(20);// 设置缩放监听
                         aMap.moveCamera(cameraUpdate);
                         setUpLocationStyle();

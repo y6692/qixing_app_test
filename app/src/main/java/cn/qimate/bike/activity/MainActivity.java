@@ -1153,7 +1153,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				CameraUpdate update = CameraUpdateFactory.zoomTo(18);
+//				CameraUpdate update = CameraUpdateFactory.zoomTo(18);
+                CameraUpdate update = CameraUpdateFactory.changeLatLng(myLocation);
+                aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLocation));
 				aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
 					@Override
 					public void onFinish() {
@@ -1167,6 +1169,49 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				});
 			}
 		}, 1000);
+	}
+
+	/**
+	 * 添加Circle
+	 * @param latlng  坐标
+	 * @param radius  半径
+	 */
+	private void addCircle(LatLng latlng, double radius) {
+		CircleOptions options = new CircleOptions();
+		options.strokeWidth(1f);
+		options.fillColor(FILL_COLOR);
+		options.strokeColor(STROKE_COLOR);
+		options.center(latlng);
+		options.radius(radius);
+		mCircle = aMap.addCircle(options);
+	}
+
+
+	private void animMarker() {
+		isMovingMarker = false;
+		if (animator != null) {
+			animator.start();
+			return;
+		}
+		animator = ValueAnimator.ofFloat(mapView.getHeight() / 2, mapView.getHeight() / 2 - 30);
+		animator.setInterpolator(new DecelerateInterpolator());
+		animator.setDuration(150);
+		animator.setRepeatCount(1);
+		animator.setRepeatMode(ValueAnimator.REVERSE);
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				Float value = (Float) animation.getAnimatedValue();
+				centerMarker.setPositionByPixels(mapView.getWidth() / 2, Math.round(value));
+			}
+		});
+		animator.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				centerMarker.setIcon(successDescripter);
+			}
+		});
+		animator.start();
 	}
 
 	private void setMovingMarker() {
@@ -1187,10 +1232,22 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	@Override
 	public void onCameraChangeFinish(CameraPosition cameraPosition) {
 		if (isUp){
-			initNearby(cameraPosition.target.latitude,cameraPosition.target.longitude);
-			if (centerMarker != null) {
-				animMarker();
-			}
+			initNearby(cameraPosition.target.latitude, cameraPosition.target.longitude);
+
+            if (centerMarker != null) {
+                animMarker();
+            }
+
+//			handler.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//
+//
+//
+//				}
+//			}, 5000);
+
+
 		}
 	}
 
@@ -1937,7 +1994,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 			if((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-//			title.setText(amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
+//			title.setText(amapLocation.getAccuracy()+"==="+amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
 			Log.e("main===1",amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
 
 			if (amapLocation != null && amapLocation.getErrorCode() == 0) {
@@ -1968,18 +2025,20 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						mFirstFix = false;
 						schoolrangeList();
 
-						addChooseMarker();
-						addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
+
+
 						initNearby(amapLocation.getLatitude(),amapLocation.getLongitude());
 
-//						aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
-						aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
-					} else {
-//						centerMarker.remove();
-//						mCircle.remove();
+						aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
 
-						centerMarker.setPosition(myLocation);
-						mCircle.setCenter(myLocation);
+					} else {
+						centerMarker.remove();
+						mCircle.remove();
+
+//						centerMarker.setPosition(myLocation);
+//						mCircle.setCenter(myLocation);
+
+
 
 						if (!isContainsList.isEmpty() || 0 != isContainsList.size()){
 							isContainsList.clear();
@@ -1989,7 +2048,24 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						}
 					}
 
-//					aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+					addChooseMarker();
+					addCircle(myLocation, amapLocation.getAccuracy());
+
+//                    aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+
+//					aMap.moveCamera(CameraUpdateFactory.zoomTo(17));
+//					aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLocation));
+
+
+
+//					addChooseMarker();
+//					addCircle(myLocation, amapLocation.getAccuracy());//添加定位精度圆
+
+
+//					centerMarker.setPosition(myLocation);
+//					mCircle.setCenter(myLocation);
+
+
 
 //					if(isConnect){
 //						BaseApplication.getInstance().getIBLE().getLockStatus();
@@ -2163,48 +2239,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		mlocationClient = null;
 	}
 
-	/**
-	 * 添加Circle
-	 * @param latlng  坐标
-	 * @param radius  半径
-	 */
-	private void addCircle(LatLng latlng, double radius) {
-		CircleOptions options = new CircleOptions();
-		options.strokeWidth(1f);
-		options.fillColor(FILL_COLOR);
-		options.strokeColor(STROKE_COLOR);
-		options.center(latlng);
-		options.radius(radius);
-		mCircle = aMap.addCircle(options);
-	}
 
-
-	private void animMarker() {
-		isMovingMarker = false;
-		if (animator != null) {
-			animator.start();
-			return;
-		}
-		animator = ValueAnimator.ofFloat(mapView.getHeight() / 2, mapView.getHeight() / 2 - 30);
-		animator.setInterpolator(new DecelerateInterpolator());
-		animator.setDuration(150);
-		animator.setRepeatCount(1);
-		animator.setRepeatMode(ValueAnimator.REVERSE);
-		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-			@Override
-			public void onAnimationUpdate(ValueAnimator animation) {
-				Float value = (Float) animation.getAnimatedValue();
-				centerMarker.setPositionByPixels(mapView.getWidth() / 2, Math.round(value));
-			}
-		});
-		animator.addListener(new AnimatorListenerAdapter() {
-			@Override
-			public void onAnimationEnd(Animator animation) {
-				centerMarker.setIcon(successDescripter);
-			}
-		});
-		animator.start();
-	}
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 		switch (requestCode) {
