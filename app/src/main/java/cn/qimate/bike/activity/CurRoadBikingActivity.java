@@ -110,7 +110,7 @@ import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 @SuppressLint("NewApi")
 public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnClickListener,
         LocationSource,AMapLocationListener
-//        ,OnConnectionListener
+        ,OnConnectionListener
     {
     private final static String TAG = "BLEService";
 
@@ -126,9 +126,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
     public static boolean isForeground = false;
-//    private Context context;
-    public static  LoadingDialog loadingDialog;
-    public static  LoadingDialog lockLoading;
+    private Context context;
+    private  LoadingDialog loadingDialog;
+    private  LoadingDialog lockLoading;
     private LinearLayout mainLayout;
     private ImageView backImg;
     private TextView title;
@@ -271,7 +271,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
-            getCurrentorderBiking(uid,access_token);
+            getCurrentorderBiking(uid, access_token);
             refreshLayout.setVisibility(View.VISIBLE);
         }
 
@@ -295,17 +295,18 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     @Override
     protected void onPause() {
         isForeground = false;
-        super.onPause();
-        mapView.onPause();
-
-        ToastUtil.showMessage(this, "biking====onPause");
-
         if (loadingDialog != null && loadingDialog.isShowing()){
             loadingDialog.dismiss();
         }
         if (lockLoading != null && lockLoading.isShowing()){
             lockLoading.dismiss();
         }
+        super.onPause();
+        mapView.onPause();
+
+        ToastUtil.showMessage(this, "biking====onPause");
+
+
 
     }
 
@@ -316,6 +317,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     protected void onDestroy() {
 //          isStop = true;
         isForeground = false;
+        if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
+        if (lockLoading != null && lockLoading.isShowing()){
+            lockLoading.dismiss();
+        }
         super.onDestroy();
         mapView.onDestroy();
 
@@ -435,16 +442,16 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 return;
             }
         }
-        loadingDialog = new LoadingDialog(context);
+        loadingDialog = new LoadingDialog(this);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        lockLoading = new LoadingDialog(context);
+        lockLoading = new LoadingDialog(this);
         lockLoading.setCancelable(false);
         lockLoading.setCanceledOnTouchOutside(false);
 
-        dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
+        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -656,7 +663,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context,LoginActivity.class);
         }else {
-
             ToastUtil.showMessage(context,macList.size()+"==="+isContainsList);
 
             if (isContainsList.contains(true)){
@@ -670,7 +676,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-                            submit(context, uid,access_token);
+                            submit(uid, access_token);
                         }
                     });
                     customBuilder.create().show();
@@ -888,7 +894,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         popupwindow.showAtLocation(customView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
-    protected void submit(final Context context, String uid,String access_token){
+    protected void submit(String uid,String access_token){
 
         RequestParams params = new RequestParams();
         params.put("uid",uid);
@@ -899,7 +905,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         if (macList.size() > 0){
             params.put("xinbiao",macList.get(0));
         }
-        HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
+        HttpHelper.post(this, Urls.backBikescan, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -932,12 +938,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 //                        if (myLocation != null){
 //                            addMaplocation(myLocation.latitude,myLocation.longitude);
 //                        }
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                            loadingDialog = null;
+                        }
+
                         if ("1".equals(result.getData())){
                             ToastUtil.showMessageApp(context, result.getMsg());
                             if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
                                 UIHelper.goToAct(context, FeedbackActivity.class);
-//                                UIHelper.goToAct(context, Main2Activity.class);
-//                                scrollToFinishActivity();
+                                scrollToFinishActivity();
                             }else {
                                 Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
                                 intent.putExtra("oid",oid);
@@ -959,6 +970,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }
                 if (loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
+                    loadingDialog = null;
                 }
                 if (customDialog3 != null && customDialog3.isShowing()){
                     customDialog3.dismiss();
@@ -971,7 +983,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
-        HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
+        HttpHelper.post(this, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -1636,30 +1648,29 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     public void onTimeOut() {
 
     }
-//    @Override
-//    public void onDisconnect(int state) {
-//        m_myHandler.sendEmptyMessageDelayed(0, 1000);
-//    }
-//    @Override
-//    public void onServicesDiscovered(String name, String address) {
-//        getToken();
-//    }
-//    /**
-//     * 获取token
-//     */
-//    private void getToken() {
-//        m_myHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                BaseApplication.getInstance().getIBLE().getToken();
-//            }
-//        }, 500);
-//    }
+    @Override
+    public void onDisconnect(int state) {
+        m_myHandler.sendEmptyMessageDelayed(0, 1000);
+    }
+    @Override
+    public void onServicesDiscovered(String name, String address) {
+        getToken();
+    }
+    /**
+     * 获取token
+     */
+    private void getToken() {
+        m_myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                BaseApplication.getInstance().getIBLE().getToken();
+            }
+        }, 500);
+    }
 
 //    @Override
 //    public void onReceive(Context context, Intent intent) {}
 
-    @Override
     protected void handleReceiver(Context context, Intent intent) {
         String action = intent.getAction();
         String data = intent.getStringExtra("data");
@@ -1673,7 +1684,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 }, 500);
                 if (null != lockLoading && lockLoading.isShowing()) {
                     lockLoading.dismiss();
-                    //lockLoading = null;
+                    lockLoading = null;
                 }
                 isStop = true;
                 ToastUtil.showMessageApp(CurRoadBikingActivity.this,"biking===设备连接成功");
@@ -1737,7 +1748,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     ToastUtil.showMessageApp(context,"biking====锁已关闭");
 
                     //锁已关闭
-                    submit(context, uid,access_token);
+                    submit(uid,access_token);
 
                 } else {
                     //锁已开启
@@ -1885,8 +1896,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 case 9:
                     break;
                 case 0x99://搜索超时
-                    BaseApplication.getInstance().getIBLE().connect(m_nowMac,
-                            CurRoadBikingActivity.this);
+                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, CurRoadBikingActivity.this);
                     break;
                 default:
                     break;

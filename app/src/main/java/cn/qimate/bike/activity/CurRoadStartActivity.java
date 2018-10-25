@@ -60,8 +60,9 @@ import cn.qimate.bike.util.ToastUtil;
 @SuppressLint("NewApi")
 public class CurRoadStartActivity extends SwipeBackActivity implements View.OnClickListener{
 
-//    private Context context;
+    private Context context;
     private LoadingDialog loadingDialog;
+    private LoadingDialog lockLoading;
     private ImageView backImg;
     private TextView title;
 
@@ -131,8 +132,8 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         isEnd = false;
         super.onResume();
 
-        ToastUtil.showMessage(this, "start===="+internalReceiver);
-        Log.e("start===", "start====onResume");
+        ToastUtil.showMessage(this, "start===="+m_nowMac);
+        Log.e("start===", "start====onResume==="+m_nowMac);
 
         try {
             if (internalReceiver != null) {
@@ -150,6 +151,9 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 
     @Override
     protected void onPause() {
+        if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
         super.onPause();
 
         ToastUtil.showMessage(this, "start====onPause");
@@ -159,6 +163,10 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
     @Override
     protected void onDestroy() {
         isEnd = true;
+        if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
+
         super.onDestroy();
 
         Log.e("start===", "start====onDestroy");
@@ -175,9 +183,13 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 
     private void initView(){
 
-        loadingDialog = new LoadingDialog(context);
+        loadingDialog = new LoadingDialog(this);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
+
+        lockLoading = new LoadingDialog(this);
+        lockLoading.setCancelable(false);
+        lockLoading.setCanceledOnTouchOutside(false);
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
@@ -221,87 +233,6 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         linkServiceBtn.setOnClickListener(this);
         unlockHelpBtn.setOnClickListener(this);
     }
-
-//    protected void submit(String uid, String access_token){
-//
-//        RequestParams params = new RequestParams();
-//        params.put("uid",uid);
-//        params.put("access_token",access_token);
-//        params.put("oid",oid);
-//        params.put("latitude",referLatitude);
-//        params.put("longitude",referLongitude);
-//        if (macList.size() > 0){
-//            params.put("xinbiao",macList.get(0));
-//        }
-//        HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-////                if (loadingDialog != null && !loadingDialog.isShowing()) {
-////                    loadingDialog.setTitle("正在提交");
-////                    loadingDialog.show();
-////                }
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-////                if (loadingDialog != null && loadingDialog.isShowing()){
-////                    loadingDialog.dismiss();
-////                }
-//                UIHelper.ToastError(context, throwable.toString());
-//            }
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                Log.e("Test","结束用车:"+responseString);
-//                try {
-//                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-//                    if (result.getFlag().equals("Success")) {
-//
-//                        SharedPreferencesUrls.getInstance().putString("type","");
-//                        SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
-//                        SharedPreferencesUrls.getInstance().putString("biking_latitude","");
-//                        SharedPreferencesUrls.getInstance().putString("biking_longitude","");
-//
-//                        if ("1".equals(result.getData())){
-//                            ToastUtil.showMessageApp(context,result.getMsg());
-//                            if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
-//
-//                                ToastUtil.showMessage(context,"context==="+context);
-//
-//
-//
-//                                UIHelper.goToAct(context, FeedbackActivity.class);
-//
-//                                if(context instanceof CurRoadStartActivity){
-//                                    CurRoadStartActivity.isEnd = true;
-//                                    finish();
-//                                }
-//
-////								UIHelper.goToAct(context, Main2Activity.class);
-////                                scrollToFinishActivity();
-//                            }else {
-//                                Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
-//                                intent.putExtra("oid",oid);
-//                                startActivity(intent);
-//                            }
-//                        }else {
-//                            ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
-//                            UIHelper.goToAct(context,CurRoadBikedActivity.class);
-//                        }
-////						finishMine();
-////                        finish();
-////                        scrollToFinishActivity();
-//
-//                    }else {
-//                        ToastUtil.showMessageApp(context,result.getMsg());
-//                    }
-//                }catch (Exception e){
-//
-//                }
-////                if (loadingDialog != null && loadingDialog.isShowing()){
-////                    loadingDialog.dismiss();
-////                }
-//            }
-//        });
-//    }
 
     @Override
     protected void handleReceiver(Context context, Intent intent) {
@@ -375,7 +306,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         if (macList.size() > 0){
             params.put("xinbiao",macList.get(0));
         }
-        HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
+        HttpHelper.post(this, Urls.backBikescan, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -409,17 +340,17 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 
                                 ToastUtil.showMessage(context,"context==="+context);
 
-                                if(context instanceof CurRoadStartActivity){
-                                    CurRoadStartActivity.isEnd = true;
-                                    CurRoadStartActivity.instance.finish();
-                                }
+//                                if(context instanceof CurRoadStartActivity){
+//                                    CurRoadStartActivity.isEnd = true;
+//                                    CurRoadStartActivity.instance.finish();
+//                                }
 
+                                isEnd = true;
                                 UIHelper.goToAct(context, FeedbackActivity.class);
-//								UIHelper.goToAct(context, Main2Activity.class);
-//                                scrollToFinishActivity();
+                                scrollToFinishActivity();
                             }else {
                                 Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
-                                intent.putExtra("oid",oid);
+                                intent.putExtra("oid", oid);
                                 startActivity(intent);
                             }
                         }else {
@@ -606,10 +537,16 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                 customBuilder.create().show();
                 break;
             case R.id.curRoadUI_start_unlockHelpBtn:
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+
+
                 if ("如何开锁".equals(unlockHelpBtn.getText().toString().trim())){
                     UIHelper.goWebViewAct(context,"开锁帮助",Urls.useHelp);
                 }else {
                     isEnd = true;
+
                     UIHelper.goToAct(context, CurRoadBikingActivity.class);
                     scrollToFinishActivity();
                 }
@@ -627,7 +564,13 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                     mCircleBar.setProgress((--num));
                 } else {
                     isEnd = true;
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+
                     if (!CurRoadBikingActivity.isForeground){
+
                         UIHelper.goToAct(context,CurRoadBikingActivity.class);
                         scrollToFinishActivity();
                     }
@@ -643,7 +586,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         RequestParams params = new RequestParams();
         params.put("uid",uid);
         params.put("access_token",access_token);
-        HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
+        HttpHelper.post(this, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
             @Override
             public void onStart() {
                 if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -692,6 +635,8 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                             hintText1.setText("该车禁止出校，仅限校内骑行！");
                             hintText2.setVisibility(View.GONE);
                         }else {
+                            m_nowMac = bean.getMacinfo();
+
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
                             customBuilder.setTitle("温馨提示").setMessage("还车必须到校内关锁，距车一米内在APP点击结束")
                                     .setNegativeButton("我知道啦", new DialogInterface.OnClickListener() {

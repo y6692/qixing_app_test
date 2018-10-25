@@ -2,9 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.qimate.bike">
 
-    <uses-sdk
-        android:minSdkVersion="17"
-        android:targetSdkVersion="25" />
+    <uses-sdk android:targetSdkVersion="28" />
 
     <!-- Required 自定义用来收发消息的相关权限 -->
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />

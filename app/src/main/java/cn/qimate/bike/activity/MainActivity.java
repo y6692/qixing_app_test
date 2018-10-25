@@ -207,7 +207,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	boolean isFrist1 = true;
 	private int near = 1;
 
-	TextView title;
+	private TextView title;
+
 
 	@Override
 	@TargetApi(23)
@@ -295,7 +296,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 			}
 		}else{
-
+			SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
 		}
 
 
@@ -365,9 +366,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							osn = bean.getOsn();
 //							password = bean.getPassword();
 							type = bean.getType();
-
-
-
 
 
 							if ("1".equals(bean.getType())){
@@ -453,7 +451,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 			} else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
 
-				ToastUtil.showMessageApp(context, "===present");
+				ToastUtil.showMessage(context, "===present");
 				Log.e("main===", tz+">>>present==="+m_nowMac);
 
 				if(tz==1){
@@ -522,42 +520,13 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 			getFeedbackStatus();
 
-//			PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-//			boolean screenOn = pm.isScreenOn();
-//			if (!screenOn) {
-//				// 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
-//				PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
-//				wl.acquire();
-//				wl.release(); // 释放
-//			}
-//
-//			// 屏幕解锁
-//			KeyguardManager keyguardManager = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
-//			KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
-//			// 屏幕锁定
-//			keyguardLock.disableKeyguard(); // 解锁
-
-//			t(context);
-
-//			Intent i = new Intent(context, FeedbackActivity.class);
-//			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			context.startActivity(i);
-//
-//			Log.e("main===", "main====Feedback2");
-
 		}
 	};
 
 	@Override
 	protected void onResume() {
 		isForeground = true;
-//		if (isFrist1){
-//			isFrist1 = false;
-//		}else {
-//		}
 		super.onResume();
-
-
 
 
 		if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)){
@@ -565,9 +534,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		}else{
 			near = 1;
 		}
-
-
-
 
 		JPushInterface.onResume(this);
 		mapView.onResume();
@@ -582,12 +548,13 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			return;
 		}
 
+		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
 		oid = SharedPreferencesUrls.getInstance().getString("oid", "");
 		osn = SharedPreferencesUrls.getInstance().getString("osn", "");
 		type = SharedPreferencesUrls.getInstance().getString("type", "");
 
 
-		ToastUtil.showMessage(this, oid+">>>"+osn+">>>"+type+">>>main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true));
+		ToastUtil.showMessageApp(this, oid+">>>"+osn+">>>"+type+">>>main====onResume==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+">>>"+m_nowMac);
 		Log.e("main===", "main====onResume");
 
 
@@ -663,23 +630,23 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	@Override
 	protected void onPause() {
 		isForeground = false;
-		super.onPause();
-
-		JPushInterface.onPause(this);
-		mapView.onPause();
-		deactivate();
-//		deactivate();
-//		mFirstFix = false;
-
-		ToastUtil.showMessage(this, "main====onPause");
-		Log.e("main===", "main====onPause");
-
 		if (loadingDialog != null && loadingDialog.isShowing()){
 			loadingDialog.dismiss();
 		}
 		if (lockLoading != null && lockLoading.isShowing()){
 			lockLoading.dismiss();
 		}
+		super.onPause();
+
+		JPushInterface.onPause(this);
+		mapView.onPause();
+		deactivate();
+//		mFirstFix = false;
+
+		ToastUtil.showMessage(this, "main====onPause");
+		Log.e("main===", "main====onPause");
+
+
 
 //		closeBroadcast();
 
@@ -692,6 +659,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	 */
 	@Override
 	protected void onDestroy() {
+		if (loadingDialog != null && loadingDialog.isShowing()){
+			loadingDialog.dismiss();
+		}
 		super.onDestroy();
 
 		ToastUtil.showMessage(context, "main===onDestroy");
@@ -963,25 +933,25 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		}
 
 
-		loadingDialog = new LoadingDialog(context);
+		loadingDialog = new LoadingDialog(this);
 		loadingDialog.setCancelable(false);
 		loadingDialog.setCanceledOnTouchOutside(false);
 
-		lockLoading = new LoadingDialog(context);
+		lockLoading = new LoadingDialog(this);
 		lockLoading.setCancelable(false);
 		lockLoading.setCanceledOnTouchOutside(false);
 
-		loadingDialog1 = new LoadingDialog(context);
+		loadingDialog1 = new LoadingDialog(this);
 		loadingDialog1.setCancelable(false);
 		loadingDialog1.setCanceledOnTouchOutside(false);
 
-		dialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-		View dialogView = LayoutInflater.from(context).inflate(R.layout.ui_frist_view, null);
+		dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+		View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
 		dialog.setContentView(dialogView);
 		dialog.setCanceledOnTouchOutside(false);
 
-		advDialog = new Dialog(context, R.style.Theme_AppCompat_Dialog);
-		View advDialogView = LayoutInflater.from(context).inflate(R.layout.ui_adv_view, null);
+		advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+		View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
 		advDialog.setContentView(advDialogView);
 		advDialog.setCanceledOnTouchOutside(false);
 
@@ -1253,6 +1223,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //				endBtn(context);
 
 				UIHelper.goToAct(MainActivity.this, ActionCenterActivity.class);
+//				finish();
 
 //				UIHelper.goToAct(context, Main2Activity.class);
 //				UIHelper.goToAct(context, CurRoadBikingActivity.class);
@@ -1958,7 +1929,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //		super.onLocationChanged(amapLocation);
 
 
-//		title.setText(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+isContainsList.contains(true)+"==="+macList.size()+"》》》"+near);
+//		title.setText(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==4="+isContainsList.contains(true)+"==="+macList.size()+"》》》"+near);
 
 		if (mListener != null && amapLocation != null) {
 
@@ -2403,7 +2374,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 
-	@Override
 	protected void handleReceiver(Context context, Intent intent) {
 		// 广播处理
 		if (intent == null) {
@@ -2754,14 +2724,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 
-	private void t(Context context){
-//		UIHelper.goToAct(MainActivity.this, FeedbackActivity.class);
 
-		Log.e("main===","main===Feedback");
-
-		Intent intent = new Intent(context, FeedbackActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
-	}
 
 }

@@ -87,10 +87,16 @@ public class SplashActivity extends BaseActivity {
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
 
+		if(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
+			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
+		}
+		if("".equals(SharedPreferencesUrls.getInstance().getString("m_nowMac", ""))){
+			SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+		}
 
 
 
-//		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
+		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
 
 //		if(!"".equals(m_nowMac)){
 //

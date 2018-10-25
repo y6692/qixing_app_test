@@ -163,7 +163,7 @@ public class UpdateManager {
 						mUpdate = JSON.parseObject(result.getData(), Update.class);
 						if (mUpdate != null) {
 
-							ToastUtil.showMessageApp(context, curVersionName+"==="+mUpdate.getAppVersion());
+							ToastUtil.showMessage(context, curVersionName+"==="+mUpdate.getAppVersion());
 
 							if (!curVersionName.equals(mUpdate.getAppVersion())) {
 								if ("2".equals(mUpdate.isForce())) {

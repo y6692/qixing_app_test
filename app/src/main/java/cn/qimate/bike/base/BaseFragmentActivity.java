@@ -84,7 +84,8 @@ import cn.qimate.bike.util.ToastUtil;
 import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
 import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 
-public class BaseFragmentActivity extends AppCompatActivity implements
+public class BaseFragmentActivity extends AppCompatActivity
+		implements
 //		LocationSource,
 // 		AMapLocationListener,
  		OnConnectionListener
@@ -94,7 +95,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 	private static final int MSG_SET_TAGS = 1002;
 	static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
 
-	protected InternalReceiver internalReceiver = null;
+
 
 	private TelephonyManager tm;
 	protected Context context;
@@ -123,17 +124,16 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 	public static double referLongitude = 0.0;
 
 	protected BluetoothAdapter mBluetoothAdapter;
-	public static LoadingDialog loadingDialog;
-	public static LoadingDialog lockLoading;
+//	public static LoadingDialog loadingDialog;
+//	public static LoadingDialog lockLoading;
 
 	protected int tz = 0;
+	protected InternalReceiver internalReceiver = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //		getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		context = this;
@@ -157,8 +157,6 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 
         uid = SharedPreferencesUrls.getInstance().getString("uid","");
         access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-
-
 
 
         //|| context instanceof CurRoadStartActivity || context instanceof ActivityScanerCode  || context instanceof CurRoadBikingActivity
@@ -254,8 +252,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 									// 极光标记别名
 									setAlias(bean.getUid());
 									SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-									SharedPreferencesUrls.getInstance().putString("access_token",
-											bean.getAccess_token());
+									SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
 									SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
 									SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
 									SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
@@ -554,97 +551,15 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 		}
 	});
 
+
 	protected void handleReceiver(Context context, Intent intent) {
 		// 广播处理
 		if (intent == null) {
 			return;
 		}
-
-//		String action = intent.getAction();
-//		String data = intent.getStringExtra("data");
-//		switch (action) {
-//			case Config.TOKEN_ACTION:
-//
-//				mHandler.postDelayed(new Runnable() {
-//					@Override
-//					public void run() {
-//						BaseApplication.getInstance().getIBLE().getBattery();
-//					}
-//				}, 500);
-//				if (null != lockLoading && lockLoading.isShowing()) {
-//					lockLoading.dismiss();
-//				}
-////					isStop = true;
-//				ToastUtil.showMessageApp(context,"base===设备连接成功");
-//
-//				break;
-//			case Config.BATTERY_ACTION:
-////					ToastUtil.showMessage(context,"####===2");
-//				break;
-//			case Config.OPEN_ACTION:
-//				ToastUtil.showMessage(context,"####===3");
-//				break;
-//			case Config.CLOSE_ACTION:
-//				ToastUtil.showMessage(context,"####===4");
-//				break;
-//			case Config.LOCK_STATUS_ACTION:
-////				if (CurRoadBikingActivity.instance.loadingDialog != null && CurRoadBikingActivity.instance.loadingDialog.isShowing()){
-////					CurRoadBikingActivity.instance.loadingDialog.dismiss();
-////				}
-////				if (CurRoadBikingActivity.instance.lockLoading != null && CurRoadBikingActivity.instance.lockLoading.isShowing()){
-////					CurRoadBikingActivity.instance.lockLoading.dismiss();
-////				}
-//
-//				if (loadingDialog != null && loadingDialog.isShowing()){
-//					loadingDialog.dismiss();
-//				}
-//				if (lockLoading != null && lockLoading.isShowing()){
-//					lockLoading.dismiss();
-//				}
-//
-//				if (TextUtils.isEmpty(data)) {
-//
-//					ToastUtil.showMessageApp(context,"====锁已关闭");
-//
-//					//锁已关闭
-//					submit(context, uid, access_token);
-//
-//				} else {
-//					//锁已开启
-//					ToastUtil.showMessageApp(context,"您还未上锁，请给车上锁后还车");
-//				}
-//				break;
-//			case Config.LOCK_RESULT:
-////				if (CurRoadBikingActivity.instance.loadingDialog != null && CurRoadBikingActivity.instance.loadingDialog.isShowing()){
-////					CurRoadBikingActivity.instance.loadingDialog.dismiss();
-////				}
-////				if (CurRoadBikingActivity.instance.lockLoading != null && CurRoadBikingActivity.instance.lockLoading.isShowing()){
-////					CurRoadBikingActivity.instance.lockLoading.dismiss();
-////				}
-//
-//				if (loadingDialog != null && loadingDialog.isShowing()){
-//					loadingDialog.dismiss();
-//				}
-//				if (lockLoading != null && lockLoading.isShowing()){
-//					lockLoading.dismiss();
-//				}
-//
-//				ToastUtil.showMessageApp(context,"####===恭喜您，您已成功上锁");
-//
-//				endBtn(context);
-//
-//				break;
-//		}
 	}
 
 	protected void registerReceiver(IntentFilter intentfilter) {
-//		if (actionArray == null) {
-//			return;
-//		}
-//		IntentFilter intentfilter = new IntentFilter();
-//		for (String action : actionArray) {
-//			intentfilter.addAction(action);
-//		}
 		if (internalReceiver == null) {
 			internalReceiver = new InternalReceiver();
 		}
@@ -653,7 +568,7 @@ public class BaseFragmentActivity extends AppCompatActivity implements
 
 	private class InternalReceiver extends BroadcastReceiver {
 
-//	protected BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() {
+		//	protected BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 

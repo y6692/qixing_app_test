@@ -74,7 +74,7 @@ public class ActionCenterActivity extends SwipeBackActivity implements View.OnCl
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
-        title.setText("活动中心");
+        title.setText("活动中心3");
 
         // list投资列表
         footerView = LayoutInflater.from(context).inflate(R.layout.footer_item, null);

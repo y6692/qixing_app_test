@@ -99,7 +99,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     BroadcastReceiver mDataValueBroadcast;
 
     private Activity mActivity = this;
-//    private Context context = this;
+    private Context context = this;
     private ImageView top_mask_bcg;
     /**
      * 扫描结果监听
@@ -254,6 +254,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     @Override
     protected void onPause() {
+        if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
+
         super.onPause();
         if (handler != null) {
             handler.quitSynchronously();
@@ -266,7 +270,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     protected void onDestroy() {
         inactivityTimer.shutdown();
         mScanerListener = null;
+        if (loadingDialog != null && loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
         super.onDestroy();
+
+
         if (broadcastReceiver != null) {
             unregisterReceiver(broadcastReceiver);
             broadcastReceiver = null;
@@ -482,9 +491,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         if (result.getFlag().equals("Success")) {
                             JSONObject jsonObject = new JSONObject(result.getData());
                             if ("1".equals(jsonObject.getString("type"))){
-                                if (loadingDialog != null && loadingDialog.isShowing()){
-                                    loadingDialog.dismiss();
-                                }
+
                                 //机械锁
                                 UIHelper.goToAct(context, CurRoadStartActivity.class);
                                 scrollToFinishActivity();
@@ -496,8 +503,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     scrollToFinishActivity();
                                 }
                                 //蓝牙锁
-                                BluetoothManager bluetoothManager =
-                                        (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
                                 mBluetoothAdapter = bluetoothManager.getAdapter();
 
@@ -524,10 +530,12 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
                     }
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+
                 }
             });
         }
@@ -696,10 +704,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             BaseApplication.getInstance().getIBLE().getBattery();
                         }
                     }, 1000);
-                    if (null != loadingDialog && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                        loadingDialog = null;
-                    }
+//                    if (null != loadingDialog && loadingDialog.isShowing()) {
+//                        loadingDialog.dismiss();
+//                        loadingDialog = null;
+//                    }
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
                     if (0 == Tag){
                         customBuilder.setMessage("扫码成功,是否开锁?");
@@ -717,17 +725,23 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 }
                             }).start();
 
-
-
                         }
                     }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
+
+                            addOrderbluelock();
+
+                            Log.e("scan===", "scan====1");
+
+
                             if (loadingDialog != null && !loadingDialog.isShowing()) {
                                 loadingDialog.setTitle("正在开锁");
                                 loadingDialog.show();
                             }
-                            addOrderbluelock();
+
+                            Log.e("scan===", "scan===="+loadingDialog);
+
                         }
                     }).setHint(false);
                     customBuilder.create().show();
@@ -740,14 +754,17 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     }
                     break;
                 case Config.OPEN_ACTION:
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+//                    if (loadingDialog != null && loadingDialog.isShowing()){
+//                        loadingDialog.dismiss();
+//                    }
+
                     if (TextUtils.isEmpty(data)) {
                         ToastUtil.showMessageApp(context,"开锁失败,请重试");
                         scrollToFinishActivity();
                     } else {
                         ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+                        SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+
                         UIHelper.goToAct(context,CurRoadStartActivity.class);
                         scrollToFinishActivity();
                     }
@@ -782,13 +799,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
                     break;
                 case 1:
-                    BaseApplication.getInstance().getIBLE().refreshCache();
 
+                    BaseApplication.getInstance().getIBLE().refreshCache();
                     BaseApplication.getInstance().getIBLE().close();
                     BaseApplication.getInstance().getIBLE().disconnect();
-
                     BaseApplication.getInstance().getIBLE().disableBluetooth();
-
                     scrollToFinishActivity();
 
                     break;
@@ -799,8 +814,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 case 9:
                     break;
                 case 0x99://搜索超时
-                    BaseApplication.getInstance().getIBLE().connect(m_nowMac,
-                            ActivityScanerCode.this);
+                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, ActivityScanerCode.this);
                     m_myHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
