@@ -189,7 +189,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         setContentView(R.layout.activity_scaner_code);
         context = this;
 
-
         registerReceiver(broadcastReceiver, Config.initFilter());
         GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
         BaseApplication.getInstance().getIBLE().refreshCache();
@@ -211,7 +210,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        ToastUtil.showMessage(this, "scaner===="+internalReceiver);
+        ToastUtil.showMessage(this, "scaner====");
 
 //        try {
 //            if (internalReceiver != null) {
@@ -275,7 +274,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         }
         super.onDestroy();
 
-
         if (broadcastReceiver != null) {
             unregisterReceiver(broadcastReceiver);
             broadcastReceiver = null;
@@ -284,7 +282,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
     private void initView() {
-
         loadingDialog = new LoadingDialog(mActivity);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
@@ -294,7 +291,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         top_mask_bcg = (ImageView)findViewById(R.id.top_mask_bcg);
         mCropLayout = (RelativeLayout) findViewById(R.id.capture_crop_layout);
         mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
-
 
         dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.pop_circles_menu, null);
@@ -395,11 +391,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             dialog.getWindow().setAttributes(lp);
             dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
             dialog.show();
-            InputMethodManager manager = (InputMethodManager) getSystemService(
-                    INPUT_METHOD_SERVICE);
+            InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             manager.showSoftInput(view, InputMethodManager.RESULT_SHOWN);
-            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED,
-                    InputMethodManager.HIDE_IMPLICIT_ONLY);
+            manager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
 
@@ -691,7 +685,6 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             String data = intent.getStringExtra("data");
             switch (action) {
                 case Config.TOKEN_ACTION:
-
                     if(isOpen){
                         break;
                     }else{

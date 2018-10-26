@@ -206,8 +206,11 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	private int flag2 = 0;
 	boolean isFrist1 = true;
 	private int near = 1;
+	public static int tz = 0;
 
+	private Context context;
 	private TextView title;
+	protected InternalReceiver internalReceiver = null;
 
 
 	@Override
@@ -426,91 +429,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		});
 	}
 
-	BroadcastReceiver mScreenReceiver =  new BroadcastReceiver() {
-		private String action = null;
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			action = intent.getAction();
-			if (Intent.ACTION_SCREEN_ON.equals(action)) { // 开屏
-
-				ToastUtil.showMessage(context, "===on");
-				Log.e("main===", "===on");
-
-			} else if (Intent.ACTION_SCREEN_OFF.equals(action)) { // 锁屏
-
-				ToastUtil.showMessage(context, "===off");
-				Log.e("main===", "===off");
-
-				try {
-					registerReceiver(Config.initFilter());
-					GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-				} catch (Exception e) {
-					ToastUtil.showMessage(context, "eee===="+e);
-				}
-
-			} else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
-
-				ToastUtil.showMessage(context, "===present");
-				Log.e("main===", tz+">>>present==="+m_nowMac);
-
-				if(tz==1){
-					UIHelper.goToAct(MainActivity.this, FeedbackActivity.class);
-					Log.e("main===","main===Feedback");
-				}else if(tz==2){
-					intent = new Intent(MainActivity.this, HistoryRoadDetailActivity.class);
-					intent.putExtra("oid",oid);
-					startActivity(intent);
-					Log.e("main===","main===HistoryRoadDetail");
-				}else if(tz==3){
-					UIHelper.goToAct(MainActivity.this, CurRoadBikedActivity.class);
-					Log.e("main===","main===CurRoadBiked");
-				}
-
-
-				if(!"".equals(m_nowMac)){
-
-					if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-						ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-						finish();
-					}
-					//蓝牙锁
-					BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-					mBluetoothAdapter = bluetoothManager.getAdapter();
-
-					Log.e("main===", "present===1");
-
-					if (mBluetoothAdapter == null) {
-						ToastUtil.showMessageApp(context, "获取蓝牙失败");
-						finish();
-						return;
-					}
-
-					Log.e("main===", "present===2");
-
-					if (!mBluetoothAdapter.isEnabled()) {
-						Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-						startActivityForResult(enableBtIntent, 188);
-					}else{
-
-						Log.e("main===", "present===3");
-
-						connect();
-
-						if (macList.size() != 0){
-							macList.clear();
-						}
-						UUID[] uuids = {Config.xinbiaoUUID};
-						mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
-					}
-
-				}
-
-			}
-
-		}
-
-	};
 
 	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -527,6 +446,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	protected void onResume() {
 		isForeground = true;
 		super.onResume();
+		tz = 0;
 
 
 		if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)){
@@ -629,6 +549,97 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 
+
+	BroadcastReceiver mScreenReceiver =  new BroadcastReceiver() {
+		private String action = null;
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			action = intent.getAction();
+
+			Log.e("main===", "===Screen");
+
+			if (Intent.ACTION_SCREEN_ON.equals(action)) { // 开屏
+
+				ToastUtil.showMessage(context, "===on");
+				Log.e("main===", "===on");
+
+			} else if (Intent.ACTION_SCREEN_OFF.equals(action)) { // 锁屏
+
+				ToastUtil.showMessageApp(context, "===off");
+				Log.e("main===", "===off");
+
+//				try {
+//					registerReceiver(Config.initFilter());
+//					GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+//				} catch (Exception e) {
+//					ToastUtil.showMessage(context, "eee===="+e);
+//				}
+
+			} else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
+
+				ToastUtil.showMessage(context, "===present");
+				Log.e("main===", tz+">>>present==="+m_nowMac);
+
+				if(tz==0) {
+					if(!"".equals(m_nowMac)){
+
+						if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+							ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+							finish();
+						}
+						//蓝牙锁
+						BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+						mBluetoothAdapter = bluetoothManager.getAdapter();
+
+						Log.e("main===", "present===1");
+
+						if (mBluetoothAdapter == null) {
+							ToastUtil.showMessageApp(context, "获取蓝牙失败");
+							finish();
+							return;
+						}
+
+						Log.e("main===", "present===2");
+
+						if (!mBluetoothAdapter.isEnabled()) {
+							Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+							startActivityForResult(enableBtIntent, 188);
+						}else{
+
+							Log.e("main===", "present===3");
+
+							connect();
+
+							if (macList.size() != 0){
+								macList.clear();
+							}
+							UUID[] uuids = {Config.xinbiaoUUID};
+							mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+						}
+					}
+				}else if(tz==1 && !FeedbackActivity.isForeground){
+					UIHelper.goToAct(MainActivity.this, FeedbackActivity.class);
+					Log.e("main===","main===Feedback");
+				}else if(tz==2 && !HistoryRoadDetailActivity.isForeground){
+					intent = new Intent(MainActivity.this, HistoryRoadDetailActivity.class);
+					intent.putExtra("oid", oid);
+					startActivity(intent);
+					Log.e("main===","main===HistoryRoadDetail");
+				}else if(tz==3 && !CurRoadBikedActivity.isForeground){
+					UIHelper.goToAct(MainActivity.this, CurRoadBikedActivity.class);
+					Log.e("main===","main===CurRoadBiked");
+				}
+
+
+
+
+
+			}
+		}
+	};
+
+
 	@Override
 	protected void onPause() {
 		isForeground = false;
@@ -641,19 +652,24 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		super.onPause();
 
 		JPushInterface.onPause(this);
-		mapView.onPause();
-		deactivate();
+//		mapView.onPause();
+//		deactivate();
 //		mFirstFix = false;
+		tz = 0;
 
-		ToastUtil.showMessage(this, "main====onPause");
+		ToastUtil.showMessageApp(this, "main====onPause");
 		Log.e("main===", "main====onPause");
-
-
 
 //		closeBroadcast();
 
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		Log.e("main===", "main====onStop");
+	}
 
 
 	/**
@@ -669,6 +685,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		ToastUtil.showMessage(context, "main===onDestroy");
 
 		mapView.onDestroy();
+		deactivate();
+
 		if(null != mlocationClient){
 			mlocationClient.onDestroy();
 		}
@@ -1347,6 +1365,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						switch (Tag){
 							case 0:
 								closeBroadcast();
+								deactivate();
 
 								UIHelper.goToAct(context, CurRoadBikingActivity.class);
 								break;
@@ -1610,6 +1629,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 									loadingDialog.dismiss();
 								}
 								closeBroadcast();
+								deactivate();
+
 								UIHelper.goToAct(context, CurRoadBikingActivity.class);
 							}else {
 								SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
@@ -1713,13 +1734,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 										try {
 
 											closeBroadcast();
+											deactivate();
 
 											Intent intent = new Intent();
 											intent.setClass(MainActivity.this, ActivityScanerCode.class);
 											intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 											startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
-
-
 
 										} catch (Exception e) {
 											UIHelper.showToastMsg(context, "相机打开失败,请检查相机是否可正常使用", R.drawable.ic_error);
@@ -1766,6 +1786,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 								}
 								try {
 									closeBroadcast();
+									deactivate();
 
 									Intent intent = new Intent();
 									intent.setClass(MainActivity.this, ActivityScanerCode.class);
@@ -1987,20 +2008,19 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	public void onLocationChanged(AMapLocation amapLocation) {
 //		super.onLocationChanged(amapLocation);
 
-
 //		title.setText(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==4="+isContainsList.contains(true)+"==="+macList.size()+"》》》"+near);
 
 		if (mListener != null && amapLocation != null) {
 
 			if((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-//			title.setText(amapLocation.getAccuracy()+"==="+amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
-			Log.e("main===1",amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
+			title.setText(isContainsList.contains(true)+"》》》"+near+"==="+amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
+			Log.e("main===1",isContainsList.contains(true)+"》》》"+near+"==="+amapLocation.getLatitude()+"==="+amapLocation.getLongitude());
 
 			if (amapLocation != null && amapLocation.getErrorCode() == 0) {
 
 //				title.setText(amapLocation.getErrorCode()+">>>"+amapLocation.getLongitude());
-				Log.e("main===2",amapLocation.getErrorCode()+">>>"+amapLocation.getLongitude());
+//				Log.e("main===2",amapLocation.getErrorCode()+">>>"+amapLocation.getLongitude());
 
 				if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()){
 					String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude","");
@@ -2286,6 +2306,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					if (permissions[0].equals(Manifest.permission.CAMERA)){
 						try {
 							closeBroadcast();
+							deactivate();
 
 							Intent intent = new Intent();
 							intent.setClass(MainActivity.this, ActivityScanerCode.class);
@@ -2419,6 +2440,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 		String action = intent.getAction();
 		String data = intent.getStringExtra("data");
+
+		Log.e("main===","handleReceiver==="+action+"==="+data);
+
 		switch (action) {
 			case BluetoothAdapter.ACTION_STATE_CHANGED:
 
@@ -2503,8 +2527,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						submit(uid, access_token);
 					}
 
-
-
 				} else {
 					//锁已开启
 					ToastUtil.showMessageApp(context,"main====您还未上锁，请给车上锁后还车");
@@ -2531,14 +2553,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				keyguardLock.disableKeyguard(); // 解锁
 
 
-
 				if (loadingDialog != null && loadingDialog.isShowing()){
 					loadingDialog.dismiss();
 				}
 				if (lockLoading != null && lockLoading.isShowing()){
 					lockLoading.dismiss();
 				}
-
 
 				ToastUtil.showMessageApp(context,"main===恭喜您，您已成功上锁");
                 Log.e("main===","main===恭喜您，您已成功上锁");
@@ -2551,7 +2571,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	protected void submit(String uid, String access_token){
 
-		Log.e("base===",uid+"==="+access_token+"==="+oid+"==="+referLatitude+"==="+referLongitude);
+		Log.e("base===",SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+uid+"==="+access_token+"==="+oid+"==="+referLatitude+"==="+referLongitude);
 
 		RequestParams params = new RequestParams();
 		params.put("uid", uid);
@@ -2593,16 +2613,23 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						SharedPreferencesUrls.getInstance().putString("biking_latitude","");
 						SharedPreferencesUrls.getInstance().putString("biking_longitude","");
 
+						if (loadingDialog != null && loadingDialog.isShowing()){
+							loadingDialog.dismiss();
+						}
+						if (customDialog3 != null && customDialog3.isShowing()){
+							customDialog3.dismiss();
+						}
+
 						if ("1".equals(result.getData())){
 							ToastUtil.showMessageApp(context, result.getMsg());
 							if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
 
 								ToastUtil.showMessage(context,"context==="+context);
 
-								if(context instanceof CurRoadStartActivity){
-									CurRoadStartActivity.isEnd = true;
-									CurRoadStartActivity.instance.finish();
-								}
+//								if(context instanceof CurRoadStartActivity){
+//									CurRoadStartActivity.isEnd = true;
+//									CurRoadStartActivity.instance.finish();
+//								}
 
 								tz = 1;
 								UIHelper.goToAct(context, FeedbackActivity.class);
@@ -2755,6 +2782,23 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 
+	protected void registerReceiver(IntentFilter intentfilter) {
+		if (internalReceiver == null) {
+			internalReceiver = new InternalReceiver();
+		}
+		registerReceiver(internalReceiver, intentfilter);
+	}
+
+	protected class InternalReceiver extends BroadcastReceiver {
+
+		//	protected BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			handleReceiver(context, intent);
+
+		}
+	};
 
 
 }

@@ -199,6 +199,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     int k=0;
     int near = 1;
+    protected InternalReceiver internalReceiver = null;
 
     @Override
     @TargetApi(23)
@@ -207,6 +208,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         setContentView(R.layout.ui_cur_road_biking);
         context = this;
 //        instance = this;
+        MainActivity.tz = 0;
 
         //注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
         IntentFilter filter = new IntentFilter("data.broadcast.action");
@@ -338,10 +340,11 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 mLeScanCallback = null;
             }
         }
-//          if (broadcastReceiver != null) {
-//              unregisterReceiver(broadcastReceiver);
-//              broadcastReceiver = null;
-//          }
+
+        if (broadcastReceiver1 != null) {
+          unregisterReceiver(broadcastReceiver1);
+          broadcastReceiver1 = null;
+        }
 
         try {
             if (internalReceiver != null) {
@@ -945,14 +948,17 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if ("1".equals(result.getData())){
                             ToastUtil.showMessageApp(context, result.getMsg());
                             if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
+                                MainActivity.tz = 1;
                                 UIHelper.goToAct(context, FeedbackActivity.class);
                                 scrollToFinishActivity();
                             }else {
+                                MainActivity.tz = 2;
                                 Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
                                 intent.putExtra("oid",oid);
                                 startActivity(intent);
                             }
                         }else {
+                            MainActivity.tz = 3;
                             ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
                             UIHelper.goToAct(context,CurRoadBikedActivity.class);
                         }
@@ -1525,6 +1531,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+            if (lockLoading != null && lockLoading.isShowing()){
+                lockLoading.dismiss();
+            }
+
+
             scrollToFinishActivity();
             return true;
         }
@@ -1908,6 +1922,23 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             return false;
         }
     });
+
+    protected void registerReceiver(IntentFilter intentfilter) {
+        if (internalReceiver == null) {
+            internalReceiver = new InternalReceiver();
+        }
+        registerReceiver(internalReceiver, intentfilter);
+    }
+
+    private class InternalReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            handleReceiver(context, intent);
+
+        }
+    };
 
 
 }

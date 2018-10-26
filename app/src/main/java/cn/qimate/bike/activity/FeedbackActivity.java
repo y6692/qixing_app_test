@@ -145,6 +145,8 @@ public class FeedbackActivity
     private double latitude = 0.0;
     private double longitude = 0.0;
 
+    public static boolean isForeground = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,6 +183,28 @@ public class FeedbackActivity
         }
         initView();
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        isForeground = true;
+        super.onResume();
+
+        Log.e("feedback===","feedback===onResume");
+    }
+
+    @Override
+    protected void onDestroy() {
+        isForeground = false;
+        super.onDestroy();
+
+        ToastUtil.showMessage(context,">>>>>>");
+
+
+        destroyLocation();
+
+        closeBle();
 
     }
 
@@ -1285,12 +1309,12 @@ public class FeedbackActivity
 
             closeBle();
 
-            try {
-                if (internalReceiver != null) {
-                    unregisterReceiver(internalReceiver);
-                }
-            } catch (Exception e) {
-            }
+//            try {
+//                if (internalReceiver != null) {
+//                    unregisterReceiver(internalReceiver);
+//                }
+//            } catch (Exception e) {
+//            }
 
             scrollToFinishActivity();
 
@@ -1479,16 +1503,5 @@ public class FeedbackActivity
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
-        ToastUtil.showMessage(context,">>>>>>");
-
-
-        destroyLocation();
-
-        closeBle();
-
-    }
 }

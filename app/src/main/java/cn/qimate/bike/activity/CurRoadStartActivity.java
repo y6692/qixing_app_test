@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -79,6 +80,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
     private TextView hintText1;
     private TextView hintText2;
     public static CurRoadStartActivity instance;
+    protected InternalReceiver internalReceiver = null;
 
     private String oid = "";
     private String osn = "";
@@ -234,7 +236,6 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         unlockHelpBtn.setOnClickListener(this);
     }
 
-    @Override
     protected void handleReceiver(Context context, Intent intent) {
         String action = intent.getAction();
         String data = intent.getStringExtra("data");
@@ -738,4 +739,21 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
         }
         return sb.toString();
     }
+
+    protected void registerReceiver(IntentFilter intentfilter) {
+        if (internalReceiver == null) {
+            internalReceiver = new InternalReceiver();
+        }
+        registerReceiver(internalReceiver, intentfilter);
+    }
+
+    private class InternalReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            handleReceiver(context, intent);
+
+        }
+    };
 }

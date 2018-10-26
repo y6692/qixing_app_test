@@ -160,15 +160,15 @@ public class ScanCaptureAct extends SwipeBackActivity implements View.OnClickLis
 	protected void onResume() {
 		super.onResume();
 
-		Toast.makeText(this, "capture===="+internalReceiver, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "capture====", Toast.LENGTH_SHORT).show();
 
-		try {
-			if (internalReceiver != null) {
-				unregisterReceiver(internalReceiver);
-			}
-		} catch (Exception e) {
-			Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
-		}
+//		try {
+//			if (internalReceiver != null) {
+//				unregisterReceiver(internalReceiver);
+//			}
+//		} catch (Exception e) {
+//			Toast.makeText(this, "eee===="+e, Toast.LENGTH_SHORT).show();
+//		}
 
 		initViews();
 		playBeep = true;

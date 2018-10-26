@@ -3,6 +3,7 @@ package cn.qimate.bike.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,6 +50,8 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
     private String oid = "";
     private String user_money = "";
     private String prices = "";
+    public static boolean isForeground = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,28 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         context = this;
         SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        isForeground = true;
+        super.onResume();
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
+            UIHelper.goToAct(context,LoginActivity.class);
+        }else {
+            getCurrentorder(uid,access_token);
+        }
+
+        Log.e("history===","biked===onResume");
+    }
+
+    @Override
+    protected void onDestroy() {
+        isForeground = false;
+        super.onDestroy();
     }
 
     private void initView(){
@@ -85,18 +110,7 @@ public class CurRoadBikedActivity extends SwipeBackActivity implements View.OnCl
         payBalanceLayout.setOnClickListener(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-            Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT);
-            UIHelper.goToAct(context,LoginActivity.class);
-        }else {
-            getCurrentorder(uid,access_token);
-        }
-    }
+
 
     private void getCurrentorder(String uid, String access_token){
         RequestParams params = new RequestParams();

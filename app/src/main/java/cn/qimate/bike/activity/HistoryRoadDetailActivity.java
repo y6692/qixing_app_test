@@ -65,6 +65,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
     private TextView freeDaysText;
 
     private String oid;
+    public static boolean isForeground = false;
 
     /** 图片id的数组,本地测试用 */
     private int[] imageId = new int[] { R.drawable.empty_photo };
@@ -78,6 +79,20 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         context = this;
         datas = new ArrayList<>();
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        isForeground = true;
+        super.onResume();
+
+        Log.e("history===","history===onResume");
+    }
+
+    @Override
+    protected void onDestroy() {
+        isForeground = false;
+        super.onDestroy();
     }
 
     private void initView(){
@@ -125,6 +140,8 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         initHttp();
         initBannerHttp();
     }
+
+
 
     @Override
     public void onClick(View v) {

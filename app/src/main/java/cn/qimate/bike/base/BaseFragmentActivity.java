@@ -127,8 +127,8 @@ public class BaseFragmentActivity extends AppCompatActivity
 //	public static LoadingDialog loadingDialog;
 //	public static LoadingDialog lockLoading;
 
-	protected int tz = 0;
-	protected InternalReceiver internalReceiver = null;
+
+//	protected InternalReceiver internalReceiver = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -557,30 +557,14 @@ public class BaseFragmentActivity extends AppCompatActivity
 	});
 
 
-	protected void handleReceiver(Context context, Intent intent) {
-		// 广播处理
-		if (intent == null) {
-			return;
-		}
-	}
+//	protected void handleReceiver(Context context, Intent intent) {
+//		// 广播处理
+//		if (intent == null) {
+//			return;
+//		}
+//	}
 
-	protected void registerReceiver(IntentFilter intentfilter) {
-		if (internalReceiver == null) {
-			internalReceiver = new InternalReceiver();
-		}
-		registerReceiver(internalReceiver, intentfilter);
-	}
 
-	private class InternalReceiver extends BroadcastReceiver {
-
-		//	protected BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-
-			handleReceiver(context, intent);
-
-		}
-	};
 
 
 }
