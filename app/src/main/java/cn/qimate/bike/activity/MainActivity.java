@@ -261,46 +261,46 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		initView();
 //		openGPSSettings();
 
-		if(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
-			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
-		}
-
-		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-
-//		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+m_nowMac);
-
-		if(!"".equals(m_nowMac)){
-
-			if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-				ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-				finish();
-			}
-			//蓝牙锁
-			BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-			mBluetoothAdapter = bluetoothManager.getAdapter();
-
-			if (mBluetoothAdapter == null) {
-				ToastUtil.showMessageApp(context, "获取蓝牙失败");
-				finish();
-				return;
-			}
-
-			if (!mBluetoothAdapter.isEnabled()) {
-				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				startActivityForResult(enableBtIntent, 188);
-			}else{
-
-				connect();
-
-				if (macList.size() != 0){
-					macList.clear();
-				}
-				UUID[] uuids = {Config.xinbiaoUUID};
-				mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
-			}
-		}else{
-			SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
-		}
+//		if(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
+//			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
+//		}
+//
+//		m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//
+////		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+m_nowMac);
+//
+//		if(!"".equals(m_nowMac)){
+//
+//			if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//				ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//				finish();
+//			}
+//			//蓝牙锁
+//			BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//			mBluetoothAdapter = bluetoothManager.getAdapter();
+//
+//			if (mBluetoothAdapter == null) {
+//				ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//				finish();
+//				return;
+//			}
+//
+//			if (!mBluetoothAdapter.isEnabled()) {
+//				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//				startActivityForResult(enableBtIntent, 188);
+//			}else{
+//
+//				connect();
+//
+//				if (macList.size() != 0){
+//					macList.clear();
+//				}
+//				UUID[] uuids = {Config.xinbiaoUUID};
+//				mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+//			}
+//		}else{
+//			SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+//		}
 
 
 //		getCurrentorder(uid, access_token);
@@ -491,8 +491,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 		getFeedbackStatus();
 
-
-
 		String uid = SharedPreferencesUrls.getInstance().getString("uid","");
 		String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 		String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays","");
@@ -504,8 +502,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			refreshLayout.setVisibility(View.GONE);
 			rechargeBtn.setVisibility(View.GONE);
 		}else {
-//			getCurrentorder2(uid,access_token);
-
 			refreshLayout.setVisibility(View.VISIBLE);
 			if (SharedPreferencesUrls.getInstance().getString("iscert","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
 				switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert",""))){
@@ -515,6 +511,41 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						authBtn.setText("您还未认证，点我快速认证");
 						break;
 					case 2:
+
+						m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+						Log.e("main===", "m_nowMac===="+m_nowMac);
+
+						if(!"".equals(m_nowMac)){
+
+							if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+								ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+								finish();
+							}
+							//蓝牙锁
+							BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+							mBluetoothAdapter = bluetoothManager.getAdapter();
+
+							if (mBluetoothAdapter == null) {
+								ToastUtil.showMessageApp(context, "获取蓝牙失败");
+								finish();
+								return;
+							}
+
+							if (!mBluetoothAdapter.isEnabled()) {
+								Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+								startActivityForResult(enableBtIntent, 188);
+							}else{
+
+								connect();
+
+								if (macList.size() != 0){
+									macList.clear();
+								}
+								UUID[] uuids = {Config.xinbiaoUUID};
+								mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+							}
+						}
+
 						getCurrentorder1(uid,access_token);
 						break;
 					case 3:
@@ -548,6 +579,107 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		}
 	}
 
+	private void getCurrentorder1(String uid, String access_token){
+		RequestParams params = new RequestParams();
+		params.put("uid",uid);
+		params.put("access_token",access_token);
+		HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
+			@Override
+			public void onStart() {
+				if (loadingDialog != null && !loadingDialog.isShowing()) {
+					loadingDialog.setTitle("正在加载");
+					loadingDialog.show();
+				}
+			}
+			@Override
+			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+				UIHelper.ToastError(context, throwable.toString());
+			}
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, String responseString) {
+				try {
+					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+					if (result.getFlag().equals("Success")) {
+						if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
+							if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+								authBtn.setEnabled(false);
+								authBtn.setVisibility(View.GONE);
+							}else {
+								CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
+
+								m_nowMac = bean.getMacinfo();
+
+								if(!"".equals(m_nowMac)){
+									oid = bean.getOid();
+									osn = bean.getOsn();
+									type = bean.getType();
+
+									SharedPreferencesUrls.getInstance().putString("m_nowMac",m_nowMac);
+									SharedPreferencesUrls.getInstance().putString("oid", oid);
+									SharedPreferencesUrls.getInstance().putString("osn", osn);
+									SharedPreferencesUrls.getInstance().putString("type", type);
+
+									if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+										ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+										finish();
+									}
+									//蓝牙锁
+									BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+									mBluetoothAdapter = bluetoothManager.getAdapter();
+
+									if (mBluetoothAdapter == null) {
+										ToastUtil.showMessageApp(context, "获取蓝牙失败");
+										finish();
+										return;
+									}
+
+									if (!mBluetoothAdapter.isEnabled()) {
+										Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+										startActivityForResult(enableBtIntent, 188);
+									}else{
+
+										connect();
+
+										if (macList.size() != 0){
+											macList.clear();
+										}
+										UUID[] uuids = {Config.xinbiaoUUID};
+										mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+									}
+								}
+
+
+
+								if ("1".equals(bean.getStatus())){
+									SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+
+									authBtn.setText("您有一条进行中的行程，点我查看");
+									Tag = 0;
+								}else {
+									SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+									SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
+
+									authBtn.setText("您有一条未支付的行程，点我查看");
+									Tag = 1;
+								}
+								authBtn.setVisibility(View.VISIBLE);
+								authBtn.setEnabled(true);
+							}
+						}
+					} else {
+						ToastUtils.show(result.getMsg());
+					}
+				} catch (Exception e) {
+				}
+				if (loadingDialog != null && loadingDialog.isShowing()){
+					loadingDialog.dismiss();
+				}
+			}
+		});
+	}
 
 
 	BroadcastReceiver mScreenReceiver =  new BroadcastReceiver() {
@@ -657,7 +789,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //		mFirstFix = false;
 		tz = 0;
 
-		ToastUtil.showMessageApp(this, "main====onPause");
+		ToastUtil.showMessage(this, "main====onPause");
 		Log.e("main===", "main====onPause");
 
 //		closeBroadcast();
@@ -852,74 +984,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	private void initView() {
 
-//        openGPS(false);
-
-//		ToastUtil.showMessageApp(this, "gps===="+isOpen());
-
-//		LocationManager alm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-//		if (alm.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)){
-//			Toast.makeText(this, "GPS模块正常", Toast.LENGTH_SHORT).show();
-//		}else{
-//
-//			Toast.makeText(this, "请开启GPS！", Toast.LENGTH_SHORT).show();
-//
-//			Intent intent = new Intent();
-//			intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//			startActivityForResult(intent, PRIVATE_CODE);
-//
-////            Intent GPSIntent = new Intent();
-////            GPSIntent.setClassName("com.android.settings","com.android.settings.widget.SettingsAppWidgetProvider");
-////            GPSIntent.addCategory("android.intent.category.ALTERNATIVE");
-////            GPSIntent.setData(Uri.parse("custom:3"));
-////            try {
-////                PendingIntent.getBroadcast(context, 0, GPSIntent, 0).send();
-////            } catch (Exception e) {
-////                e.printStackTrace();
-////            }
-//
-//		}
-
-//		Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
-//		startActivityForResult(intent,0);
-
-//		if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PERMISSION_GRANTED) {
-//			Settings.Secure.setLocationProviderEnabled( getContentResolver(), LocationManager.GPS_PROVIDER, true);
-//		}
-
-
-
-//		LocationManager lm = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
-//		boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-//		if (ok) {//开了定位服务
-//			if (Build.VERSION.SDK_INT >= 23) { //判断是否为android6.0系统版本，如果是，需要动态添加权限
-//				if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PERMISSION_GRANTED) {// 没有权限，申请权限。
-//					ToastUtil.showMessageApp(this, "====权限");
-//
-////					ActivityCompat.requestPermissions(this, LOCATIONGPS, BAIDU_READ_PHONE_STATE);
-//
-//				} else {
-//					getLocation();//getLocation为定位方法
-//				}
-//			} else {
-//				getLocation();//getLocation为定位方法
-//			}
-//		} else {
-//			ToastUtil.showMessageApp(this, "系统检测到未开启GPS定位服务,请开启");
-//			Intent intent = new Intent();
-//			intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//			startActivityForResult(intent, PRIVATE_CODE);
-//		}
-
-
-//		try {
-//			Intent gpsIntent = new Intent();
-//			gpsIntent.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-//			gpsIntent.addCategory("android.intent.category.ALTERNATIVE");
-//			gpsIntent.setData(Uri.parse("custom:3"));
-//			PendingIntent.getBroadcast(this, 0, gpsIntent, 0).send();
-//		}catch (Exception e) {
-//			ToastUtil.showMessageApp(this, "eee===="+e);
-//		}
 
 		openGPSSettings();
 
@@ -1450,6 +1514,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 
 
+
 	private class MyAsyncTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -1901,60 +1966,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 
-	private void getCurrentorder1(String uid, String access_token){
-		RequestParams params = new RequestParams();
-		params.put("uid",uid);
-		params.put("access_token",access_token);
-		HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
-			@Override
-			public void onStart() {
-				if (loadingDialog != null && !loadingDialog.isShowing()) {
-					loadingDialog.setTitle("正在加载");
-					loadingDialog.show();
-				}
-			}
-			@Override
-			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-				UIHelper.ToastError(context, throwable.toString());
-			}
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, String responseString) {
-				try {
-					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-					if (result.getFlag().equals("Success")) {
-						if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert",""))){
-							if ("[]".equals(result.getData()) || 0 == result.getData().length()){
-								authBtn.setEnabled(false);
-								authBtn.setVisibility(View.GONE);
-							}else {
-								CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
-								if ("1".equals(bean.getStatus())){
-									SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
-									authBtn.setText("您有一条进行中的行程，点我查看");
-									Tag = 0;
-								}else {
-									SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
-									authBtn.setText("您有一条未支付的行程，点我查看");
-									Tag = 1;
-								}
-								authBtn.setVisibility(View.VISIBLE);
-								authBtn.setEnabled(true);
-							}
-						}
-					} else {
-						ToastUtils.show(result.getMsg());
-					}
-				} catch (Exception e) {
-				}
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * 方法必须重写
