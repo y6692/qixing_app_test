@@ -13,6 +13,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.IBinder;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
@@ -149,6 +150,9 @@ public class BaseApplication extends Application {
 
 	public IBLE getIBLE() {
 		if (bleManager == null) {
+
+			Log.e("main===", "IBLE====");
+
 			bleManager = new AndroidBle(this);
 		}
 		return bleManager;
