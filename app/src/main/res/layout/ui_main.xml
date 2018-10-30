@@ -56,6 +56,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/mainUI_marquee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="还车须至校内地图红色区域，封顶5元/天"
