@@ -251,7 +251,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 //						lockLoading.dismiss();
 //					}
 //					isStop = true;
-                ToastUtil.showMessageApp(context,"start===设备连接成功");
+                ToastUtil.showMessageApp(context,"设备连接成功");
 
                 break;
             case Config.BATTERY_ACTION:
@@ -269,14 +269,14 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 //					}
                 if (TextUtils.isEmpty(data)) {
 
-                    ToastUtil.showMessageApp(context,"start====锁已关闭");
+                    ToastUtil.showMessageApp(context,"锁已关闭");
 
                     //锁已关闭
                     submit(uid, access_token);
 
                 } else {
                     //锁已开启
-                    ToastUtil.showMessageApp(context,"start===您还未上锁，请给车上锁后还车");
+                    ToastUtil.showMessageApp(context,"您还未上锁，请给车上锁后还车");
                 }
                 break;
             case Config.LOCK_RESULT:
@@ -286,10 +286,12 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
 //                    if (lockLoading != null && lockLoading.isShowing()){
 //                        lockLoading.dismiss();
 //                    }
-                ToastUtil.showMessageApp(context,"start===恭喜您，您已成功上锁");
+                ToastUtil.showMessageApp(context,"恭喜您，您已成功上锁");
 
+                if(MainActivity.screen){
+                    endBtn();
+                }
 
-                endBtn();
 
 
                 break;
@@ -338,6 +340,7 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                         if ("1".equals(result.getData())){
                             ToastUtil.showMessageApp(context, result.getMsg());
                             if ("已为您免单,欢迎反馈问题".equals(result.getMsg())){
+                                MainActivity.tz = 1;
 
                                 ToastUtil.showMessage(context,"context==="+context);
 
@@ -350,18 +353,20 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                                 UIHelper.goToAct(context, FeedbackActivity.class);
                                 scrollToFinishActivity();
                             }else {
+                                MainActivity.tz = 2;
                                 Intent intent = new Intent(context, HistoryRoadDetailActivity.class);
                                 intent.putExtra("oid", oid);
                                 startActivity(intent);
                             }
                         }else {
+                            MainActivity.tz = 3;
                             ToastUtil.showMessageApp(context,"恭喜您,还车成功,请支付!");
                             UIHelper.goToAct(context,CurRoadBikedActivity.class);
                         }
 //                        scrollToFinishActivity();
 
                     }else {
-                        ToastUtil.showMessageApp(context, "base===="+result.getMsg());
+                        ToastUtil.showMessageApp(context, result.getMsg());
                     }
                 }catch (Exception e){
 
@@ -383,6 +388,8 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
             ToastUtil.showMessage(context,uid+"==="+access_token);
             ToastUtil.showMessage(context,macList+"==="+isContainsList);
             ToastUtil.showMessage(context,macList.size()+"==="+isContainsList.contains(true));
+
+            Log.e("start===", "start====" + isContainsList.size()+"==="+isContainsList.contains(true));
 
             if (isContainsList.contains(true)){
                 if ("1".equals(type)){

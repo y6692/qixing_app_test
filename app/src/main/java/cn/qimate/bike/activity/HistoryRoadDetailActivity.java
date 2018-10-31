@@ -106,6 +106,7 @@ public class HistoryRoadDetailActivity extends SwipeBackActivity implements View
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("行程详情");
+//        title.setText(SharedPreferencesUrls.getInstance().getInt("near",-1)+"==="+SharedPreferencesUrls.getInstance().getString("biked_latitude","")+"==="+SharedPreferencesUrls.getInstance().getString("biked_longitude",""));
 
         payState = (TextView)findViewById(R.id.history_roadDetailUI_state);
         codeText = (TextView)findViewById(R.id.history_roadDetailUI_bikeCode);

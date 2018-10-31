@@ -461,8 +461,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             params.put("tokencode",result);
             params.put("latitude",SharedPreferencesUrls.getInstance().getString("latitude",""));
             params.put("longitude",SharedPreferencesUrls.getInstance().getString("longitude",""));
-            params.put("telprama","手机型号：" + SystemUtil.getSystemModel()
-                +", Android系统版本号："+SystemUtil.getSystemVersion());
+            params.put("telprama","手机型号：" + SystemUtil.getSystemModel() + ", Android系统版本号："+SystemUtil.getSystemVersion());
             HttpHelper.post(context, Urls.useCar, params, new TextHttpResponseHandler() {
                 @Override
                 public void onStart() {
@@ -544,7 +543,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             RequestParams params = new RequestParams();
             params.put("uid",uid);
             params.put("access_token",access_token);
-            params.put("codenum",codenum);
+            params.put("codenum", codenum);
+
+            Log.e("scan===lock", uid + "===" + access_token + "===" + codenum);
+
             if (quantity != null && !"".equals(quantity)){
                 params.put("quantity",quantity);
             }
@@ -562,9 +564,13 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     try {
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                         if (result.getFlag().equals("Success")) {
+
+                            Log.e("scan===lock1", "===");
+
                             BaseApplication.getInstance().getIBLE().openLock();
 
-                            SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+                            Log.e("scan===lock2", "===");
+
 
                         } else {
                             ToastUtil.showMessageApp(context, result.getMsg());
@@ -574,10 +580,14 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+
                         if (loadingDialog != null && loadingDialog.isShowing()){
                             loadingDialog.dismiss();
                         }
                     }
+
+
+
                 }
             });
         }
@@ -680,7 +690,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
      * */
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, Intent intent) {
             String action = intent.getAction();
             String data = intent.getStringExtra("data");
             switch (action) {
@@ -733,6 +743,29 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 loadingDialog.show();
                             }
 
+
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
+
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
+                                    if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                        ToastUtil.showMessageApp(context, "开锁失败，请重试");
+
+                                        finish();
+                                    }
+
+
+                                }
+                            }, 10 * 1000);
+
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+
+
                             Log.e("scan===", "scan===="+loadingDialog);
 
                         }
@@ -747,18 +780,21 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     }
                     break;
                 case Config.OPEN_ACTION:
-//                    if (loadingDialog != null && loadingDialog.isShowing()){
-//                        loadingDialog.dismiss();
-//                    }
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
 
                     if (TextUtils.isEmpty(data)) {
                         ToastUtil.showMessageApp(context,"开锁失败,请重试");
                         scrollToFinishActivity();
                     } else {
                         ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
-                        SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+                        Log.e("scan===", "OPEN_ACTION===="+isOpen);
 
-                        UIHelper.goToAct(context,CurRoadStartActivity.class);
+                        SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+                        SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+
+                        UIHelper.goToAct(context, CurRoadBikingActivity.class);
                         scrollToFinishActivity();
                     }
                     break;
