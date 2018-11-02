@@ -105,9 +105,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 	public static String osn = "";
 	public static String type = "";
 
-	public static List<Boolean> isContainsList;
-	public static List<String> macList;
-	public static List<Polygon> pOptions;
+
 	private LatLng myLocation = null;
 	private boolean mFirstFix = true;
 	protected AMapLocationClient mlocationClient;
@@ -123,7 +121,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 	public static double referLatitude = 0.0;
 	public static double referLongitude = 0.0;
 
-	protected BluetoothAdapter mBluetoothAdapter;
+
 //	public static LoadingDialog loadingDialog;
 //	public static LoadingDialog lockLoading;
 
@@ -212,14 +210,7 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 
 
-	protected BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-		@Override
-		public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-			if (!macList.contains(parseAdvData(rssi,scanRecord))){
-				macList.add(parseAdvData(rssi,scanRecord));
-			}
-		}
-	};
+
 
 	private String parseAdvData(int rssi, byte[] scanRecord) {
 		byte[] bytes = ParseLeAdvData.adv_report_parse(ParseLeAdvData.BLE_GAP_AD_TYPE_MANUFACTURER_SPECIFIC_DATA, scanRecord);
