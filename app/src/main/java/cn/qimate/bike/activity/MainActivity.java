@@ -232,6 +232,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	public List<Boolean> isContainsList;
 	public List<String> macList;
+	public List<String> macList2;
 	public List<Polygon> pOptions;
 
 	protected BluetoothAdapter.LeScanCallback mLeScanCallback;
@@ -570,6 +571,30 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			ToastUtil.showMessage(this, "eee====" + e);
 		}
 
+
+		mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+			@Override
+			public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+				Log.e("main===LeScan", device + "====" + rssi + "====" + scanRecord);
+
+//			if (!macList.contains(parseAdvData(rssi,scanRecord))){
+//				macList.add(parseAdvData(rssi,scanRecord));
+//			}
+
+				k++;
+
+				if (!macList.contains(""+device)){
+					macList.add(""+device);
+
+					title.setText(isContainsList.contains(true)+"》》》"+near+"==="+macList.size()+"==="+k+"==="+p);
+				}
+
+			}
+		};
+
+		startXB();
+
+
 		getFeedbackStatus();
 
 	}
@@ -673,23 +698,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			mlocationClient.startLocation();
 		}
 
-		mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-			@Override
-			public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-				Log.e("main===LeScan", device + "====" + rssi + "====" + scanRecord);
 
-//			if (!macList.contains(parseAdvData(rssi,scanRecord))){
-//				macList.add(parseAdvData(rssi,scanRecord));
-//			}
-
-				if (!macList.contains(""+device)){
-					macList.add(""+device);
-
-					title.setText(isContainsList.contains(true)+"》》》"+near+"==="+macList.size()+"==="+k+"==="+p);
-				}
-
-			}
-		};
 
 
 
@@ -793,129 +802,142 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 			if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
 
-			startXB();
-
-			m_myHandler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
 
 //					title.setText(isContainsList.contains(true)+"》》》"+near+"==="+macList.size()+"==="+k+"==="+p);
-					Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size());
-					ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
+			Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size());
+			ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
 
-					if (amapLocation != null && amapLocation.getErrorCode() == 0) {
+			if (amapLocation != null && amapLocation.getErrorCode() == 0) {
 
 //						title.setText(amapLocation.getErrorCode()+">>>"+amapLocation.getLongitude());
 //						Log.e("main===2",amapLocation.getErrorCode()+">>>"+amapLocation.getLongitude());
 
-						if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()) {
-							String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude", "");
-							String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude", "");
-							if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
-								if (AMapUtils.calculateLineDistance(new LatLng(
-										Double.parseDouble(latitude), Double.parseDouble(longitude)
-								), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
+				if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()) {
+					String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude", "");
+					String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude", "");
+					if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
+						if (AMapUtils.calculateLineDistance(new LatLng(
+								Double.parseDouble(latitude), Double.parseDouble(longitude)
+						), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
 
-									SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
-									SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
-									addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
-								}
-							}
-							if (mListener != null) {
-								mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-							}
+							SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
+							SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
+							addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
+						}
+					}
+					if (mListener != null) {
+						mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+					}
 
-							referLatitude = amapLocation.getLatitude();
-							referLongitude = amapLocation.getLongitude();
-							myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
+					referLatitude = amapLocation.getLatitude();
+					referLongitude = amapLocation.getLongitude();
+					myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
 
 
-							if (mFirstFix) {
-								mFirstFix = false;
-								schoolrangeList();
-								initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
-								aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
-							} else {
-								centerMarker.remove();
-								mCircle.remove();
+					if (mFirstFix) {
+						mFirstFix = false;
+						schoolrangeList();
+						initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
+						aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+					} else {
+						centerMarker.remove();
+						mCircle.remove();
 
 //								centerMarker.setPosition(myLocation);
 //								mCircle.setCenter(myLocation);
 
-								if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
-									isContainsList.clear();
-								}
-								for (int i = 0; i < pOptions.size(); i++) {
-									isContainsList.add(pOptions.get(i).contains(myLocation));
-								}
-							}
-
-//							title.setText(isContainsList.contains(true) + "===" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
-							ToastUtil.showMessage(context, isContainsList.contains(true) + "======" + near);
-
-							addChooseMarker();
-							addCircle(myLocation, amapLocation.getAccuracy());
-
-
-							if (start) {
-								start = false;
-
-								if (mlocationClient != null) {
-									mlocationClient.setLocationListener(MainActivity.this);
-									mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-									mLocationOption.setInterval(2 * 1000);
-									mlocationClient.setLocationOption(mLocationOption);
-									mlocationClient.startLocation();
-								}
-
-								BaseApplication.getInstance().getIBLE().getLockStatus();
-							} else {
-								if (!SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
-									if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near == 1) {
-										ToastUtil.showMessage(context, "main---》》》里");
-										BaseApplication.getInstance().getIBLE().getLockStatus();
-									} else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near == 0) {
-										ToastUtil.showMessage(context, "main---》》》外");
-										BaseApplication.getInstance().getIBLE().getLockStatus();
-									}
-								}
-							}
-
-
-							if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
-								near = 0;
-							} else {
-								near = 1;
-							}
-
-						} else {
-							CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-							customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-									.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-											dialog.cancel();
-											finish();
-//									scrollToFinishActivity();
-										}
-									}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int which) {
-									dialog.cancel();
-									MainActivity.this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
-								}
-							});
-							customBuilder.create().show();
+						if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
+							isContainsList.clear();
 						}
-
-						//保存经纬度到本地
-						SharedPreferencesUrls.getInstance().putString("latitude", "" + amapLocation.getLatitude());
-						SharedPreferencesUrls.getInstance().putString("longitude", "" + amapLocation.getLongitude());
+						for (int i = 0; i < pOptions.size(); i++) {
+							isContainsList.add(pOptions.get(i).contains(myLocation));
+						}
 					}
 
-					stopXB();
+//							title.setText(isContainsList.contains(true) + "===" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
+					ToastUtil.showMessage(context, isContainsList.contains(true) + "======" + near);
+
+					addChooseMarker();
+					addCircle(myLocation, amapLocation.getAccuracy());
+
+
+					if (start) {
+						start = false;
+
+						if (mlocationClient != null) {
+							mlocationClient.setLocationListener(MainActivity.this);
+							mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+							mLocationOption.setInterval(2 * 1000);
+							mlocationClient.setLocationOption(mLocationOption);
+							mlocationClient.startLocation();
+						}
+
+						macList2 = new ArrayList<> (macList);
+						BaseApplication.getInstance().getIBLE().getLockStatus();
+					} else {
+						if (!SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
+							if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near == 1) {
+								macList2 = new ArrayList<> (macList);
+
+								ToastUtil.showMessage(context, "main---》》》里");
+								BaseApplication.getInstance().getIBLE().getLockStatus();
+							} else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near == 0) {
+								macList2 = new ArrayList<> (macList);
+
+								ToastUtil.showMessage(context, "main---》》》外");
+								BaseApplication.getInstance().getIBLE().getLockStatus();
+							}
+						}
+					}
+
+
+					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
+						near = 0;
+					} else {
+						near = 1;
+					}
+
+				} else {
+					CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+									finish();
+//									scrollToFinishActivity();
+								}
+							}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							MainActivity.this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
+						}
+					});
+					customBuilder.create().show();
 				}
-			}, 1500);
+
+				//保存经纬度到本地
+				SharedPreferencesUrls.getInstance().putString("latitude", "" + amapLocation.getLatitude());
+				SharedPreferencesUrls.getInstance().putString("longitude", "" + amapLocation.getLongitude());
+			}
 
 
+
+
+//			startXB();
+//
+//			m_myHandler.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//
+//				}
+//			}, 1500);
+//
+//			stopXB();
+
+
+			if (macList.size() != 0) {
+				macList.clear();
+			}
 
 		}
 	}
@@ -1010,8 +1032,11 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				break;
 			case Config.BATTERY_ACTION:
 				if (isConnect) {
-					BaseApplication.getInstance().getIBLE().getLockStatus();
 				}
+
+				macList2 = new ArrayList<> (macList);
+				BaseApplication.getInstance().getIBLE().getLockStatus();
+
 				break;
 			case Config.OPEN_ACTION:
 				ToastUtil.showMessage(context, "####===3");
@@ -1036,20 +1061,21 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					Log.e("main===", "main===锁已关闭");
 					//锁已关闭
 
-					startXB();
+					if (!isContainsList.contains(true) && macList2.size() <= 0) {
+						customDialog3.show();
+					} else {
+						submit(uid, access_token);
+					}
 
-					m_myHandler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							if (!isContainsList.contains(true) && macList.size() <= 0) {
-								customDialog3.show();
-							} else {
-								submit(uid, access_token);
-							}
 
-							stopXB();
-						}
-					}, 2000);
+//					startXB();
+//
+//					m_myHandler.postDelayed(new Runnable() {
+//						@Override
+//						public void run() {
+//							stopXB();
+//						}
+//					}, 2000);
 
 				} else {
 					//锁已开启
@@ -1151,8 +1177,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		params.put("oid", oid);
 		params.put("latitude", referLatitude);
 		params.put("longitude", referLongitude);
-		if (macList.size() > 0){
-			params.put("xinbiao",macList.get(0));
+		if (macList2.size() > 0){
+			params.put("xinbiao",macList2.get(0));
 		}
 		HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
 			@Override
@@ -1226,7 +1252,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //							Intent intent = new Intent(getApplicationContext(),  CurRoadBikedActivity.class);
 //							intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 //							startActivity(intent);
-
 
 							Log.e("base===","base===CurRoadBiked");
 						}
@@ -1313,6 +1338,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 						Log.e("main===", "endBtn4===="+uid+"===="+access_token);
 
+						macList2 = new ArrayList<> (macList);
 						BaseApplication.getInstance().getIBLE().getLockStatus();
 					}else {
 
@@ -1324,7 +1350,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						m_myHandler.postDelayed(new Runnable() {
 							@Override
 							public void run() {
-								ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
+//								ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
 
 								if (lockLoading != null && lockLoading.isShowing()){
 									lockLoading.dismiss();
@@ -1356,6 +1382,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						return;
 					}
 					if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+						macList2 = new ArrayList<> (macList);
 						BaseApplication.getInstance().getIBLE().getLockStatus();
 					}else {
 						if (lockLoading != null && !lockLoading.isShowing()){
@@ -1597,6 +1624,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //					mLeScanCallback = null;
 //				}
 //			}
+
+			stopXB();
 
 			if (internalReceiver != null) {
 				unregisterReceiver(internalReceiver);
