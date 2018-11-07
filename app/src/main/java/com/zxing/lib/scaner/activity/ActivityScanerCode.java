@@ -63,8 +63,11 @@ import cn.loopj.android.http.RequestHandle;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.CurRoadBikedActivity;
 import cn.qimate.bike.activity.CurRoadBikingActivity;
 import cn.qimate.bike.activity.CurRoadStartActivity;
+import cn.qimate.bike.activity.FeedbackActivity;
+import cn.qimate.bike.activity.HistoryRoadDetailActivity;
 import cn.qimate.bike.activity.LoginActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.core.common.HttpHelper;
@@ -73,6 +76,7 @@ import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.core.widget.LoadingDialog;
+import cn.qimate.bike.model.CurRoadBikingBean;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.PublicWay;
@@ -210,7 +214,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        ToastUtil.showMessage(this, "scaner====");
+        ToastUtil.showMessage(this, "scaner===="+referLatitude);
 
 //        try {
 //            if (internalReceiver != null) {
@@ -533,65 +537,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             });
         }
     }
-    private void addOrderbluelock(){
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-            ToastUtil.showMessageApp(context,"请先登录账号");
-            UIHelper.goToAct(context, LoginActivity.class);
-        }else {
-            RequestParams params = new RequestParams();
-            params.put("uid",uid);
-            params.put("access_token",access_token);
-            params.put("codenum", codenum);
 
-            Log.e("scan===lock", uid + "===" + access_token + "===" + codenum);
-
-            if (quantity != null && !"".equals(quantity)){
-                params.put("quantity",quantity);
-            }
-            HttpHelper.post(context, Urls.addOrderbluelock, params, new TextHttpResponseHandler() {
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
-                    UIHelper.ToastError(context, throwable.toString());
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    try {
-                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                        if (result.getFlag().equals("Success")) {
-
-                            Log.e("scan===lock1", "===");
-
-                            BaseApplication.getInstance().getIBLE().openLock();
-
-                            Log.e("scan===lock2", "===");
-
-
-                        } else {
-                            ToastUtil.showMessageApp(context, result.getMsg());
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-
-                        if (loadingDialog != null && loadingDialog.isShowing()){
-                            loadingDialog.dismiss();
-                        }
-                    }
-
-
-
-                }
-            });
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -733,38 +679,37 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
 
-                            addOrderbluelock();
-
                             Log.e("scan===", "scan====1");
 
+                            addOrderbluelock();
 
                             if (loadingDialog != null && !loadingDialog.isShowing()) {
                                 loadingDialog.setTitle("正在开锁");
                                 loadingDialog.show();
                             }
 
-
                             m_myHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
+//                                    ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
 
                                     if (loadingDialog != null && loadingDialog.isShowing()){
                                         loadingDialog.dismiss();
                                     }
 
-                                    if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                        ToastUtil.showMessageApp(context, "开锁失败，请重试");
+                                    String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+                                    String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 
-                                        finish();
-                                    }
+//                                    Log.e("scan===1", BaseApplication.getInstance().getIBLE().getLockStatus()+"===="+oid+"===="+referLatitude);
 
-
+//                                    if (BaseApplication.getInstance().getIBLE().getLockStatus()){
+                                        Log.e("scan===2", oid+"===="+referLatitude);
+                                        submit(uid, access_token);
+//                                    }
                                 }
                             }, 10 * 1000);
 
-                            BaseApplication.getInstance().getIBLE().getLockStatus();
-
+//                          BaseApplication.getInstance().getIBLE().getLockStatus();
 
                             Log.e("scan===", "scan===="+loadingDialog);
 
@@ -802,23 +747,149 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     if (TextUtils.isEmpty(data)) {
                     } else {
                     }
+
                     break;
                 case Config.LOCK_STATUS_ACTION:
                     if (TextUtils.isEmpty(data)) {
-
                     } else {
-
                     }
+
                     break;
                 case Config.LOCK_RESULT:
                     if (TextUtils.isEmpty(data)) {
                     } else {
-
                     }
+
                     break;
             }
         }
     };
+
+
+    private void addOrderbluelock(){
+        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
+            ToastUtil.showMessageApp(context,"请先登录账号");
+            UIHelper.goToAct(context, LoginActivity.class);
+        }else {
+            RequestParams params = new RequestParams();
+            params.put("uid",uid);
+            params.put("access_token",access_token);
+            params.put("codenum", codenum);
+
+            Log.e("scan===lock", uid + "===" + access_token + "===" + codenum);
+
+            if (quantity != null && !"".equals(quantity)){
+                params.put("quantity",quantity);
+            }
+
+            HttpHelper.post(context, Urls.addOrderbluelock, params, new TextHttpResponseHandler() {
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                    UIHelper.ToastError(context, throwable.toString());
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    try {
+                        ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                        if (result.getFlag().equals("Success")) {
+
+                            CurRoadBikingBean bean = JSON.parseObject(result.getData(),CurRoadBikingBean.class);
+                            oid = bean.getOid();
+
+                            Log.e("scan===lock1", "===");
+
+                            BaseApplication.getInstance().getIBLE().openLock();
+
+                            Log.e("scan===lock2", "===");
+
+
+                        } else {
+                            ToastUtil.showMessageApp(context, result.getMsg());
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+
+
+                }
+            });
+
+        }
+    }
+
+
+    protected void submit(String uid, String access_token){
+
+        Log.e("scan===",SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+uid+"==="+access_token+"==="+oid+"==="+referLatitude+"==="+referLongitude);
+
+        RequestParams params = new RequestParams();
+        params.put("uid", uid);
+        params.put("access_token", access_token);
+        params.put("oid", oid);
+        params.put("latitude", referLatitude);
+        params.put("longitude", referLongitude);
+//        if (macList.size() > 0){
+//            params.put("xinbiao", macList.get(0));
+//        }
+        HttpHelper.post(context, Urls.backBikescan, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在提交");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.e("scan===","结束用车:"+responseString);
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        SharedPreferencesUrls.getInstance().putString("type","");
+                        SharedPreferencesUrls.getInstance().putString("m_nowMac","");
+                        SharedPreferencesUrls.getInstance().putString("oid","");
+                        SharedPreferencesUrls.getInstance().putString("osn","");
+                        SharedPreferencesUrls.getInstance().putString("type","");
+                        SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+                        SharedPreferencesUrls.getInstance().putString("biking_latitude","");
+                        SharedPreferencesUrls.getInstance().putString("biking_longitude","");
+
+                        ToastUtil.showMessageApp(context, "开锁失败，请重试");
+
+                        scrollToFinishActivity();
+
+                    }else {
+                        ToastUtil.showMessageApp(context, result.getMsg());
+                    }
+                }catch (Exception e){
+
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
 
     Handler m_myHandler = new Handler(new Handler.Callback() {
         @Override

@@ -615,7 +615,6 @@ public class CurRoadStartActivity extends SwipeBackActivity implements View.OnCl
                         SharedPreferencesUrls.getInstance().putString("osn", osn);
                         SharedPreferencesUrls.getInstance().putString("type", type);
 
-
                         bikeCode.setText(bean.getCodenum());
                         if ("1".equals(bean.getType())){
                             CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
