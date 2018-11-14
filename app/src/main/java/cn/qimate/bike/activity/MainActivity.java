@@ -342,29 +342,226 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	}
 
+
+    private boolean checkGPSIsOpen() {
+        boolean isOpen;
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
+        provider = locationManager.getBestProvider(criteria, true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        locationManager.requestLocationUpdates(provider, 2000, 500, locationListener);
+
+        isOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
+        return isOpen;
+    }
+
+
+    private void openGPSSettings() {
+
+
+
+        if (checkGPSIsOpen()) {
+        } else {
+
+            CustomDialog.Builder customBuilder = new CustomDialog.Builder(MainActivity.this);
+            customBuilder.setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            finishMine();
+                        }
+                    })
+                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, PRIVATE_CODE);
+                        }
+                    });
+            customBuilder.create().show();
+
+        }
+    }
+
+
+    private void initView() {
+
+        openGPSSettings();
+
+//		Settings.Secure.setLocationProviderEnabled( getContentResolver(), LocationManager.GPS_PROVIDER, true);
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                            REQUEST_CODE_ASK_PERMISSIONS);
+                } else {
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            MainActivity.this.requestPermissions(
+                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                                    REQUEST_CODE_ASK_PERMISSIONS);
+                        }
+                    });
+                    customBuilder.create().show();
+                }
+                return;
+            }
+        }
+
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
+
+        lockLoading = new LoadingDialog(this);
+        lockLoading.setCancelable(false);
+        lockLoading.setCanceledOnTouchOutside(false);
+
+        loadingDialog1 = new LoadingDialog(this);
+        loadingDialog1.setCancelable(false);
+        loadingDialog1.setCanceledOnTouchOutside(false);
+
+        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
+        dialog.setContentView(dialogView);
+        dialog.setCanceledOnTouchOutside(false);
+
+        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
+
+        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+
+        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
+        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+        advImageView.setLayoutParams(params4);
+
+        marquee = (TextView) findViewById(R.id.mainUI_marquee);
+        title = (TextView) findViewById(R.id.mainUI_title);
+        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
+        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
+        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
+        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
+        scanLock = (ImageView) findViewById(R.id.mainUI_scanCode_lock);
+        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
+        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
+        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
+        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
+        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
+        slideLayout = findViewById(R.id.mainUI_slideLayout);
+        if (aMap == null) {
+            aMap = mapView.getMap();
+            setUpMap();
+        }
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+        aMap.moveCamera(cameraUpdate);
+        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+        setUpLocationStyle();
+
+        aMap.setOnMapTouchListener(MainActivity.this);
+
+        leftBtn.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
+        marqueeLayout.setOnClickListener(this);
+        myLocationBtn.setOnClickListener(this);
+        myLocationLayout.setOnClickListener(this);
+        linkLayout.setOnClickListener(this);
+        scanLock.setOnClickListener(this);
+        linkBtn.setOnClickListener(this);
+        authBtn.setOnClickListener(this);
+        rechargeBtn.setOnClickListener(this);
+        refreshLayout.setOnClickListener(this);
+        advImageView.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
+        cartBtn.setOnClickListener(this);
+        slideLayout.setOnClickListener(this);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+        titleImage.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_1.setLayoutParams(params1);
+
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_2.setLayoutParams(params2);
+
+        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_3.setLayoutParams(params3);
+
+        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+            WindowManager windowManager = getWindowManager();
+            Display display = windowManager.getDefaultDisplay();
+            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+            dialog.getWindow().setAttributes(lp);
+            dialog.show();
+        }else {
+            initHttp();
+        }
+        exImage_1.setOnClickListener(myOnClickLister);
+        exImage_2.setOnClickListener(myOnClickLister);
+        closeBtn.setOnClickListener(myOnClickLister);
+
+    }
+
+
 	private final LocationListener locationListener = new LocationListener() {
 
 		@Override
 		public void onLocationChanged(Location location) {
-			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void onProviderDisabled(String arg0) {
-			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void onProviderEnabled(String arg0) {
-			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-			// TODO Auto-generated method stub
 
 		}
 
@@ -376,9 +573,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
-
 			getFeedbackStatus();
-
 		}
 	};
 
@@ -1828,203 +2023,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		}
 	}
 
-	private boolean checkGPSIsOpen() {
-		boolean isOpen;
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE); // 高精度
-		criteria.setAltitudeRequired(false);
-		criteria.setBearingRequired(false);
-		criteria.setCostAllowed(true);
-		criteria.setPowerRequirement(Criteria.POWER_LOW); // 低功耗
-		provider = locationManager.getBestProvider(criteria, true);
-		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-			return false;
-		}
-		locationManager.requestLocationUpdates(provider, 2000, 500, locationListener);
-
-		isOpen = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
-		return isOpen;
-	}
 
 
-	private void openGPSSettings() {
-
-		if (checkGPSIsOpen()) {
-		} else {
-
-			CustomDialog.Builder customBuilder = new CustomDialog.Builder(MainActivity.this);
-			customBuilder.setTitle("温馨提示").setMessage("请在手机设置打开应用的位置权限并选择最精准的定位模式")
-					.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.cancel();
-							finishMine();
-						}
-					})
-					.setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.cancel();
-							Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							startActivityForResult(intent, PRIVATE_CODE);
-						}
-					});
-			customBuilder.create().show();
-
-		}
-	}
 
 
-	private void initView() {
-
-
-		openGPSSettings();
-
-//		Settings.Secure.setLocationProviderEnabled( getContentResolver(), LocationManager.GPS_PROVIDER, true);
-
-		if (Build.VERSION.SDK_INT >= 23) {
-			int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-				if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-					requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-							REQUEST_CODE_ASK_PERMISSIONS);
-				} else {
-					CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int which) {
-									dialog.cancel();
-								}
-							}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.cancel();
-							MainActivity.this.requestPermissions(
-									new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-									REQUEST_CODE_ASK_PERMISSIONS);
-						}
-					});
-					customBuilder.create().show();
-				}
-				return;
-			}
-		}
-
-		loadingDialog = new LoadingDialog(this);
-		loadingDialog.setCancelable(false);
-		loadingDialog.setCanceledOnTouchOutside(false);
-
-		lockLoading = new LoadingDialog(this);
-		lockLoading.setCancelable(false);
-		lockLoading.setCanceledOnTouchOutside(false);
-
-		loadingDialog1 = new LoadingDialog(this);
-		loadingDialog1.setCancelable(false);
-		loadingDialog1.setCanceledOnTouchOutside(false);
-
-		dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-		View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
-		dialog.setContentView(dialogView);
-		dialog.setCanceledOnTouchOutside(false);
-
-		advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-		View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
-		advDialog.setContentView(advDialogView);
-		advDialog.setCanceledOnTouchOutside(false);
-
-		marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
-
-		titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-		exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-		exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-		exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-		closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-		advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-		advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-		LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-		params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-		advImageView.setLayoutParams(params4);
-
-		marquee = (TextView) findViewById(R.id.mainUI_marquee);
-		title = (TextView) findViewById(R.id.mainUI_title);
-		leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-		rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
-        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
-        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
-		myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
-		scanLock = (ImageView) findViewById(R.id.mainUI_scanCode_lock);
-		linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
-		authBtn = (Button)findViewById(R.id.mainUI_authBtn);
-		cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
-		rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
-		refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
-		slideLayout = findViewById(R.id.mainUI_slideLayout);
-		if (aMap == null) {
-			aMap = mapView.getMap();
-			setUpMap();
-		}
-		aMap.getUiSettings().setZoomControlsEnabled(false);
-		aMap.getUiSettings().setMyLocationButtonEnabled(false);
-		aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-		CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-		aMap.moveCamera(cameraUpdate);
-		successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-		bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
-		setUpLocationStyle();
-
-		aMap.setOnMapTouchListener(MainActivity.this);
-
-		leftBtn.setOnClickListener(this);
-		rightBtn.setOnClickListener(this);
-		marqueeLayout.setOnClickListener(this);
-		myLocationBtn.setOnClickListener(this);
-        myLocationLayout.setOnClickListener(this);
-        linkLayout.setOnClickListener(this);
-		scanLock.setOnClickListener(this);
-		linkBtn.setOnClickListener(this);
-		authBtn.setOnClickListener(this);
-		rechargeBtn.setOnClickListener(this);
-		refreshLayout.setOnClickListener(this);
-		advImageView.setOnClickListener(this);
-		advCloseBtn.setOnClickListener(this);
-		cartBtn.setOnClickListener(this);
-		slideLayout.setOnClickListener(this);
-
-		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-		params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-		titleImage.setLayoutParams(params);
-
-		LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-		params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-		exImage_1.setLayoutParams(params1);
-
-		LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-		params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-		exImage_2.setLayoutParams(params2);
-
-		LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-		params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-		exImage_3.setLayoutParams(params3);
-
-		if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-			SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-			WindowManager windowManager = getWindowManager();
-			Display display = windowManager.getDefaultDisplay();
-			WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-			lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-			lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-			dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-			dialog.getWindow().setAttributes(lp);
-			dialog.show();
-		}else {
-			initHttp();
-		}
-		exImage_1.setOnClickListener(myOnClickLister);
-		exImage_2.setOnClickListener(myOnClickLister);
-		closeBtn.setOnClickListener(myOnClickLister);
-
-	}
 
 	private OnClickListener myOnClickLister = new OnClickListener() {
         @Override

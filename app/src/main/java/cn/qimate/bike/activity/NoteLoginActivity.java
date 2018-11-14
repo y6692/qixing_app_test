@@ -1,9 +1,16 @@
 package cn.qimate.bike.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +25,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.http.Header;
 
 import java.util.Set;
+import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
@@ -32,6 +40,8 @@ import cn.qimate.bike.core.widget.LoadingDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
+
+import static android.text.TextUtils.isEmpty;
 
 /**
  * Created by Administrator1 on 2017/2/16.
@@ -66,7 +76,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         initView();
     }
 
-    private void initView(){
+    private void initView() {
 
         tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -78,22 +88,22 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("快捷登录");
 
-        headLayout = (LinearLayout)findViewById(R.id.noteLoginUI_headLayout);
-        headLayout = (LinearLayout)findViewById(R.id.noteLoginUI_headLayout);
+        headLayout = (LinearLayout) findViewById(R.id.noteLoginUI_headLayout);
+        headLayout = (LinearLayout) findViewById(R.id.noteLoginUI_headLayout);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) headLayout.getLayoutParams();
         params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.4);
         headLayout.setLayoutParams(params);
 
-        userNameEdit = (EditText)findViewById(R.id.noteLoginUI_userName);
-        codeEdit = (EditText)findViewById(R.id.noteLoginUI_phoneNum_code);
+        userNameEdit = (EditText) findViewById(R.id.noteLoginUI_userName);
+        codeEdit = (EditText) findViewById(R.id.noteLoginUI_phoneNum_code);
 
-        if (SharedPreferencesUrls.getInstance().getString("userName","") != null && !"".equals(
-                SharedPreferencesUrls.getInstance().getString("userName",""))){
-            userNameEdit.setText(SharedPreferencesUrls.getInstance().getString("userName",""));
+        if (SharedPreferencesUrls.getInstance().getString("userName", "") != null && !"".equals(
+                SharedPreferencesUrls.getInstance().getString("userName", ""))) {
+            userNameEdit.setText(SharedPreferencesUrls.getInstance().getString("userName", ""));
         }
-        codeBtn = (Button)findViewById(R.id.noteLoginUI_noteCode);
-        loginBtn = (Button)findViewById(R.id.noteLoginUI_btn);
-        findPsd = (TextView)findViewById(R.id.noteLoginUI_findPsd);
+        codeBtn = (Button) findViewById(R.id.noteLoginUI_noteCode);
+        loginBtn = (Button) findViewById(R.id.noteLoginUI_btn);
+        findPsd = (TextView) findViewById(R.id.noteLoginUI_findPsd);
 
         backImg.setOnClickListener(this);
         codeBtn.setOnClickListener(this);
@@ -104,51 +114,83 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         String telphone = userNameEdit.getText().toString();
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
             case R.id.noteLoginUI_noteCode:
-                if (telphone == null || "".equals(telphone)){
-                    Toast.makeText(context,"请输入您的手机号码",Toast.LENGTH_SHORT).show();
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!StringUtil.isPhoner(telphone)){
-                    Toast.makeText(context,"手机号码格式不正确",Toast.LENGTH_SHORT).show();
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 sendCode(telphone);
                 break;
             case R.id.noteLoginUI_btn:
                 String code = codeEdit.getText().toString();
-                if (telphone == null || "".equals(telphone)){
-                    Toast.makeText(context,"请输入您的手机号码",Toast.LENGTH_SHORT).show();
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!StringUtil.isPhoner(telphone)){
-                    Toast.makeText(context,"手机号码格式不正确",Toast.LENGTH_SHORT).show();
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (code == null || "".equals(code)){
-                    Toast.makeText(context,"请输入您的验证码",Toast.LENGTH_SHORT).show();
+                if (code == null || "".equals(code)) {
+                    Toast.makeText(context, "请输入您的验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                loginHttp(telphone,code);
+                loginHttp(telphone, code);
                 break;
             case R.id.noteLoginUI_findPsd:
-                UIHelper.goToAct(context,FindPsdActivity.class);
+                UIHelper.goToAct(context, FindPsdActivity.class);
                 break;
         }
+    }
+
+    private String getMyUUID() {
+
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, tmPhone, androidId;
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return "";
+        }
+        tmDevice = "" + tm.getDeviceId();
+
+        tmSerial = "" + tm.getSimSerialNumber();
+
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+
+        String uniqueId = deviceUuid.toString();
+
+        Log.d("debug", "uuid=" + uniqueId);
+
+        return uniqueId;
+
     }
 
     /**
      * 发送验证码
      *
      * */
-    private void sendCode(String telphone){
+    private void sendCode(String telphone) {
 
         RequestParams params = new RequestParams();
         params.add("telphone", telphone);
+
+//        params.put("UUID", getMyUUID());
+//        params.put("UUID", getDeviceId());
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         params.add("UUID", tm.getDeviceId());
         params.add("type", "2");
         HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
@@ -196,7 +238,26 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         RequestParams params = new RequestParams();
         params.put("telphone", telphone);
         params.put("telcode", telcode);
-        params.put("UUID", tm.getDeviceId());
+
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//
+//        String id;
+//        if (tm.getDeviceId() != null && !"".equals(tm.getDeviceId())) {
+//            id = tm.getDeviceId();
+//        } else {
+//            id = Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+//        }
+//
+//        params.add("UUID", id);
+//
+//        params.put("UUID", getDeviceId());
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        params.add("UUID", tm.getDeviceId());
 
         HttpHelper.post(context, Urls.loginCode, params, new TextHttpResponseHandler() {
             @Override
@@ -247,6 +308,56 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 }
             }
         });
+    }
+
+    public String getDeviceId() {
+        StringBuilder deviceId = new StringBuilder();
+        // 渠道标志
+        deviceId.append("a");
+        try {
+            //wifi mac地址
+            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo info = wifi.getConnectionInfo();
+            String wifiMac = info.getMacAddress();
+            if (!isEmpty(wifiMac)) {
+                deviceId.append("wifi");
+                deviceId.append(wifiMac);
+                Log.e("getDeviceId : ", deviceId.toString());
+                return deviceId.toString();
+            }
+            //IMEI（imei）
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return "";
+            }
+            String imei = tm.getDeviceId();
+            if(!isEmpty(imei)){
+                deviceId.append("imei");
+                deviceId.append(imei);
+                Log.e("getDeviceId : ", deviceId.toString());
+                return deviceId.toString();
+            }
+            //序列号（sn）
+            String sn = tm.getSimSerialNumber();
+            if(!isEmpty(sn)){
+                deviceId.append("sn");
+                deviceId.append(sn);
+                Log.e("getDeviceId : ", deviceId.toString());
+                return deviceId.toString();
+            }
+            //如果上面都没有， 则生成一个id：随机码
+            String uuid = UUID.randomUUID().toString();
+            if(!isEmpty(uuid)){
+                deviceId.append("id");
+                deviceId.append(uuid);
+                Log.e("getDeviceId : ", deviceId.toString());
+                return deviceId.toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.e("getDeviceId : ", deviceId.toString());
+        return deviceId.toString();
     }
 
     Handler handler = new Handler() {

@@ -1,8 +1,15 @@
 package cn.qimate.bike.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Selection;
@@ -10,6 +17,7 @@ import android.text.Spannable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +32,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.http.Header;
 
 import java.util.Set;
+import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
@@ -40,11 +49,13 @@ import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.model.UserMsgBean;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
+import static android.text.TextUtils.isEmpty;
+
 /**
  * Created by Administrator on 2017/2/15 0015.
  */
 
-public class LoginActivity extends SwipeBackActivity implements View.OnClickListener{
+public class LoginActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private static final int MSG_SET_ALIAS = 1001;
     private static final int MSG_SET_TAGS = 1002;
@@ -74,7 +85,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         initView();
     }
 
-    private void initView(){
+    private void initView() {
 
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
@@ -88,21 +99,21 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
         rightBtn.setText("注册");
 
-        headLayout = (LinearLayout)findViewById(R.id.loginUI_headLayout);
+        headLayout = (LinearLayout) findViewById(R.id.loginUI_headLayout);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) headLayout.getLayoutParams();
         params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.4);
         headLayout.setLayoutParams(params);
 
-        userNameEdit = (EditText)findViewById(R.id.loginUI_userName);
-        passwordEdit = (EditText)findViewById(R.id.LoginUI_password);
-        loginBtn = (Button)findViewById(R.id.loginUI_btn);
-        noteLogin = (TextView)findViewById(R.id.loginUI_noteLogin);
-        findPsd = (TextView)findViewById(R.id.loginUI_findPsd);
-        checkBox = (ImageView)findViewById(R.id.LoginUI_checkBox);
+        userNameEdit = (EditText) findViewById(R.id.loginUI_userName);
+        passwordEdit = (EditText) findViewById(R.id.LoginUI_password);
+        loginBtn = (Button) findViewById(R.id.loginUI_btn);
+        noteLogin = (TextView) findViewById(R.id.loginUI_noteLogin);
+        findPsd = (TextView) findViewById(R.id.loginUI_findPsd);
+        checkBox = (ImageView) findViewById(R.id.LoginUI_checkBox);
 
-        if (SharedPreferencesUrls.getInstance().getString("userName","") != null &&
-                !"".equals(SharedPreferencesUrls.getInstance().getString("userName",""))){
-            userNameEdit.setText(SharedPreferencesUrls.getInstance().getString("userName",""));
+        if (SharedPreferencesUrls.getInstance().getString("userName", "") != null &&
+                !"".equals(SharedPreferencesUrls.getInstance().getString("userName", ""))) {
+            userNameEdit.setText(SharedPreferencesUrls.getInstance().getString("userName", ""));
         }
         userNameEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -117,9 +128,9 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
-               if (StringUtil.isPhoner(userNameEdit.getText().toString().trim())){
-                   SharedPreferencesUrls.getInstance().putString("userName",userNameEdit.getText().toString().trim());
-               }
+                if (StringUtil.isPhoner(userNameEdit.getText().toString().trim())) {
+                    SharedPreferencesUrls.getInstance().putString("userName", userNameEdit.getText().toString().trim());
+                }
             }
         });
 
@@ -133,45 +144,45 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
             case R.id.mainUI_title_rightBtn:
-                UIHelper.goToAct(context,RegisterActivity.class);
+                UIHelper.goToAct(context, RegisterActivity.class);
                 scrollToFinishActivity();
                 break;
             case R.id.loginUI_btn:
                 String telphone = userNameEdit.getText().toString();
                 String password = passwordEdit.getText().toString();
-                if (telphone == null || "".equals(telphone)){
-                    Toast.makeText(context,"请输入您的手机号码",Toast.LENGTH_SHORT).show();
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!StringUtil.isPhoner(telphone)){
-                    Toast.makeText(context,"手机号码格式不正确",Toast.LENGTH_SHORT).show();
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (password == null || "".equals(password)){
-                    Toast.makeText(context,"请输入您的密码",Toast.LENGTH_SHORT).show();
+                if (password == null || "".equals(password)) {
+                    Toast.makeText(context, "请输入您的密码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                LoginHttp(telphone,password);
+                LoginHttp(telphone, password);
                 break;
             case R.id.loginUI_noteLogin:
-                UIHelper.goToAct(context,NoteLoginActivity.class);
+                UIHelper.goToAct(context, NoteLoginActivity.class);
                 scrollToFinishActivity();
                 break;
             case R.id.loginUI_findPsd:
-                UIHelper.goToAct(context,FindPsdActivity.class);
+                UIHelper.goToAct(context, FindPsdActivity.class);
                 break;
             case R.id.LoginUI_checkBox:
-                if (isHidepsd){
+                if (isHidepsd) {
                     isHidepsd = false;
                     checkBox.setImageResource(R.drawable.checkbox_pressed);
                     // 设置EditText文本为可见的
-                    passwordEdit .setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }else {
+                    passwordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
                     isHidepsd = true;
                     checkBox.setImageResource(R.drawable.checkbox_normal);
                     passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -186,14 +197,35 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
         }
     }
 
-    private void LoginHttp(String telphone,String password) {
+    private void LoginHttp(String telphone, String password) {
 
         Md5Helper Md5Helper = new Md5Helper();
         String passwordmd5 = Md5Helper.encode(password);
         RequestParams params = new RequestParams();
         params.add("telphone", telphone);
         params.add("password", passwordmd5);
-        params.add("UUID", tm.getDeviceId());
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//
+//        Log.e("LoginHttp===", tm.getDeviceId() + "===" + tm.getSubscriberId());
+//
+//        String id;
+//        if (tm.getDeviceId() != null && !"".equals(tm.getDeviceId())) {
+////            id = tm.getDeviceId();
+//
+//            id = tm.getSubscriberId();
+//
+//            id = "";
+//
+//        } else {
+//            id = Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+//        }
+
+        params.add("UUID", "1");
+//        params.add("UUID", getDeviceId());
+
+//        params.add("UUID", tm.getDeviceId());
 
         HttpHelper.post(context, Urls.loginNormal, params, new TextHttpResponseHandler() {
             @Override
@@ -206,7 +238,7 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
+                if (loadingDialog != null && loadingDialog.isShowing()) {
                     loadingDialog.dismiss();
                 }
                 UIHelper.ToastError(context, throwable.toString());
@@ -232,20 +264,85 @@ public class LoginActivity extends SwipeBackActivity implements View.OnClickList
                         SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
                         SharedPreferencesUrls.getInstance().putString("specialdays", bean.getSpecialdays());
                         SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
-                        Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "恭喜您,登录成功", Toast.LENGTH_SHORT).show();
                         scrollToFinishActivity();
                     } else {
-                        Toast.makeText(context,result.getMsg(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (loadingDialog != null && loadingDialog.isShowing()){
+                if (loadingDialog != null && loadingDialog.isShowing()) {
                     loadingDialog.dismiss();
                 }
             }
         });
     }
+
+
+    public String getDeviceId() {
+        StringBuilder deviceId = new StringBuilder();
+        // 渠道标志
+        deviceId.append("a");
+        try {
+            //wifi mac地址
+            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo info = wifi.getConnectionInfo();
+            String wifiMac = info.getMacAddress();
+            if (!isEmpty(wifiMac)) {
+                deviceId.append("wifi");
+                deviceId.append(wifiMac);
+                Log.e("getDeviceId : ", deviceId.toString());
+                return deviceId.toString();
+            }
+            //IMEI（imei）
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return "";
+            }
+            String imei = tm.getDeviceId();
+            if(!isEmpty(imei)){
+                deviceId.append("imei");
+                deviceId.append(imei);
+                Log.e("getDeviceId : ", deviceId.toString());
+                return deviceId.toString();
+            }
+            //序列号（sn）
+            String sn = tm.getSimSerialNumber();
+            if(!isEmpty(sn)){
+                deviceId.append("sn");
+                deviceId.append(sn);
+                Log.e("getDeviceId : ", deviceId.toString());
+                return deviceId.toString();
+            }
+            //如果上面都没有， 则生成一个id：随机码
+            String uuid = UUID.randomUUID().toString();
+            if(!isEmpty(uuid)){
+                deviceId.append("id");
+                deviceId.append(uuid);
+                Log.e("getDeviceId : ", deviceId.toString());
+                return deviceId.toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.e("getDeviceId : ", deviceId.toString());
+        return deviceId.toString();
+    }
+
+//    public static String getUUID(Context context){
+//        SharedPreferences mShare = getSysShare(context, "sysCacheMap");
+//        if(mShare != null){
+//            uuid = mShare.getString("uuid", "");
+//        }
+//        if(isEmpty(uuid)){
+//            uuid = UUID.randomUUID().toString();
+//            saveSysMap(context, "sysCacheMap", "uuid", uuid);
+//        }
+//        Log.e(tag, "getUUID : " + uuid);
+//        return uuid;
+//    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
