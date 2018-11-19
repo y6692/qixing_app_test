@@ -96,7 +96,7 @@ public class SplashActivity extends BaseActivity {
 
 
 
-		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
+		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
 
 //		if(!"".equals(m_nowMac)){
 //
@@ -467,10 +467,13 @@ public class SplashActivity extends BaseActivity {
 	 *
 	 */
 	private void startLocation(){
-		// 设置定位参数
-		locationClient.setLocationOption(locationOption);
-		// 启动定位
-		locationClient.startLocation();
+		if (null != locationClient) {
+			// 设置定位参数
+			locationClient.setLocationOption(locationOption);
+			// 启动定位
+			locationClient.startLocation();
+		}
+
 	}
 
 	/**
@@ -482,7 +485,10 @@ public class SplashActivity extends BaseActivity {
 	 */
 	private void stopLocation(){
 		// 停止定位
-		locationClient.stopLocation();
+		if (null != locationClient) {
+			locationClient.stopLocation();
+		}
+
 	}
 
 	/**

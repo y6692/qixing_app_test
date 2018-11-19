@@ -95,7 +95,7 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 			return;
 		} else if (view > mViewCount - 1){
 			UIHelper.goToAct(context, MainActivity.class);
-			EnterActivity.this.finishMine();
+			finishMine();
 		}
 		setCurPoint(view);
 	}

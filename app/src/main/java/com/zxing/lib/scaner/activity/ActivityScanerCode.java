@@ -453,8 +453,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
     private void useBike(String result){
 
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+        final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
             ToastUtil.showMessageApp(context,"请先登录账号");
             UIHelper.goToAct(context, LoginActivity.class);
@@ -488,11 +488,10 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         if (result.getFlag().equals("Success")) {
                             JSONObject jsonObject = new JSONObject(result.getData());
                             if ("1".equals(jsonObject.getString("type"))){
-
                                 //机械锁
                                 UIHelper.goToAct(context, CurRoadStartActivity.class);
                                 scrollToFinishActivity();
-                            }else {
+                            }else if ("2".equals(jsonObject.getString("type"))){
                                 codenum = jsonObject.getString("codenum");
                                 m_nowMac = jsonObject.getString("macinfo");
                                 if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -515,9 +514,35 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 }else{
                                     if (!TextUtils.isEmpty(m_nowMac)) {
                                         connect();
-                                     }
+                                    }
                                 }
+                            }else if ("3".equals(jsonObject.getString("type"))){
+                                ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
+                                Log.e("useBike===", "===="+jsonObject);
+
+                                codenum = jsonObject.getString("codenum");
+                                m_nowMac = jsonObject.getString("macinfo");
+
+                                getCurrentorder(uid, access_token);
+
+//                                m_myHandler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if (!isStop){
+//                                            if (loadingDialog != null && loadingDialog.isShowing()) {
+//                                                loadingDialog.dismiss();
+//                                            }
+//                                            Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
+//                                            BaseApplication.getInstance().getIBLE().refreshCache();
+//                                            BaseApplication.getInstance().getIBLE().close();
+//                                            BaseApplication.getInstance().getIBLE().disconnect();
+//                                            scrollToFinishActivity();
+//                                        }
+//                                    }
+//                                }, 2 * 1000);
+
                             }
+
                         } else {
                             Toast.makeText(context,result.getMsg(),10 * 1000).show();
                             if (loadingDialog != null && loadingDialog.isShowing()){
@@ -536,6 +561,72 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 }
             });
         }
+    }
+
+
+    private void getCurrentorder(final String uid, final String access_token){
+        RequestParams params = new RequestParams();
+        params.put("uid",uid);
+        params.put("access_token",access_token);
+        HttpHelper.post(this, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+
+
+                        Log.e("scan===", "getCurrentorder===="+result.getData());
+
+                        if ("[]".equals(result.getData()) || 0 == result.getData().length()){
+
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getCurrentorder(uid, access_token);
+                                }
+                            }, 2 * 1000);
+
+                        }else {
+                            ToastUtil.showMessage(context,"数据更新成功");
+
+                            SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
+                            SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+
+                            UIHelper.goToAct(context, CurRoadBikingActivity.class);
+                            scrollToFinishActivity();
+                        }
+                    } else {
+                        ToastUtil.showMessageApp(context,result.getMsg());
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
+                    }
+                } catch (Exception e) {
+
+                    if (loadingDialog != null && loadingDialog.isShowing()){
+                        loadingDialog.dismiss();
+                    }
+                }
+
+            }
+        });
     }
 
 
@@ -716,6 +807,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         }
                     }).setHint(false);
                     customBuilder.create().show();
+
                     break;
                 case Config.BATTERY_ACTION:
                     if (!TextUtils.isEmpty(data)) {
