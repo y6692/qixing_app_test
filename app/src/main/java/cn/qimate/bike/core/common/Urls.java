@@ -143,6 +143,8 @@ public class Urls {
 	public static String gradeList = host + "/index.php?a=get_grade_list&m=Index&g=App";
 	/**获取月卡配置接口*/
 	public static String userMonth = host + "/index.php?a=month_card_set&m=UserMonth&g=App";
+	/**3合1锁再次开锁*/
+	public static String openAgain = host + "/index.php?g=App&m=UserOther&a=open_again";
 	/**判断当前锁是否为关闭*/
 	public static String carClose = host + "/index.php?g=App&m=UserOther&a=car_close";
 }
