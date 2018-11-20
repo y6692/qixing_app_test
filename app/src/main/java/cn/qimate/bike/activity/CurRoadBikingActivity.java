@@ -1143,11 +1143,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                             submit(uid, access_token);
 
+                        } else {
+                            ToastUtil.showMessageApp(context,"您还未上锁，请给车上锁后还车");
                         }
-
-//                        else {
-//                            ToastUtil.showMessageApp(context,"您还未上锁，请给车上锁后还车");
-//                        }
                     } else {
                         ToastUtil.showMessageApp(context,result.getMsg());
                     }
@@ -2261,14 +2259,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         lockLoading.setTitle("正在连接");
                         lockLoading.show();
                    }
-//                   m_myHandler.postDelayed(new Runnable() {
-//                       @Override
-//                       public void run() {
-//                           if (lockLoading != null && lockLoading.isShowing()){
-//                               lockLoading.dismiss();
-//                           }
-//                       }
-//                   }, 10 * 1000);
 
                     Log.e("biking===", "188===="+m_nowMac);
 
@@ -2288,16 +2278,6 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                             connect();
                         }
                     }
-
-//                   if (!TextUtils.isEmpty(m_nowMac)) {
-//
-//                       Log.e("biking===2", "188===="+m_nowMac);
-//
-////                         if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-////                                connect();
-////                         }
-//                       connect();
-//                   }
 
                    m_myHandler.postDelayed(new Runnable() {
                         @Override
@@ -2329,6 +2309,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             }
         }else if( requestCode == 188){
             ToastUtil.showMessageApp(this, "需要打开蓝牙");
+            MainActivity.first=true;
             finish();
         }
     }

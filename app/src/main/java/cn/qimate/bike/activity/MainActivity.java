@@ -228,7 +228,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	private TextView marquee;
 	protected InternalReceiver internalReceiver = null;
 
-	protected BluetoothAdapter mBluetoothAdapter;
+	private BluetoothAdapter mBluetoothAdapter;
 	LocationManager locationManager;
 	String provider = LocationManager.GPS_PROVIDER;
 //	String provider = LocationManager.NETWORK_PROVIDER;
@@ -238,7 +238,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	public List<String> macList2;
 	public List<Polygon> pOptions;
 
-	protected BluetoothAdapter.LeScanCallback mLeScanCallback;
+	private BluetoothAdapter.LeScanCallback mLeScanCallback;
 
 	@Override
 	@TargetApi(23)
@@ -292,9 +292,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                 m_myHandler.sendEmptyMessage(1);
 
-//				Looper.prepare();
-//				getNetTime();
-//				Looper.loop();
 
 			}
 		}).start();
@@ -352,37 +349,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 startActivityForResult(enableBtIntent, 188);
             }
 
-//            startXB();
-//
-//            if (lockLoading != null && !lockLoading.isShowing()){
-//                lockLoading.setTitle("还车点确认中");
-//                lockLoading.show();
-//            }
-//
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        int n=0;
-//                        while(macList.size() == 0){
-//
-//                            Thread.sleep(1000);
-//                            n++;
-//
-//                            if(n>=6) break;
-//
-//                        }
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    m_myHandler.sendEmptyMessage(2);
-//
-//                }
-//            }).start();
-
-
-
         }
 
 
@@ -434,7 +400,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         type = SharedPreferencesUrls.getInstance().getString("type", "");
 
         ToastUtil.showMessage(this, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
-        Log.e("main===", "main====onResume");
+        Log.e("main===", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
 
 //		if (1 == 1) {
 //			return;
@@ -471,8 +437,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         break;
                     case 2:
 
-//                        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-
 
                         if (!"".equals(m_nowMac)) {
                             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -497,10 +461,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                 startActivityForResult(enableBtIntent, 188);
                             } else {
 
+                                Log.e("main===", "first====" + first);
+
                                 if (first) {
                                     first = false;
 
-                                    Log.e("main===", "first====" + first);
+
 
                                     startXB();
 
@@ -519,6 +485,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                                     Thread.sleep(1000);
                                                     n++;
 
+                                                    Log.e("main===", "n====" + n);
+
                                                     if(n>=6) break;
 
                                                 }
@@ -531,7 +499,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                         }
                                     }).start();
 
-//                                    connect();
                                 }
 
 //								title.setText(macList.size()+"》》》"+isContainsList.contains(true)+"》》》"+type);
@@ -831,6 +798,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                     stopXB();
 
+                    Log.e("main===", "type==="+type);
+
                     if("3".equals(type)){
                         endBtn3();
                     }else{
@@ -843,6 +812,31 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         lockLoading.dismiss();
                     }
                     stopXB();
+
+                    if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在连接");
+                        lockLoading.show();
+                    }
+
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (lockLoading != null && lockLoading.isShowing()){
+                                lockLoading.dismiss();
+                            }
+
+//                            if(first3){
+//                                first3 = false;
+//                                customDialog4.show();
+//                            }else{
+//                                carClose();
+//                            }
+                            carClose();
+
+                        }
+                    }, 10 * 1000);
+
                     connect();
 
                     break;
@@ -1808,6 +1802,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                         if ("0".equals(result.getData())){
                             submit(uid, access_token);
+                        } else {
+                            ToastUtil.showMessageApp(context,"您还未上锁，请给车上锁后还车");
                         }
                     } else {
                         ToastUtil.showMessageApp(context,result.getMsg());
@@ -2266,7 +2262,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //				}
 //			}
 
-			stopXB();
+//			stopXB();
 
 			if (internalReceiver != null) {
 				unregisterReceiver(internalReceiver);
@@ -2342,8 +2338,49 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				case 188:
 					if (first) {
 						first = false;
-						connect();
 
+                        mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+                            @Override
+                            public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                                k++;
+                                Log.e("main===LeScan", device + "====" + rssi + "====" + k);
+
+                                if (!macList.contains(""+device)){
+                                    macList.add(""+device);
+                                }
+
+                            }
+                        };
+
+						Log.e("main===", "188===="+type+"==="+m_nowMac+"==="+macList.size());
+
+                        startXB();
+
+                        if (lockLoading != null && !lockLoading.isShowing()){
+                            lockLoading.setTitle("还车点确认中");
+                            lockLoading.show();
+                        }
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    int n=0;
+                                    while(macList.size() == 0){
+
+                                        Thread.sleep(1000);
+                                        n++;
+
+                                        if(n>=6) break;
+                                    }
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                                m_myHandler.sendEmptyMessage(3);
+
+                            }
+                        }).start();
 					}
 
 //					if (macList.size() != 0) {
@@ -2596,7 +2633,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			@Override
 			public void onScanDevice(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
-//				Log.e("main===","connect3==="+m_nowMac+"==="+device.getAddress());
+				Log.e("main===","connect3==="+m_nowMac+"==="+device);
 
 				if (device==null || TextUtils.isEmpty(device.getAddress()))return;
 
