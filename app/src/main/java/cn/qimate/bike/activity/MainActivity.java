@@ -402,9 +402,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         ToastUtil.showMessage(this, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
         Log.e("main===", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
 
-//		if (1 == 1) {
-//			return;
-//		}
+
+//        if (1 == 1) {
+//            return;
+//        }
 
         closeBroadcast();
         try {
@@ -415,6 +416,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         }
 
         getFeedbackStatus();
+
+
 
         String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
         String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");

@@ -1,8 +1,11 @@
 package cn.qimate.bike.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -58,7 +61,7 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
         initView();
     }
 
-    private void initView(){
+    private void initView() {
 
         tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -70,13 +73,13 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("找回密码");
 
-        userNameEdit = (EditText)findViewById(R.id.findPsdUI_userName);
-        codeEdit = (EditText)findViewById(R.id.findPsdUI_phoneNum_code);
-        passwordEdit = (EditText)findViewById(R.id.findPsdUI_password);
-        againPsdEdit = (EditText)findViewById(R.id.findPsdUI_againPsd);
+        userNameEdit = (EditText) findViewById(R.id.findPsdUI_userName);
+        codeEdit = (EditText) findViewById(R.id.findPsdUI_phoneNum_code);
+        passwordEdit = (EditText) findViewById(R.id.findPsdUI_password);
+        againPsdEdit = (EditText) findViewById(R.id.findPsdUI_againPsd);
 
-        codeBtn = (Button)findViewById(R.id.findPsdUI_noteCode);
-        submitBtn = (Button)findViewById(R.id.findPsdUI_btn);
+        codeBtn = (Button) findViewById(R.id.findPsdUI_noteCode);
+        submitBtn = (Button) findViewById(R.id.findPsdUI_btn);
 
         backImg.setOnClickListener(this);
         codeBtn.setOnClickListener(this);
@@ -87,17 +90,17 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         String telphone = userNameEdit.getText().toString();
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
             case R.id.findPsdUI_noteCode:
-                if (telphone == null || "".equals(telphone)){
-                    Toast.makeText(context,"请输入您的手机号码",Toast.LENGTH_SHORT).show();
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!StringUtil.isPhoner(telphone)){
-                    Toast.makeText(context,"手机号码格式不正确",Toast.LENGTH_SHORT).show();
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 sendCode(telphone);
@@ -106,35 +109,35 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
                 String pass = passwordEdit.getText().toString();
                 String againPsd = againPsdEdit.getText().toString();
                 String code = codeEdit.getText().toString();
-                if (telphone == null || "".equals(telphone)){
-                    Toast.makeText(context,"请输入您的手机号码",Toast.LENGTH_SHORT).show();
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!StringUtil.isPhoner(telphone)){
-                    Toast.makeText(context,"手机号码格式不正确",Toast.LENGTH_SHORT).show();
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (code == null || "".equals(code)){
-                    Toast.makeText(context,"请输入您的验证码",Toast.LENGTH_SHORT).show();
+                if (code == null || "".equals(code)) {
+                    Toast.makeText(context, "请输入您的验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (pass == null || "".equals(pass)){
-                    Toast.makeText(context,"请输入您的密码",Toast.LENGTH_SHORT).show();
+                if (pass == null || "".equals(pass)) {
+                    Toast.makeText(context, "请输入您的密码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (6 > pass.length()){
-                    Toast.makeText(context,"请输入至少6位数密码",Toast.LENGTH_SHORT).show();
+                if (6 > pass.length()) {
+                    Toast.makeText(context, "请输入至少6位数密码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (againPsd == null || "".equals(againPsd)){
-                    Toast.makeText(context,"请再次输入您的密码",Toast.LENGTH_SHORT).show();
+                if (againPsd == null || "".equals(againPsd)) {
+                    Toast.makeText(context, "请再次输入您的密码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!pass.equals(againPsd)){
-                    Toast.makeText(context,"两次输入的密码不一致",Toast.LENGTH_SHORT).show();
+                if (!pass.equals(againPsd)) {
+                    Toast.makeText(context, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                submit(telphone,code,pass);
+                submit(telphone, code, pass);
                 break;
         }
     }
@@ -143,10 +146,13 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
      * 发送验证码
      *
      * */
-    private void sendCode(String telphone){
+    private void sendCode(String telphone) {
 
         RequestParams params = new RequestParams();
         params.add("telphone", telphone);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         params.add("UUID", tm.getDeviceId());
         params.add("type", "2");
         HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
