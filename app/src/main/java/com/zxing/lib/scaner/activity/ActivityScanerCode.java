@@ -452,6 +452,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     }
 
     private void useBike(String result){
+        Log.e("scan===", "useBike==="+result);
 
         final String uid = SharedPreferencesUrls.getInstance().getString("uid","");
         final String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
@@ -489,39 +490,41 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         if (result.getFlag().equals("Success")) {
                             JSONObject jsonObject = new JSONObject(result.getData());
 
-                            Log.e("scan===", "statusCode==="+result.getFlag()+"==="+statusCode+"==="+jsonObject.getString("code"));
+//                            Log.e("scan===", "statusCode==="+result.getFlag()+"==="+statusCode+"==="+jsonObject.getString("code"));
 
-                            if ("200".equals(jsonObject.getString("code"))){
-                                if ("1".equals(jsonObject.getString("type"))){          //机械锁
 
-                                    UIHelper.goToAct(context, CurRoadStartActivity.class);
+
+                            if ("1".equals(jsonObject.getString("type"))){          //机械锁
+
+                                UIHelper.goToAct(context, CurRoadStartActivity.class);
+                                scrollToFinishActivity();
+                            }else if ("2".equals(jsonObject.getString("type"))){    //蓝牙锁
+                                codenum = jsonObject.getString("codenum");
+                                m_nowMac = jsonObject.getString("macinfo");
+                                if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                     scrollToFinishActivity();
-                                }else if ("2".equals(jsonObject.getString("type"))){    //蓝牙锁
-                                    codenum = jsonObject.getString("codenum");
-                                    m_nowMac = jsonObject.getString("macinfo");
-                                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                                        scrollToFinishActivity();
-                                    }
-                                    //蓝牙锁
-                                    BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                                }
+                                //蓝牙锁
+                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
-                                    mBluetoothAdapter = bluetoothManager.getAdapter();
+                                mBluetoothAdapter = bluetoothManager.getAdapter();
 
-                                    if (mBluetoothAdapter == null) {
-                                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                        scrollToFinishActivity();
-                                        return;
+                                if (mBluetoothAdapter == null) {
+                                    ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                    scrollToFinishActivity();
+                                    return;
+                                }
+                                if (!mBluetoothAdapter.isEnabled()) {
+                                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                    startActivityForResult(enableBtIntent, 188);
+                                }else{
+                                    if (!TextUtils.isEmpty(m_nowMac)) {
+                                        connect();
                                     }
-                                    if (!mBluetoothAdapter.isEnabled()) {
-                                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                        startActivityForResult(enableBtIntent, 188);
-                                    }else{
-                                        if (!TextUtils.isEmpty(m_nowMac)) {
-                                            connect();
-                                        }
-                                    }
-                                }else if ("3".equals(jsonObject.getString("type"))){    //3合1锁
+                                }
+                            }else if ("3".equals(jsonObject.getString("type"))){    //3合1锁
+                                if ("200".equals(jsonObject.getString("code"))){
                                     ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                                     Log.e("useBike===", "===="+jsonObject);
 
@@ -529,52 +532,38 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     m_nowMac = jsonObject.getString("macinfo");
 
                                     getCurrentorder(uid, access_token);
+                                }else if ("404".equals(jsonObject.getString("code"))){
+                                    if ("3".equals(jsonObject.getString("type"))){
+                                        codenum = jsonObject.getString("codenum");
+                                        m_nowMac = jsonObject.getString("macinfo");
+                                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                                            scrollToFinishActivity();
+                                        }
+                                        //蓝牙锁
+                                        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
-//                                m_myHandler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        if (!isStop){
-//                                            if (loadingDialog != null && loadingDialog.isShowing()) {
-//                                                loadingDialog.dismiss();
-//                                            }
-//                                            Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
-//                                            BaseApplication.getInstance().getIBLE().refreshCache();
-//                                            BaseApplication.getInstance().getIBLE().close();
-//                                            BaseApplication.getInstance().getIBLE().disconnect();
-//                                            scrollToFinishActivity();
-//                                        }
-//                                    }
-//                                }, 2 * 1000);
+                                        mBluetoothAdapter = bluetoothManager.getAdapter();
 
-                                }
-                            }else if ("404".equals(jsonObject.getString("code"))){
-                                if ("3".equals(jsonObject.getString("type"))){
-                                    codenum = jsonObject.getString("codenum");
-                                    m_nowMac = jsonObject.getString("macinfo");
-                                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                                        scrollToFinishActivity();
-                                    }
-                                    //蓝牙锁
-                                    BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-
-                                    mBluetoothAdapter = bluetoothManager.getAdapter();
-
-                                    if (mBluetoothAdapter == null) {
-                                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                        scrollToFinishActivity();
-                                        return;
-                                    }
-                                    if (!mBluetoothAdapter.isEnabled()) {
-                                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                        startActivityForResult(enableBtIntent, 188);
-                                    }else{
-                                        if (!TextUtils.isEmpty(m_nowMac)) {
-                                            connect();
+                                        if (mBluetoothAdapter == null) {
+                                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                            scrollToFinishActivity();
+                                            return;
+                                        }
+                                        if (!mBluetoothAdapter.isEnabled()) {
+                                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                            startActivityForResult(enableBtIntent, 188);
+                                        }else{
+                                            if (!TextUtils.isEmpty(m_nowMac)) {
+                                                connect();
+                                            }
                                         }
                                     }
                                 }
+
                             }
+
+
 
 
 
