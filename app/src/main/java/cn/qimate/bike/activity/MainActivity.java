@@ -362,15 +362,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                     }
                 };
 
-                startXB();
+//                startXB();
             }
 
         }
-
-
-
-
-
 	}
 
     @Override
@@ -454,7 +449,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                 mBluetoothAdapter = bluetoothManager.getAdapter();
                             }
 
-
                             if (mBluetoothAdapter == null) {
                                 ToastUtil.showMessageApp(context, "获取蓝牙失败");
                                 finish();
@@ -501,9 +495,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                                         }
                                     }).start();
-
                                 }
-
                             }
                         }
 
@@ -705,38 +697,30 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     }
 
     private void startXB() {
-//		if (mBluetoothAdapter == null) {
-//			BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//			mBluetoothAdapter = bluetoothManager.getAdapter();
-//		}
-//
-//
-//		if (mBluetoothAdapter == null) {
-//			ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//			finish();
-//			return;
-//		}
-//
-//		if (!mBluetoothAdapter.isEnabled()) {
-//			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//			startActivityForResult(enableBtIntent, 188);
-//		}else{
-//			if (macList.size() != 0) {
-//				macList.clear();
-//			}
-//			UUID[] uuids = {Config.xinbiaoUUID};
-//
-//			Log.e("main===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
-//			mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
-//		}
-
-        if (macList.size() != 0) {
-            macList.clear();
+        if (mBluetoothAdapter == null) {
+            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            mBluetoothAdapter = bluetoothManager.getAdapter();
         }
-        UUID[] uuids = {Config.xinbiaoUUID};
 
-        Log.e("main===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
-        mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+        if (mBluetoothAdapter == null) {
+            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+            finish();
+            return;
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 188);
+        }else{
+            if (macList.size() != 0) {
+                macList.clear();
+            }
+            UUID[] uuids = {Config.xinbiaoUUID};
+
+            Log.e("main===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
+            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+        }
+
+
 
     }
 
@@ -777,6 +761,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 break;
             case Config.TOKEN_ACTION:
                 isConnect = true;
+
+                if (customDialog3 != null && customDialog3.isShowing()) {
+                    customDialog3.dismiss();
+                }
+                if (customDialog4 != null && customDialog4.isShowing()) {
+                    customDialog4.dismiss();
+                }
+
 
                 if (mlocationClient != null) {
                     mlocationClient.startLocation();//停止定位
@@ -845,14 +837,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                         if("3".equals(type)){
                             if (macList2.size() <= 0) {
-//                                if(first3){
-//                                    first3 = false;
-//                                    customDialog4.show();
-//                                }else{
-//                                    carClose();
-//                                }
+                                if(first3){
+                                    first3 = false;
+                                    customDialog4.show();
+                                }else{
+                                    carClose();
+                                }
 
-                                customDialog4.show();
+//                                customDialog4.show();
 
                             } else {
                                 submit(uid, access_token);
@@ -867,8 +859,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         }
 
                     }
-
-
                 } else {
                     //锁已开启
                     ToastUtil.showMessageApp(context, "您还未上锁，请给车上锁后还车");
@@ -979,8 +969,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                     }
                     stopXB();
 
-//                    connect();
-
+                    isConnect = false;
 
                     if (lockLoading != null && !lockLoading.isShowing()){
                         lockLoading.setTitle("正在连接");
@@ -990,9 +979,30 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                     m_myHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
                             if (lockLoading != null && lockLoading.isShowing()){
                                 lockLoading.dismiss();
+                            }
+
+                            if(!isConnect){
+                                if("3".equals(type)){
+                                    if(first3){
+                                        first3 = false;
+                                        customDialog4.show();
+                                    }else{
+                                        carClose();
+                                    }
+                                }else{
+                                    if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                        customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                        customBuilder.create().show();
+                                    }
+                                }
                             }
 
 //                            carClose();
@@ -1283,7 +1293,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				break;
 			case R.id.mainUI_scanCode_lock:
 
-
 				if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
 					ToastUtil.showMessageApp(context,"请先登录账号");
 					UIHelper.goToAct(context,LoginActivity.class);
@@ -1359,6 +1368,39 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 									authBtn.setText("您还未认证，点我快速认证");
 									break;
 								case 2:
+
+//                                    startXB();
+//
+//                                    if (lockLoading != null && !lockLoading.isShowing()){
+//                                        lockLoading.setTitle("还车点确认中");
+//                                        lockLoading.show();
+//                                    }
+//
+//                                    new Thread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            try {
+//                                                int n=0;
+//                                                while(macList.size() == 0){
+//
+//                                                    Thread.sleep(1000);
+//                                                    n++;
+//
+//                                                    Log.e("main===", "n====" + n);
+//
+//                                                    if(n>=6) break;
+//
+//                                                }
+//                                            } catch (InterruptedException e) {
+//                                                e.printStackTrace();
+//                                            }
+//
+//                                            m_myHandler.sendEmptyMessage(3);
+//
+//                                        }
+//                                    }).start();
+
+
 									getCurrentorder1(uid, access_token);
 									break;
 								case 3:
@@ -1647,7 +1689,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 
 //					title.setText(isContainsList.contains(true)+"》》》"+near+"==="+macList.size()+"==="+k+"==="+p);
-			Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size());
+			Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + type);
 			ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
 
 			if (amapLocation != null && amapLocation.getErrorCode() == 0) {
@@ -1703,48 +1745,37 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					addChooseMarker();
 					addCircle(myLocation, amapLocation.getAccuracy());
 
+                    if(!"3".equals(type)){
+                        if (start) {
+                            start = false;
 
-					if (start) {
-						start = false;
+                            if (mlocationClient != null) {
+                                mlocationClient.setLocationListener(MainActivity.this);
+                                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+                                mLocationOption.setInterval(2 * 1000);
+                                mlocationClient.setLocationOption(mLocationOption);
+                                mlocationClient.startLocation();
+                            }
 
-						if (mlocationClient != null) {
-							mlocationClient.setLocationListener(MainActivity.this);
-							mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-							mLocationOption.setInterval(2 * 1000);
-							mlocationClient.setLocationOption(mLocationOption);
-							mlocationClient.startLocation();
-						}
+                            macList2 = new ArrayList<> (macList);
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        } else {
 
-						macList2 = new ArrayList<> (macList);
-						BaseApplication.getInstance().getIBLE().getLockStatus();
-					} else {
-						if (isContainsList.contains(true) && near==1){
-							macList2 = new ArrayList<> (macList);
+                            if (isContainsList.contains(true) && near==1){
+                                macList2 = new ArrayList<> (macList);
 
-							ToastUtil.showMessage(context,"biking---》》》里");
-							BaseApplication.getInstance().getIBLE().getLockStatus();
-						}else if (!isContainsList.contains(true) && near==0){
-							macList2 = new ArrayList<> (macList);
+                                ToastUtil.showMessage(context,"biking---》》》里");
+                                BaseApplication.getInstance().getIBLE().getLockStatus();
+                            }else if (!isContainsList.contains(true) && near==0){
+                                macList2 = new ArrayList<> (macList);
 
-							ToastUtil.showMessage(context,"biking---》》》外");
-							BaseApplication.getInstance().getIBLE().getLockStatus();
-						}
+                                ToastUtil.showMessage(context,"biking---》》》外");
+                                BaseApplication.getInstance().getIBLE().getLockStatus();
+                            }
 
+                        }
+                    }
 
-//						if (!SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
-//							if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type) && near == 1) {
-//								macList2 = new ArrayList<> (macList);
-//
-//								ToastUtil.showMessage(context, "main---》》》里");
-//								BaseApplication.getInstance().getIBLE().getLockStatus();
-//							} else if (((!isContainsList.contains(true) && macList.size() <= 0) || "1".equals(type)) && near == 0) {
-//								macList2 = new ArrayList<> (macList);
-//
-//								ToastUtil.showMessage(context, "main---》》》外");
-//								BaseApplication.getInstance().getIBLE().getLockStatus();
-//							}
-//						}
-					}
 
 
 					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
@@ -1828,7 +1859,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	protected void submit(String uid, String access_token){
 
-		Log.e("base===",SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+uid+"==="+access_token+"==="+oid+"==="+referLatitude+"==="+referLongitude);
+		Log.e("main===submit",macList2.size()+"==="+SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+uid+"==="+access_token+"==="+oid+"==="+referLatitude+"==="+referLongitude);
 
 		RequestParams params = new RequestParams();
 		params.put("uid", uid);
@@ -2013,6 +2044,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                             loadingDialog.show();
                         }
 
+                        isConnect = false;
                         m_myHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -2035,12 +2067,15 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							lockLoading.show();
 						}
 
+                        isConnect = false;
                         m_myHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 if (lockLoading != null && lockLoading.isShowing()){
                                     lockLoading.dismiss();
                                 }
+
+
 
                                 if(!isConnect){
                                     if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
@@ -2101,11 +2136,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 								loadingDialog.show();
 							}
 
+                            isConnect = false;
 							m_myHandler.postDelayed(new Runnable() {
 								@Override
 								public void run() {
 									if (loadingDialog != null && loadingDialog.isShowing()){
 										loadingDialog.dismiss();
+
+
 
                                         if(!isConnect){
                                             ToastUtil.showMessage(context, "连接失败，请重启手机蓝牙后再结束用车");
@@ -2126,11 +2164,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 								lockLoading.show();
 							}
 
+                            ToastUtil.showMessage(context, "连接失败，请重启手机蓝牙后再结束用车");
+
+                            isConnect = false;
 							m_myHandler.postDelayed(new Runnable() {
 								@Override
 								public void run() {
-//								ToastUtil.showMessage(context, BaseApplication.getInstance().getIBLE().getConnectStatus()+"==="+BaseApplication.getInstance().getIBLE().getLockStatus());
-
 									if (lockLoading != null && lockLoading.isShowing()){
 										lockLoading.dismiss();
 									}
@@ -2186,6 +2225,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                             loadingDialog.show();
                         }
 
+                        isConnect = false;
                         m_myHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -2221,6 +2261,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                             lockLoading.show();
                         }
 
+                        isConnect = false;
                         m_myHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -2238,7 +2279,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                     }
                                 }
 
-
                             }
                         }, 10 * 1000);
 
@@ -2249,8 +2289,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             }else{
                 customDialog4.show();
             }
-
-
         }
     }
 
@@ -2377,14 +2415,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	private void closeBroadcast() {
 		try {
 
-//			if (!"1".equals(type)){
-//				if (mLeScanCallback != null && mBluetoothAdapter != null) {
-//					mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//					mLeScanCallback = null;
-//				}
-//			}
-
-//			stopXB();
+			stopXB();
 
             first = true;
             macList.clear();

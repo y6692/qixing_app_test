@@ -217,9 +217,10 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
+                } finally {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
                 }
             }
 
@@ -284,8 +285,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                         // 极光标记别名
                         setAlias(bean.getUid());
                         SharedPreferencesUrls.getInstance().putString("uid", bean.getUid());
-                        SharedPreferencesUrls.getInstance().putString("access_token",
-                                bean.getAccess_token());
+                        SharedPreferencesUrls.getInstance().putString("access_token", bean.getAccess_token());
                         SharedPreferencesUrls.getInstance().putString("nickname", bean.getNickname());
                         SharedPreferencesUrls.getInstance().putString("realname", bean.getRealname());
                         SharedPreferencesUrls.getInstance().putString("sex", bean.getSex());
@@ -293,7 +293,6 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                         SharedPreferencesUrls.getInstance().putString("points", bean.getPoints());
                         SharedPreferencesUrls.getInstance().putString("money", bean.getMoney());
                         SharedPreferencesUrls.getInstance().putString("bikenum", bean.getBikenum());
-
                         SharedPreferencesUrls.getInstance().putString("iscert", bean.getIscert());
                         Toast.makeText(context,"恭喜您,登录成功",Toast.LENGTH_SHORT).show();
                         scrollToFinishActivity();
@@ -302,9 +301,10 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
+                } finally {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
                 }
             }
         });

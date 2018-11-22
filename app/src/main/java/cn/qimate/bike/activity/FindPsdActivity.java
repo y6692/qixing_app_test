@@ -179,9 +179,10 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
+                } finally {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
                 }
             }
 
@@ -225,9 +226,10 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
+                } finally {
+                    if (loadingDialog != null && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
                 }
             }
 
