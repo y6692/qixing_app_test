@@ -490,9 +490,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         if (result.getFlag().equals("Success")) {
                             JSONObject jsonObject = new JSONObject(result.getData());
 
-//                            Log.e("scan===", "statusCode==="+result.getFlag()+"==="+statusCode+"==="+jsonObject.getString("code"));
-
-
+                            Log.e("scan===", responseString+"statusCode==="+result.getFlag()+"==="+statusCode+"==="+jsonObject.getString("type"));
 
                             if ("1".equals(jsonObject.getString("type"))){          //机械锁
 
@@ -519,68 +517,71 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                     Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                                     startActivityForResult(enableBtIntent, 188);
                                 }else{
+                                    if (loadingDialog != null && loadingDialog.isShowing()){
+                                        loadingDialog.dismiss();
+                                    }
+
+                                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                                        loadingDialog.setTitle("正在唤醒车锁");
+                                        loadingDialog.show();
+                                    }
+
                                     if (!TextUtils.isEmpty(m_nowMac)) {
                                         connect();
                                     }
                                 }
                             }else if ("3".equals(jsonObject.getString("type"))){    //3合1锁
+                                codenum = jsonObject.getString("codenum");
+                                m_nowMac = jsonObject.getString("macinfo");
+
                                 if ("200".equals(jsonObject.getString("code"))){
                                     ToastUtil.showMessageApp(context,"恭喜您,开锁成功!");
                                     Log.e("useBike===", "===="+jsonObject);
 
-                                    codenum = jsonObject.getString("codenum");
-                                    m_nowMac = jsonObject.getString("macinfo");
-
                                     getCurrentorder(uid, access_token);
                                 }else if ("404".equals(jsonObject.getString("code"))){
-                                    if ("3".equals(jsonObject.getString("type"))){
-                                        codenum = jsonObject.getString("codenum");
-                                        m_nowMac = jsonObject.getString("macinfo");
-                                        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                            ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                                            scrollToFinishActivity();
-                                        }
-                                        //蓝牙锁
-                                        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                                        scrollToFinishActivity();
+                                    }
+                                    BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                                    mBluetoothAdapter = bluetoothManager.getAdapter();
 
-                                        mBluetoothAdapter = bluetoothManager.getAdapter();
-
-                                        if (mBluetoothAdapter == null) {
-                                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                            scrollToFinishActivity();
-                                            return;
-                                        }
-                                        if (!mBluetoothAdapter.isEnabled()) {
-                                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                            startActivityForResult(enableBtIntent, 188);
-                                        }else{
-                                            if (!TextUtils.isEmpty(m_nowMac)) {
-                                                connect();
-                                            }
+                                    if (mBluetoothAdapter == null) {
+                                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                                        scrollToFinishActivity();
+                                        return;
+                                    }
+                                    if (!mBluetoothAdapter.isEnabled()) {
+                                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                                        startActivityForResult(enableBtIntent, 188);
+                                    }else{
+                                        if (!TextUtils.isEmpty(m_nowMac)) {
+                                            connect();
                                         }
                                     }
                                 }
-
                             }
-
-
-
-
-
                         } else {
                             Toast.makeText(context,result.getMsg(),10 * 1000).show();
                             if (loadingDialog != null && loadingDialog.isShowing()){
                                 loadingDialog.dismiss();
                             }
                             scrollToFinishActivity();
+
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+
+                        if (loadingDialog != null && loadingDialog.isShowing()){
+                            loadingDialog.dismiss();
+                        }
                     }
 
-                    if (loadingDialog != null && loadingDialog.isShowing()){
-                        loadingDialog.dismiss();
-                    }
+
 
                 }
             });
@@ -690,6 +691,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                     break;
                 }
                 case 188:{
+                    if (loadingDialog != null && !loadingDialog.isShowing()) {
+                        loadingDialog.setTitle("正在唤醒车锁");
+                        loadingDialog.show();
+                    }
+
                     if (!TextUtils.isEmpty(m_nowMac)) {
                         connect();
                     }
@@ -783,6 +789,11 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
             String data = intent.getStringExtra("data");
             switch (action) {
                 case Config.TOKEN_ACTION:
+
+                    if (null != loadingDialog && loadingDialog.isShowing()) {
+                        loadingDialog.dismiss();
+                    }
+
                     if(isOpen){
                         break;
                     }else{
@@ -795,10 +806,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                             BaseApplication.getInstance().getIBLE().getBattery();
                         }
                     }, 1000);
-//                    if (null != loadingDialog && loadingDialog.isShowing()) {
-//                        loadingDialog.dismiss();
-//                        loadingDialog = null;
-//                    }
+
                     CustomDialog.Builder customBuilder = new CustomDialog.Builder(ActivityScanerCode.this);
                     if (0 == Tag){
                         customBuilder.setMessage("扫码成功,是否开锁?");
