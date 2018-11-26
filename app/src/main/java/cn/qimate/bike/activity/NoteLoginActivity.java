@@ -206,10 +206,9 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        num = 60;
-                        isCode = true;
-                        codeBtn.setText(num + "秒");
-                        codeBtn.setEnabled(false);
+
+                        handler.sendEmptyMessage(2);
+
                         // 开始60秒倒计时
                         handler.sendEmptyMessageDelayed(1, 1000);
                     } else {
@@ -373,6 +372,11 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 if (isCode) {
                     handler.sendEmptyMessageDelayed(1, 1000);
                 }
+            }else{
+                num = 60;
+                isCode = true;
+                codeBtn.setText(num + "秒");
+                codeBtn.setEnabled(false);
             }
         };
     };

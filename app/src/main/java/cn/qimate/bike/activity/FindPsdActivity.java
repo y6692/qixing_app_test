@@ -168,10 +168,8 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
                 try {
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
-                        num = 60;
-                        isCode = true;
-                        codeBtn.setText(num + "秒");
-                        codeBtn.setEnabled(false);
+
+                        handler.sendEmptyMessage(2);
                         // 开始60秒倒计时
                         handler.sendEmptyMessageDelayed(1, 1000);
                     } else {
@@ -256,6 +254,11 @@ public class FindPsdActivity extends SwipeBackActivity implements View.OnClickLi
                 if (isCode) {
                     handler.sendEmptyMessageDelayed(1, 1000);
                 }
+            }else{
+                num = 60;
+                isCode = true;
+                codeBtn.setText(num + "秒");
+                codeBtn.setEnabled(false);
             }
         };
     };

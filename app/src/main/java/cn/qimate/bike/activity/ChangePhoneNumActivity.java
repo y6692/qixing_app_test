@@ -1,8 +1,11 @@
 package cn.qimate.bike.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -32,7 +35,7 @@ import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
  * Created by LDY on 2017/2/13.
  */
 
-public class ChangePhoneNumActivity extends SwipeBackActivity implements View.OnClickListener{
+public class ChangePhoneNumActivity extends SwipeBackActivity implements View.OnClickListener {
 
     private Context context;
     private LoadingDialog loadingDialog;
@@ -56,7 +59,7 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
         initView();
     }
 
-    private void initView(){
+    private void initView() {
 
         tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -68,11 +71,11 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("变更手机号");
 
-        phoneNumEdit = (EditText)findViewById(R.id.change_phoneNumUI_phoneNum);
-        noteCodeEdit = (EditText)findViewById(R.id.change_phoneNumUI_code);
+        phoneNumEdit = (EditText) findViewById(R.id.change_phoneNumUI_phoneNum);
+        noteCodeEdit = (EditText) findViewById(R.id.change_phoneNumUI_code);
 
-        codeBtn = (Button)findViewById(R.id.change_phoneNumUI_noteCode);
-        submitBtn = (Button)findViewById(R.id.change_phoneNumUI_submitBtn);
+        codeBtn = (Button) findViewById(R.id.change_phoneNumUI_noteCode);
+        submitBtn = (Button) findViewById(R.id.change_phoneNumUI_submitBtn);
 
         backImg.setOnClickListener(this);
         codeBtn.setOnClickListener(this);
@@ -81,47 +84,47 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
         String telphone = phoneNumEdit.getText().toString();
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
             case R.id.change_phoneNumUI_noteCode:
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-                    Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (telphone == null || "".equals(telphone)){
-                    Toast.makeText(context,"请输入您的手机号码",Toast.LENGTH_SHORT).show();
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!StringUtil.isPhoner(telphone)){
-                    Toast.makeText(context,"手机号码格式不正确",Toast.LENGTH_SHORT).show();
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 sendCode(telphone);
                 break;
             case R.id.change_phoneNumUI_submitBtn:
                 String code = noteCodeEdit.getText().toString();
-                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
-                    Toast.makeText(context,"请先登录账号",Toast.LENGTH_SHORT).show();
+                if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+                    Toast.makeText(context, "请先登录账号", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (telphone == null || "".equals(telphone)){
-                    Toast.makeText(context,"请输入您的手机号码",Toast.LENGTH_SHORT).show();
+                if (telphone == null || "".equals(telphone)) {
+                    Toast.makeText(context, "请输入您的手机号码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!StringUtil.isPhoner(telphone)){
-                    Toast.makeText(context,"手机号码格式不正确",Toast.LENGTH_SHORT).show();
+                if (!StringUtil.isPhoner(telphone)) {
+                    Toast.makeText(context, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (code == null || "".equals(code)){
-                    Toast.makeText(context,"请输入手机验证码",Toast.LENGTH_SHORT).show();
+                if (code == null || "".equals(code)) {
+                    Toast.makeText(context, "请输入手机验证码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                submit(uid,access_token,telphone,code);
+                submit(uid, access_token, telphone, code);
                 break;
             default:
                 break;
@@ -132,10 +135,13 @@ public class ChangePhoneNumActivity extends SwipeBackActivity implements View.On
      * 发送验证码
      *
      * */
-    private void sendCode(String telphone){
+    private void sendCode(String telphone) {
 
         RequestParams params = new RequestParams();
         params.add("telphone", telphone);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         params.add("UUID", tm.getDeviceId());
         params.add("type", "2");
         HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {

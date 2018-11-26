@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -44,6 +45,7 @@ import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.activity.WebActivity;
 import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.core.common.AppManager;
@@ -60,7 +62,7 @@ import cn.qimate.bike.util.ToastUtil;
 @SuppressLint("NewApi")
 public class SplashActivity extends BaseActivity {
 
-//	private Context context = this;
+	//	private Context context = this;
 	public static boolean isForeground = false;
 
 	private AMapLocationClient locationClient = null;
@@ -87,16 +89,15 @@ public class SplashActivity extends BaseActivity {
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
 
-		if(SharedPreferencesUrls.getInstance().getBoolean("isStop",true)){
+		if (SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
 			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
 		}
-		if("".equals(SharedPreferencesUrls.getInstance().getString("m_nowMac", ""))){
-			SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+		if ("".equals(SharedPreferencesUrls.getInstance().getString("m_nowMac", ""))) {
+			SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
 		}
 
 
-
-		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop",true)+"==="+SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
+		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + "===" + SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
 
 //		if(!"".equals(m_nowMac)){
 //
@@ -130,11 +131,11 @@ public class SplashActivity extends BaseActivity {
 			int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
 			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
 				if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-					requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+					requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 							101);
 				} else {
 					SplashActivity.this.requestPermissions(
-							new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+							new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 							101);
 					return;
 				}
@@ -148,6 +149,14 @@ public class SplashActivity extends BaseActivity {
 		isForeground = true;
 		super.onResume();
 		JPushInterface.onResume(this);
+
+		Log.e("splash===onResume", "===");
+
+		isStop = false;
+		isEnd = false;
+
+		handler.sendEmptyMessageDelayed(1, 900);
+
 
 //		try {
 //			registerReceiver(Config.initFilter());
@@ -258,10 +267,10 @@ public class SplashActivity extends BaseActivity {
 			int checkPermission = this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
 			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
 				if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
-					requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE }, 100);
+					requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
 				} else {
 					SplashActivity.this.requestPermissions(
-							new String[] { Manifest.permission.READ_PHONE_STATE }, 100);
+							new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
 					return;
 				}
 			}
@@ -271,12 +280,12 @@ public class SplashActivity extends BaseActivity {
 			int checkPermission = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
 			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
 				if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-					requestPermissions(new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
-							Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+							Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 				} else {
 					SplashActivity.this.requestPermissions(
-							new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
-									Manifest.permission.WRITE_EXTERNAL_STORAGE },
+							new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+									Manifest.permission.WRITE_EXTERNAL_STORAGE},
 							0);
 					return;
 				}
@@ -309,35 +318,42 @@ public class SplashActivity extends BaseActivity {
 		loadingImage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-				String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-				if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
-					UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
-					if (app_type != null && !"".equals(app_type)){
-						if (!"#".equals(ad_link) && ad_link != null && !"".equals(ad_link)) {
-							isStop = true;
-							isEnd = true;
-							finishMine();
-						}
-					}
-				}
+//				String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+//				String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+//				if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
+//					UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
+//					if (app_type != null && !"".equals(app_type)){
+//						if (!"#".equals(ad_link) && ad_link != null && !"".equals(ad_link)) {
+//							isStop = true;
+//							isEnd = true;
+//							finishMine();
+//						}
+//					}
+//				}
+
+				isStop = true;
+				isEnd = true;
+
+				UIHelper.goToAct(context, WebActivity.class);
+//				finishMine();
+
 			}
 		});
-		mThread.start();
-		handler.sendEmptyMessageDelayed(1, 900);
+//		mThread.start();
+//		handler.sendEmptyMessageDelayed(1, 900);
 	}
 
 	/**
 	 * 获取启动页图广告
 	 * */
-	private void initHttp(){
+	private void initHttp() {
 
 		if (NetworkUtils.getNetWorkType(context) == NetworkUtils.NONETWORK) {
 			loadingImage.setBackgroundResource(R.drawable.enter_bg);
-			Toast.makeText(context,"暂无网络连接，请连接网络",Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "暂无网络连接，请连接网络", Toast.LENGTH_SHORT).show();
 		} else {
 			RequestParams params = new RequestParams();
-			params.put("adsid","10");
+			params.put("adsid", "10");
 			HttpHelper.get(context, Urls.getIndexAd, params, new TextHttpResponseHandler() {
 				@Override
 				public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -368,7 +384,7 @@ public class SplashActivity extends BaseActivity {
 								Glide.with(context).load(imageUrl).into(loadingImage);
 							}
 						}
-					}catch (Exception e){
+					} catch (Exception e) {
 
 					}
 				}
@@ -383,7 +399,7 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private void initLocation(){
+	private void initLocation() {
 		if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
 			//初始化client
 			locationClient = new AMapLocationClient(this.getApplicationContext());
@@ -392,8 +408,8 @@ public class SplashActivity extends BaseActivity {
 			// 设置定位监听
 			locationClient.setLocationListener(locationListener);
 			startLocation();
-		}else {
-			Toast.makeText(context,"暂无网络连接，请连接网络",Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(context, "暂无网络连接，请连接网络", Toast.LENGTH_SHORT).show();
 			return;
 		}
 	}
@@ -404,7 +420,7 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private AMapLocationClientOption getDefaultOption(){
+	private AMapLocationClientOption getDefaultOption() {
 		AMapLocationClientOption mOption = new AMapLocationClientOption();
 		mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
 		mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
@@ -419,6 +435,7 @@ public class SplashActivity extends BaseActivity {
 		mOption.setLocationCacheEnable(false); //可选，设置是否使用缓存定位，默认为true
 		return mOption;
 	}
+
 	/**
 	 * 定位监听
 	 */
@@ -428,9 +445,9 @@ public class SplashActivity extends BaseActivity {
 			if (null != loc) {
 //				Toast.makeText(context,"===="+loc.getLongitude(),Toast.LENGTH_SHORT).show();
 
-				if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()){
-					PostDeviceInfo(loc.getLatitude(),loc.getLongitude());
-				}else {
+				if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
+					PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+				} else {
 					CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity.this);
 					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
 							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -453,7 +470,7 @@ public class SplashActivity extends BaseActivity {
 					return;
 				}
 			} else {
-				Toast.makeText(context,"定位失败",Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, "定位失败", Toast.LENGTH_SHORT).show();
 				finishMine();
 			}
 		}
@@ -466,7 +483,7 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private void startLocation(){
+	private void startLocation() {
 		if (null != locationClient) {
 			// 设置定位参数
 			locationClient.setLocationOption(locationOption);
@@ -483,7 +500,7 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private void stopLocation(){
+	private void stopLocation() {
 		// 停止定位
 		if (null != locationClient) {
 			locationClient.stopLocation();
@@ -498,7 +515,7 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private void destroyLocation(){
+	private void destroyLocation() {
 		if (null != locationClient) {
 			/**
 			 * 如果AMapLocationClient是在当前Activity实例化的，
@@ -517,7 +534,7 @@ public class SplashActivity extends BaseActivity {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if (!isStop && !isEnd){
+			if (!isStop && !isEnd) {
 				handler.sendEmptyMessageDelayed(2, 900);
 
 				stopLocation();
@@ -533,18 +550,20 @@ public class SplashActivity extends BaseActivity {
 				isEnd = true;
 				finishMine();
 			}
-		};
+		}
+
+		;
 	};
-	Handler handler = new Handler(){
+	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.what == 1){
+			if (msg.what == 1) {
 				if (num != 0) {
 					skipLayout.setVisibility(View.VISIBLE);
-					skipTime.setText(""+(--num) + "s");
+					skipTime.setText("" + (--num) + "s");
 				} else {
 					skipLayout.setVisibility(View.GONE);
-					if (!isStop){
+					if (!isStop) {
 						stopLocation();
 						if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
 								&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
@@ -562,17 +581,17 @@ public class SplashActivity extends BaseActivity {
 				if (!isEnd && !isStop) {
 					handler.sendEmptyMessageDelayed(1, 900);
 				}
-			}else{
+			} else {
 //				Toast.makeText(context,"==》》》》",Toast.LENGTH_SHORT).show();
 
 			}
 		}
 	};
+
 	// 初始化极光
 	private void initjpush() {
 		JPushInterface.init(getApplicationContext()); // 初始化 JPush
 	}
-
 
 
 	@Override
@@ -642,10 +661,13 @@ public class SplashActivity extends BaseActivity {
 	}
 
 	// 提交设备信息到appinfo
-	private void PostDeviceInfo(double latitude,double longitude) {
+	private void PostDeviceInfo(double latitude, double longitude) {
 		if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
 			try {
 				TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+				if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+					return;
+				}
 				String UUID = tm.getDeviceId();
 				String system_version = Build.VERSION.RELEASE;
 				String device_model = new Build().MODEL;
