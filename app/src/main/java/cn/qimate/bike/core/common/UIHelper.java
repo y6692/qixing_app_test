@@ -340,37 +340,37 @@ public class UIHelper {
 	}
 	
 	// 广告跳转
-		public static void bannerGoAct(Context context, String app_type, String app_id, String link) {
+	public static void bannerGoAct(Context context, String app_type, String app_id, String link) {
 
-			if ((app_type == null || "".equals(app_type))) {
-				return;
-			}
-			switch (Integer.parseInt(app_type)) {
-			case 1:
-				if (!"#".equals(link) && link != null && !"".equals(link)) {
-					Intent intent = new Intent(context, WebviewActivity.class);
-					intent.putExtra("link", link);
-					intent.putExtra("title", "广告详情");
-					context.startActivity(intent);
-				}
-				break;
-			case 2:
-				Intent intent = new Intent(context,InviteCodeActivity.class);
-				intent.putExtra("isBack",false);
-				context.startActivity(intent);
-				break;
-			case 3:
-				Intent intent1 = new Intent(context,InsureanceActivity.class);
-				intent1.putExtra("isBack",false);
-				context.startActivity(intent1);
-				break;
-			default:
-				if (!MainActivity.isForeground){
-					UIHelper.goToAct(context, MainActivity.class);
-				}
-				break;
-			}
+		if ((app_type == null || "".equals(app_type))) {
+			return;
 		}
+		switch (Integer.parseInt(app_type)) {
+		case 1:
+			if (!"#".equals(link) && link != null && !"".equals(link)) {
+				Intent intent = new Intent(context, WebviewActivity.class);
+				intent.putExtra("link", link);
+				intent.putExtra("title", "广告详情");
+				context.startActivity(intent);
+			}
+			break;
+		case 2:
+			Intent intent = new Intent(context,InviteCodeActivity.class);
+			intent.putExtra("isBack",false);
+			context.startActivity(intent);
+			break;
+		case 3:
+			Intent intent1 = new Intent(context,InsureanceActivity.class);
+			intent1.putExtra("isBack",false);
+			context.startActivity(intent1);
+			break;
+		default:
+			if (!MainActivity.isForeground){
+				UIHelper.goToAct(context, MainActivity.class);
+			}
+			break;
+		}
+	}
 
 	/**
 	 *

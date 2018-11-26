@@ -40,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -171,6 +172,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private ImageView exImage_1;
     private ImageView exImage_2;
     private ImageView exImage_3;
+    private Switch switcher;
 
     private ImageView closeBtn;
 
@@ -712,6 +714,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         rightBtn.setTextColor(getResources().getColor(R.color.ui_main));
         rightBtn.setOnClickListener(this);
 
+        switcher = (Switch) findViewById(R.id.switcher);
+
         refreshLayout = (LinearLayout)findViewById(R.id.curRoadUI_biking_refreshLayout);
 
         bikeCodeText = (TextView)findViewById(R.id.curRoadUI_biking_code);
@@ -903,6 +907,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 break;
             case R.id.curRoadUI_biking_endBtn:
 //                endBtn();
+
+//                Log.e("biking===switcher", "==="+switcher.isChecked());
 
                 startXB();
 
@@ -1696,6 +1702,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 ToastUtil.showMessageApp(context,"恭喜您，您已成功上锁");
                 Log.e("biking===","biking==="+MainActivity.screen);
 
+
+                if(switcher.isChecked()) break;
 
                 startXB();
 

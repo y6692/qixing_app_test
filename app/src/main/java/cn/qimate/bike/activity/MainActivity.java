@@ -357,9 +357,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         super.onResume();
         tz = 0;
 
-//        if (1 == 1) {
-//            return;
-//        }
+
 
         JPushInterface.onResume(this);
         mapView.onResume();
@@ -392,6 +390,10 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         } catch (Exception e) {
             ToastUtil.showMessage(this, "eee====" + e);
         }
+
+//        if (1 == 1) {
+//            return;
+//        }
 
         getFeedbackStatus();
 
@@ -1099,7 +1101,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 
     private void initView() {
-
         openGPSSettings();
 
 //		Settings.Secure.setLocationProviderEnabled( getContentResolver(), LocationManager.GPS_PROVIDER, true);
@@ -1199,19 +1200,19 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
         leftBtn.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
-        marqueeLayout.setOnClickListener(this);
-        myLocationBtn.setOnClickListener(this);
-        myLocationLayout.setOnClickListener(this);
-        linkLayout.setOnClickListener(this);
-        scanLock.setOnClickListener(this);
-        linkBtn.setOnClickListener(this);
-        authBtn.setOnClickListener(this);
-        rechargeBtn.setOnClickListener(this);
-        refreshLayout.setOnClickListener(this);
-        advImageView.setOnClickListener(this);
-        advCloseBtn.setOnClickListener(this);
-        cartBtn.setOnClickListener(this);
-        slideLayout.setOnClickListener(this);
+//        marqueeLayout.setOnClickListener(this);
+//        myLocationBtn.setOnClickListener(this);
+//        myLocationLayout.setOnClickListener(this);
+//        linkLayout.setOnClickListener(this);
+//        scanLock.setOnClickListener(this);
+//        linkBtn.setOnClickListener(this);
+//        authBtn.setOnClickListener(this);
+//        rechargeBtn.setOnClickListener(this);
+//        refreshLayout.setOnClickListener(this);
+//        advImageView.setOnClickListener(this);
+//        advCloseBtn.setOnClickListener(this);
+//        cartBtn.setOnClickListener(this);
+//        slideLayout.setOnClickListener(this);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
         params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
@@ -1259,9 +1260,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 //                startXB();
 
-                carClose();
+//                carClose();
 
-//				UIHelper.goToAct(MainActivity.this, ActionCenterActivity.class);
+				UIHelper.goToAct(MainActivity.this, ActionCenterActivity.class);
 
 //				if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //					return;
@@ -1608,8 +1609,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		SharedPreferencesUrls.getInstance().putString("biked_latitude",""+lat);
 		SharedPreferencesUrls.getInstance().putString("biked_longitude",""+lon);
 		SharedPreferencesUrls.getInstance().putInt("near", near);
-
-
 
 //		lat = mlocationClient.getLastKnownLocation().getAltitude();
 //		lon = mlocationClient.getLastKnownLocation().getLongitude();

@@ -376,6 +376,8 @@ public class SplashActivity extends BaseActivity {
 								SharedPreferencesUrls.getInstance().putString("ad_link", ad_link);
 								SharedPreferencesUrls.getInstance().putString("app_type", app_type);
 								SharedPreferencesUrls.getInstance().putString("app_id", app_id);
+
+								Log.e("splash===initHttp", imageUrl+"==="+ad_link+"==="+app_type);
 							}
 							if (imageUrl == null || "".equals(imageUrl)) {
 								loadingImage.setBackgroundResource(R.drawable.enter_bg);
