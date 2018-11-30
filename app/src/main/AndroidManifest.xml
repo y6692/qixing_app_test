@@ -74,7 +74,8 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/round_app_icon"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:hardwareAccelerated="false">
+        android:largeHeap="true"
+        android:hardwareAccelerated="true">
         <activity
             android:name=".full.SplashActivity"
             android:label="@string/app_name"

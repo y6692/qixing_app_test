@@ -37,7 +37,7 @@
             android:id="@+id/message"
             android:paddingBottom="@dimen/dp15"
             android:paddingTop="@dimen/dp15"
-            android:gravity="center"
+            android:gravity="left"
             android:lineSpacingExtra="5dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

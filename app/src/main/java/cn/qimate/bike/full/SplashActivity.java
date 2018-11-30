@@ -22,6 +22,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +48,7 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.Main3Activity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.WebActivity;
 import cn.qimate.bike.base.BaseActivity;
@@ -58,6 +63,8 @@ import cn.qimate.bike.core.common.Urls;
 import cn.qimate.bike.core.widget.CustomDialog;
 import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.util.ToastUtil;
+
+import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
 @SuppressLint("NewApi")
 public class SplashActivity extends BaseActivity {
@@ -77,7 +84,10 @@ public class SplashActivity extends BaseActivity {
 
 	private boolean isStop = false;
 	private int num = 5;
+	private static long ExitTime = 0;
 	private boolean isEnd = false;
+	private WebView myWebView;
+	WebView webView;
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -88,12 +98,15 @@ public class SplashActivity extends BaseActivity {
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
+		android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
+
 
 		if (SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
 			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
 		}
 		if ("".equals(SharedPreferencesUrls.getInstance().getString("m_nowMac", ""))) {
 			SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
+			SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
 		}
 
 
@@ -334,14 +347,188 @@ public class SplashActivity extends BaseActivity {
 				isStop = true;
 				isEnd = true;
 
+//				Intent intent = new Intent();
+//				intent.setAction("android.intent.action.VIEW");
+//				Uri uri = Uri.parse(ad_link); // 商品地址
+//				intent.setData(uri);
+//				startActivity(intent);
+
+//				UIHelper.goToAct(context, Main3Activity.class);
 				UIHelper.goToAct(context, WebActivity.class);
 //				finishMine();
+
+//				myWebView=new WebView(context);
+//				myWebView.setWebViewClient(new WebViewClient(){
+//					@Override
+//					public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//
+//						if (url.startsWith("weixin://wap/pay?")) {
+//							Intent intent = new Intent();
+//							intent.setAction(Intent.ACTION_VIEW);
+//							intent.setData(Uri.parse(url));
+//							startActivity(intent);
+//
+//							return true;
+//						}
+////						else{
+////							view.loadUrl(url);
+////							return true;
+////						}
+//						return super.shouldOverrideUrlLoading(view, url);
+//
+//					}
+//				});
+//
+//				WebSettings mysettings = myWebView.getSettings();
+//				mysettings.setSupportZoom(true);
+//				mysettings.setBuiltInZoomControls(true);
+//				mysettings.setJavaScriptEnabled(true);
+//				mysettings.setDomStorageEnabled(true);
+//
+////				myWebView.getSettings().setJavaScriptEnabled(true);//设置webView属性，运行JS脚本
+////				myWebView.loadUrl("http://blog.csdn.net/xiangyong_1521");//连接
+//				myWebView.loadUrl(ad_link);//连接
+//				setContentView(myWebView);//显示
+//
+//
+//
+////				url = SharedPreferencesUrls.getInstance().getString("ad_link", "");
+//
+//				myWebView = (WebView) findViewById(R.id.myWebView);
+//				myWebView.setVisibility(View.VISIBLE);
+//				myWebView = new WebView(context);
+//				WebSettings mysettings = myWebView.getSettings();
+//				mysettings.setSupportZoom(true);
+//				mysettings.setBuiltInZoomControls(true);
+//				mysettings.setJavaScriptEnabled(true);
+//				mysettings.setDomStorageEnabled(true);
+//
+//				myWebView.setClickable(true);
+//				myWebView.setWebViewClient(new WebViewClient());
+//				myWebView.loadUrl(ad_link);
+//
+//
+//
+//				myWebView.setWebViewClient(new WebViewClient() {
+//					@Override
+//					public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//						// 如下方案可在非微信内部WebView的H5页面中调出微信支付
+//						if (url.startsWith("weixin://wap/pay?")) {
+//							Intent intent = new Intent();
+//							intent.setAction(Intent.ACTION_VIEW);
+//							intent.setData(Uri.parse(url));
+//							startActivity(intent);
+//
+//							return true;
+//						}
+////						else{
+////							view.loadUrl(url);
+////							return true;
+////						}
+//						return super.shouldOverrideUrlLoading(view, url);
+//					}
+//
+//					@Override
+//					public void onPageFinished(WebView view, String url) {
+//						super.onPageFinished(view, url);
+//					}
+//
+//					@Override
+//					public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+//						super.onReceivedError(view, errorCode, description, failingUrl);
+//					}
+//
+//				});
+//
+//
+////				myWebView.setOnKeyListener(new View.OnKeyListener() {
+////					@Override
+////					public boolean onKey(View v, int keyCode, KeyEvent event) {
+////						if (event.getAction() == KeyEvent.ACTION_DOWN) {
+////
+////							Log.e("main===WebView", myWebView+"==="+myWebView.canGoBack());
+////
+////							if (keyCode == KeyEvent.KEYCODE_BACK && myWebView.canGoBack()) {  //表示按返回键
+////								myWebView.goBack();   //后退
+////
+////								return true;    //已处理
+////							}else{
+////
+////								if (myWebView != null) {
+////									myWebView.getSettings().setJavaScriptEnabled(false);
+////									myWebView.clearFormData();
+////									myWebView.clearHistory();
+////
+////
+////									myWebView.stopLoading();
+////
+////									myWebView.removeAllViews();
+////
+////									myWebView.setWebViewClient(null);
+////									myWebView.clearHistory();
+////									myWebView.clearCache(true);
+////									myWebView.loadUrl("about:blank");
+////									myWebView.freeMemory();
+////									myWebView.pauseTimers();
+////
+////									((ViewGroup) myWebView.getParent()).removeView(myWebView);
+////									myWebView.destroy();
+////									myWebView = null;
+////								}
+////
+////								setContentView(R.layout.main_enter);
+////
+////								return true;
+////							}
+////						}
+////						return false;
+////					}
+////				});
+//
+//
+//				setContentView(myWebView);
 
 			}
 		});
 //		mThread.start();
 //		handler.sendEmptyMessageDelayed(1, 900);
 	}
+
+
+//	@Override
+//	public void onBackPressed() {
+//	}
+
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		Log.e("main===WebView", myWebView+"===");
+//
+//		if(myWebView!=null){
+//			myWebView.goBack();
+////			return true;
+//		}else{
+//			if(System.currentTimeMillis()-ExitTime > 2000){
+//				Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+//				ExitTime=System.currentTimeMillis();
+////				return false;
+//			}else{
+////				return super.onKeyDown(keyCode, event);
+//			}
+//		}
+//
+//		return super.onKeyDown(keyCode, event);
+//
+//	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			AppManager.getAppManager().AppExit(context);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
 
 	/**
 	 * 获取启动页图广告
@@ -636,14 +823,7 @@ public class SplashActivity extends BaseActivity {
 		}
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			AppManager.getAppManager().AppExit(context);
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
+
 
 	/**
 	 * 获取版本号

@@ -183,10 +183,16 @@ public class CustomDialog extends Dialog {
 			dialog.setCanceledOnTouchOutside(false);
 
 			View layout;
+
 			if(type==1){
 				layout = inflater.inflate(R.layout.alertdialog2, null);
 			}else{
-				layout = inflater.inflate(R.layout.alertdialog, null);
+				if(type==2){
+					layout = inflater.inflate(R.layout.alertdialog3, null);
+				}else{
+					layout = inflater.inflate(R.layout.alertdialog, null);
+				}
+
 
                 // set the confirm button
                 if (positiveButtonText != null) {

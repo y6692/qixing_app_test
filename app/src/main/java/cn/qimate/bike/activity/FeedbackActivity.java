@@ -217,7 +217,6 @@ public class FeedbackActivity
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("问题反馈");
-//        title.setText(SharedPreferencesUrls.getInstance().getInt("near",-1)+"==="+SharedPreferencesUrls.getInstance().getString("biked_latitude","")+"==="+SharedPreferencesUrls.getInstance().getString("biked_longitude",""));
 
         imageUri = Uri.parse("file:///sdcard/temp.jpg");
         iv_popup_window_back = (ImageView)findViewById(R.id.popupWindow_back);

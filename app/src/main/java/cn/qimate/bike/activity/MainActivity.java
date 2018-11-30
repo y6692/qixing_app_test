@@ -341,7 +341,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                             macList.add(""+device);
                             m_myHandler.sendEmptyMessage(3);
                         }
-
                     }
                 };
 
@@ -351,13 +350,160 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         }
 	}
 
+    private void initView() {
+        openGPSSettings();
+
+//		Settings.Secure.setLocationProviderEnabled( getContentResolver(), LocationManager.GPS_PROVIDER, true);
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                            REQUEST_CODE_ASK_PERMISSIONS);
+                } else {
+                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            MainActivity.this.requestPermissions(
+                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                                    REQUEST_CODE_ASK_PERMISSIONS);
+                        }
+                    });
+                    customBuilder.create().show();
+                }
+                return;
+            }
+        }
+
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
+
+        lockLoading = new LoadingDialog(this);
+        lockLoading.setCancelable(false);
+        lockLoading.setCanceledOnTouchOutside(false);
+
+        loadingDialog1 = new LoadingDialog(this);
+        loadingDialog1.setCancelable(false);
+        loadingDialog1.setCanceledOnTouchOutside(false);
+
+        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
+        dialog.setContentView(dialogView);
+        dialog.setCanceledOnTouchOutside(false);
+
+        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
+
+        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+
+        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
+        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+        advImageView.setLayoutParams(params4);
+
+        marquee = (TextView) findViewById(R.id.mainUI_marquee);
+        title = (TextView) findViewById(R.id.mainUI_title);
+        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
+        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
+        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
+        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
+        scanLock = (ImageView) findViewById(R.id.mainUI_scanCode_lock);
+        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
+        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
+        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
+        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
+        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
+        slideLayout = findViewById(R.id.mainUI_slideLayout);
+        if (aMap == null) {
+            aMap = mapView.getMap();
+            setUpMap();
+        }
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+        aMap.moveCamera(cameraUpdate);
+        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+        setUpLocationStyle();
+
+        aMap.setOnMapTouchListener(MainActivity.this);
+
+        leftBtn.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
+        marqueeLayout.setOnClickListener(this);
+        myLocationBtn.setOnClickListener(this);
+        myLocationLayout.setOnClickListener(this);
+        linkLayout.setOnClickListener(this);
+        scanLock.setOnClickListener(this);
+        linkBtn.setOnClickListener(this);
+        authBtn.setOnClickListener(this);
+        rechargeBtn.setOnClickListener(this);
+        refreshLayout.setOnClickListener(this);
+        advImageView.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
+        cartBtn.setOnClickListener(this);
+        slideLayout.setOnClickListener(this);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+        titleImage.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_1.setLayoutParams(params1);
+
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_2.setLayoutParams(params2);
+
+        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_3.setLayoutParams(params3);
+
+        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+            WindowManager windowManager = getWindowManager();
+            Display display = windowManager.getDefaultDisplay();
+            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+            dialog.getWindow().setAttributes(lp);
+            dialog.show();
+        }else {
+            initHttp();
+        }
+        exImage_1.setOnClickListener(myOnClickLister);
+        exImage_2.setOnClickListener(myOnClickLister);
+        closeBtn.setOnClickListener(myOnClickLister);
+
+    }
+
     @Override
     protected void onResume() {
         isForeground = true;
         super.onResume();
         tz = 0;
-
-
 
         JPushInterface.onResume(this);
         mapView.onResume();
@@ -860,14 +1006,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                     }else{
 
                         if("3".equals(type)){
-                            if (macList2.size() <= 0) {
-//                                if(first3){
-//                                    first3 = false;
-//                                    customDialog4.show();
-//                                }else{
-//                                    carClose();
-//                                }
-
+                            if (!isContainsList.contains(true) && macList2.size() <= 0) {
                                 customDialog4.show();
 
                             } else {
@@ -922,6 +1061,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                 ToastUtil.showMessageApp(context, "恭喜您，您已成功上锁");
                 Log.e("main===", "main===恭喜您，您已成功上锁");
+
+
+                if(SharedPreferencesUrls.getInstance().getBoolean("switcher", false)) break;
 
                 startXB();
 
@@ -993,7 +1135,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                     }
                     stopXB();
 
-                    if(macList.size()>0){
+                    if(macList.size()>0  || isContainsList.contains(true)){
                         if (lockLoading != null && !lockLoading.isShowing()){
                             lockLoading.setTitle("正在连接");
                             lockLoading.show();
@@ -1034,7 +1176,11 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
                         connect();
                     }else{
-                        customDialog4.show();
+                        if("3".equals(type)){
+                            customDialog4.show();
+                        }else{
+                            customDialog3.show();
+                        }
                     }
 
                     break;
@@ -1100,154 +1246,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     }
 
 
-    private void initView() {
-        openGPSSettings();
 
-//		Settings.Secure.setLocationProviderEnabled( getContentResolver(), LocationManager.GPS_PROVIDER, true);
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                            REQUEST_CODE_ASK_PERMISSIONS);
-                } else {
-                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            MainActivity.this.requestPermissions(
-                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                                    REQUEST_CODE_ASK_PERMISSIONS);
-                        }
-                    });
-                    customBuilder.create().show();
-                }
-                return;
-            }
-        }
-
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.setCancelable(false);
-        loadingDialog.setCanceledOnTouchOutside(false);
-
-        lockLoading = new LoadingDialog(this);
-        lockLoading.setCancelable(false);
-        lockLoading.setCanceledOnTouchOutside(false);
-
-        loadingDialog1 = new LoadingDialog(this);
-        loadingDialog1.setCancelable(false);
-        loadingDialog1.setCanceledOnTouchOutside(false);
-
-        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
-
-        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
-        advDialog.setContentView(advDialogView);
-        advDialog.setCanceledOnTouchOutside(false);
-
-        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
-
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-        advImageView.setLayoutParams(params4);
-
-        marquee = (TextView) findViewById(R.id.mainUI_marquee);
-        title = (TextView) findViewById(R.id.mainUI_title);
-        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
-        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
-        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
-        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
-        scanLock = (ImageView) findViewById(R.id.mainUI_scanCode_lock);
-        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
-        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
-        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
-        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
-        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
-        slideLayout = findViewById(R.id.mainUI_slideLayout);
-        if (aMap == null) {
-            aMap = mapView.getMap();
-            setUpMap();
-        }
-        aMap.getUiSettings().setZoomControlsEnabled(false);
-        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-        aMap.moveCamera(cameraUpdate);
-        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
-        setUpLocationStyle();
-
-        aMap.setOnMapTouchListener(MainActivity.this);
-
-        leftBtn.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
-//        marqueeLayout.setOnClickListener(this);
-//        myLocationBtn.setOnClickListener(this);
-//        myLocationLayout.setOnClickListener(this);
-//        linkLayout.setOnClickListener(this);
-//        scanLock.setOnClickListener(this);
-//        linkBtn.setOnClickListener(this);
-//        authBtn.setOnClickListener(this);
-//        rechargeBtn.setOnClickListener(this);
-//        refreshLayout.setOnClickListener(this);
-//        advImageView.setOnClickListener(this);
-//        advCloseBtn.setOnClickListener(this);
-//        cartBtn.setOnClickListener(this);
-//        slideLayout.setOnClickListener(this);
-
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-        titleImage.setLayoutParams(params);
-
-        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_1.setLayoutParams(params1);
-
-        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_2.setLayoutParams(params2);
-
-        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_3.setLayoutParams(params3);
-
-        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-            WindowManager windowManager = getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-            dialog.getWindow().setAttributes(lp);
-            dialog.show();
-        }else {
-            initHttp();
-        }
-        exImage_1.setOnClickListener(myOnClickLister);
-        exImage_2.setOnClickListener(myOnClickLister);
-        closeBtn.setOnClickListener(myOnClickLister);
-
-    }
 
 
 	@Override
@@ -1591,24 +1590,24 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	@Override
 	public void deactivate() {
-		double lat = aMap.getMyLocation().getLatitude();
-		double lon = aMap.getMyLocation().getLongitude();
-		LatLng myLoc = new LatLng(lat, lon);
-
-		if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
-			isContainsList.clear();
-		}
-		for (int i = 0; i < pOptions.size(); i++) {
-			isContainsList.add(pOptions.get(i).contains(myLoc));
-		}
-		if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
-			near = 0;
-		} else {
-			near = 1;
-		}
-		SharedPreferencesUrls.getInstance().putString("biked_latitude",""+lat);
-		SharedPreferencesUrls.getInstance().putString("biked_longitude",""+lon);
-		SharedPreferencesUrls.getInstance().putInt("near", near);
+//		double lat = aMap.getMyLocation().getLatitude();
+//		double lon = aMap.getMyLocation().getLongitude();
+//		LatLng myLoc = new LatLng(lat, lon);
+//
+//		if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
+//			isContainsList.clear();
+//		}
+//		for (int i = 0; i < pOptions.size(); i++) {
+//			isContainsList.add(pOptions.get(i).contains(myLoc));
+//		}
+//		if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
+//			near = 0;
+//		} else {
+//			near = 1;
+//		}
+//		SharedPreferencesUrls.getInstance().putString("biked_latitude",""+lat);
+//		SharedPreferencesUrls.getInstance().putString("biked_longitude",""+lon);
+//		SharedPreferencesUrls.getInstance().putInt("near", near);
 
 //		lat = mlocationClient.getLastKnownLocation().getAltitude();
 //		lon = mlocationClient.getLastKnownLocation().getLongitude();
@@ -1767,38 +1766,34 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					addChooseMarker();
 					addCircle(myLocation, amapLocation.getAccuracy());
 
-                    if(!"3".equals(type)){
-                        if (start) {
-                            start = false;
+                    if (start) {
+                        start = false;
 
-                            if (mlocationClient != null) {
-                                mlocationClient.setLocationListener(MainActivity.this);
-                                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-                                mLocationOption.setInterval(2 * 1000);
-                                mlocationClient.setLocationOption(mLocationOption);
-                                mlocationClient.startLocation();
-                            }
-
-                            macList2 = new ArrayList<> (macList);
-                            BaseApplication.getInstance().getIBLE().getLockStatus();
-                        } else {
-
-                            if (isContainsList.contains(true) && near==1){
-                                macList2 = new ArrayList<> (macList);
-
-                                ToastUtil.showMessage(context,"biking---》》》里");
-                                BaseApplication.getInstance().getIBLE().getLockStatus();
-                            }else if (!isContainsList.contains(true) && near==0){
-                                macList2 = new ArrayList<> (macList);
-
-                                ToastUtil.showMessage(context,"biking---》》》外");
-                                BaseApplication.getInstance().getIBLE().getLockStatus();
-                            }
-
+                        if (mlocationClient != null) {
+                            mlocationClient.setLocationListener(MainActivity.this);
+                            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+                            mLocationOption.setInterval(2 * 1000);
+                            mlocationClient.setLocationOption(mLocationOption);
+                            mlocationClient.startLocation();
                         }
+
+                        macList2 = new ArrayList<> (macList);
+                        BaseApplication.getInstance().getIBLE().getLockStatus();
+                    } else {
+
+                        if (isContainsList.contains(true) && near==1){
+                            macList2 = new ArrayList<> (macList);
+
+                            ToastUtil.showMessage(context,"biking---》》》里");
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        }else if (!isContainsList.contains(true) && near==0){
+                            macList2 = new ArrayList<> (macList);
+
+                            ToastUtil.showMessage(context,"biking---》》》外");
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        }
+
                     }
-
-
 
 					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
 						near = 0;
@@ -1917,6 +1912,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						SharedPreferencesUrls.getInstance().putString("osn","");
 						SharedPreferencesUrls.getInstance().putString("type","");
 						SharedPreferencesUrls.getInstance().putBoolean("isStop",true);
+                        SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
 						SharedPreferencesUrls.getInstance().putString("biking_latitude","");
 						SharedPreferencesUrls.getInstance().putString("biking_longitude","");
 
@@ -2045,13 +2041,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			ToastUtil.showMessage(context,macList.size()+"==="+isContainsList.contains(true));
 
 			Log.e("main===", "endBtn2===="+uid+"===="+access_token);
-//			title.setText(macList.size()+"==="+isContainsList.contains(true)+"==="+type);
-
-//            carClose();
 
 			if (macList.size() > 0 && !"1".equals(type)){
 				if (!TextUtils.isEmpty(m_nowMac)) {
 					//蓝牙锁
+                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                        finish();
+                    }
 					if (!BaseApplication.getInstance().getIBLE().isEnable()){
 						BaseApplication.getInstance().getIBLE().enableBluetooth();
 						return;
@@ -2135,13 +2132,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						});
 						customBuilder.create().show();
 					}else {
-//                    flag = 2;
-						Log.e("main===", "endBtn3===="+uid+"===="+access_token);
-
 						if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
 							ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
 							finish();
-//                        scrollToFinishActivity();
 						}
 						//蓝牙锁
 						if (!BaseApplication.getInstance().getIBLE().isEnable()){
@@ -2232,8 +2225,88 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             Log.e("biking===endBtn3",macList.size()+"==="+type);
 
             if (macList.size() > 0){
+                if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                    ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                    finish();
+                }
 
-                if (!TextUtils.isEmpty(m_nowMac)) {
+                if (!BaseApplication.getInstance().getIBLE().isEnable()){
+                    BaseApplication.getInstance().getIBLE().enableBluetooth();
+                    return;
+                }
+                if (BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                    if (loadingDialog != null && !loadingDialog.isShowing()){
+                        loadingDialog.setTitle("请稍等");
+                        loadingDialog.show();
+                    }
+
+                    isConnect = false;
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (loadingDialog != null && loadingDialog.isShowing()){
+                                loadingDialog.dismiss();
+
+                                if(!isConnect){
+                                    if(first3){
+                                        first3 = false;
+                                        CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                        customBuilder.setTitle("连接失败").setMessage("请关闭手机蓝牙后再试")
+                                                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                        customBuilder.create().show();
+                                    }else{
+                                        carClose();
+                                    }
+                                }
+
+                            }
+                        }
+                    }, 10 * 1000);
+
+
+                    macList2 = new ArrayList<> (macList);
+                    BaseApplication.getInstance().getIBLE().getLockStatus();
+                } else {
+                    if (lockLoading != null && !lockLoading.isShowing()){
+                        lockLoading.setTitle("正在连接");
+                        lockLoading.show();
+                    }
+
+                    isConnect = false;
+                    m_myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (lockLoading != null && lockLoading.isShowing()){
+                                lockLoading.dismiss();
+                            }
+
+                            if(!isConnect){
+                                if(first3){
+                                    first3 = false;
+                                    customDialog4.show();
+                                }else{
+                                    carClose();
+                                }
+                            }
+                        }
+                    }, 10 * 1000);
+
+                    connect();
+                }
+
+                return;
+            }
+
+            if(MainActivity.screen){
+                if (isContainsList.contains(true)){
+                    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                        ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+                        finish();
+                    }
                     if (!BaseApplication.getInstance().getIBLE().isEnable()){
                         BaseApplication.getInstance().getIBLE().enableBluetooth();
                         return;
@@ -2271,10 +2344,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                             }
                         }, 10 * 1000);
 
-
                         macList2 = new ArrayList<> (macList);
                         BaseApplication.getInstance().getIBLE().getLockStatus();
-                    } else {
+                    }else {
                         if (lockLoading != null && !lockLoading.isShowing()){
                             lockLoading.setTitle("正在连接");
                             lockLoading.show();
@@ -2284,7 +2356,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         m_myHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-
                                 if (lockLoading != null && lockLoading.isShowing()){
                                     lockLoading.dismiss();
                                 }
@@ -2297,16 +2368,14 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                         carClose();
                                     }
                                 }
-
                             }
                         }, 10 * 1000);
 
                         connect();
                     }
+                }else {
+                    customDialog4.show();
                 }
-
-            }else{
-                customDialog4.show();
             }
         }
     }

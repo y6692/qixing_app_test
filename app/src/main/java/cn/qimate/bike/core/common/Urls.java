@@ -76,7 +76,7 @@ public class Urls {
 	/**支付宝付款*/
 	public static String alipayType = host + "/index.php?g=App&m=Alipay&a=alipay";
 	/**扫码用车*/
-	public static String useCar = host + "/index.php?g=App&m=UserOther&a=useCar";
+	public static String useCar = host + "/index.php?g=App&m=User&a=useCar";
 	/**结束用车*/
 	public static String backBikescan = host + "/index.php?g=App&m=User&a=backBikescan";
 	/**余额支付行程订单*/
@@ -144,7 +144,7 @@ public class Urls {
 	/**获取月卡配置接口*/
 	public static String userMonth = host + "/index.php?a=month_card_set&m=UserMonth&g=App";
 	/**3合1锁再次开锁*/
-	public static String openAgain = host + "/index.php?g=App&m=UserOther&a=open_again";
+	public static String openAgain = host + "/index.php?g=App&m=User&a=open_again";
 	/**判断当前锁是否为关闭*/
-	public static String carClose = host + "/index.php?g=App&m=UserOther&a=car_close";
+	public static String carClose = host + "/index.php?g=App&m=User&a=car_close";
 }

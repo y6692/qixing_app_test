@@ -659,6 +659,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                             SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
                             SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+                            SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
 
                             UIHelper.goToAct(context, CurRoadBikingActivity.class);
                             scrollToFinishActivity();
@@ -889,6 +890,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
 
                         SharedPreferencesUrls.getInstance().putBoolean("isStop",false);
                         SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+                        SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
 
                         UIHelper.goToAct(context, CurRoadBikingActivity.class);
                         scrollToFinishActivity();

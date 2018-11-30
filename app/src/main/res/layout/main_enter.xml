@@ -37,4 +37,12 @@
             android:textSize="@dimen/sp10"
             android:layout_marginTop="2dp"/>
     </LinearLayout>
+
+    <WebView
+        android:visibility="gone"
+        android:id="@+id/myWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
 </RelativeLayout>
