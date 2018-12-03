@@ -2565,56 +2565,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     break;
                 }
                 case 188:{
-//                    closeBroadcast();
-//
-//                    registerReceiver(Config.initFilter());
-//                    GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-
-//                    if (lockLoading != null && !lockLoading.isShowing()){
-//                        lockLoading.setTitle("正在连接");
-//                        lockLoading.show();
-//                    }
 
                     Log.e("biking===", "188===="+m_nowMac+"==="+type);
-
-//                    BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//                    mBluetoothAdapter = bluetoothManager.getAdapter();
-//
-//                    if (mBluetoothAdapter == null) {
-//                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//                        scrollToFinishActivity();
-//                        return;
-//                    }
-//                    if (!mBluetoothAdapter.isEnabled()) {
-//                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                        startActivityForResult(enableBtIntent, 188);
-//                    }else{
-//                        if (!TextUtils.isEmpty(m_nowMac)) {
-//                            connect();
-//                        }
-//                    }
-
-//                    m_myHandler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (lockLoading != null && lockLoading.isShowing()) {
-//                                lockLoading.dismiss();
-//                            }
-//
-//                            if (!isStop){
-//
-//                                if("3".equals(type)){
-//                                    if(first3){
-//                                        first3 = false;
-//                                        ToastUtil.showMessageApp(context,"设备连接失败，请重试！");
-//                                    }
-//                                }else{
-//                                    ToastUtil.showMessageApp(context,"设备连接失败，请重试！");
-//                                }
-//                            }
-//                        }
-//                    }, 10 * 1000);
-
 
                     if(n>0){
                         startXB();
@@ -2647,37 +2599,52 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }else{
                         n++;
 
-                        if (lockLoading != null && !lockLoading.isShowing()){
-                            lockLoading.setTitle("正在连接");
-                            lockLoading.show();
+                        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                        mBluetoothAdapter = bluetoothManager.getAdapter();
+
+                        if (mBluetoothAdapter == null) {
+                            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                            scrollToFinishActivity();
+                            return;
                         }
+                        if (!mBluetoothAdapter.isEnabled()) {
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableBtIntent, 188);
+                        }else{
+                            if (lockLoading != null && !lockLoading.isShowing()){
+                                lockLoading.setTitle("正在连接");
+                                lockLoading.show();
+                            }
 
-                        isStop = false;
-                        m_myHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (lockLoading != null && lockLoading.isShowing()){
-                                    lockLoading.dismiss();
-                                }
+                            isStop = false;
+                            m_myHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (lockLoading != null && lockLoading.isShowing()){
+                                        lockLoading.dismiss();
+                                    }
 
-                                Log.e("biking===", "3==="+isStop);
+                                    Log.e("biking===", "3==="+isStop);
 
-                                if(!isStop){
-                                    if("3".equals(type)){
-                                        if(first3){
-                                            first3 = false;
-                                            customDialog4.show();
+                                    if(!isStop){
+                                        if("3".equals(type)){
+                                            if(first3){
+                                                first3 = false;
+                                                customDialog4.show();
+                                            }else{
+                                                carClose();
+                                            }
                                         }else{
-                                            carClose();
+                                            customDialog3.show();
                                         }
-                                    }else{
-                                        customDialog3.show();
                                     }
                                 }
-                            }
-                        }, 10 * 1000);
+                            }, 10 * 1000);
 
-                        connect();
+                            connect();
+                        }
+
+
                     }
 
 

@@ -2576,7 +2576,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 		ToastUtil.showMessage(this, resultCode + "====" + requestCode);
 
-
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 				case 188:
@@ -2594,79 +2593,50 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         }
                     };
 
-                    startXB();
+                    BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+                    mBluetoothAdapter = bluetoothManager.getAdapter();
 
-                    if (lockLoading != null && !lockLoading.isShowing()){
-                        lockLoading.setTitle("还车点确认中");
-                        lockLoading.show();
+                    if (mBluetoothAdapter == null) {
+                        ToastUtil.showMessageApp(context, "获取蓝牙失败");
+                        finish();
+                        return;
+                    }
+                    if (!mBluetoothAdapter.isEnabled()) {
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBtIntent, 188);
+                    }else{
+                        startXB();
+
+                        if (lockLoading != null && !lockLoading.isShowing()){
+                            lockLoading.setTitle("还车点确认中");
+                            lockLoading.show();
+                        }
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    int n=0;
+                                    while(macList.size() == 0){
+
+                                        Thread.sleep(1000);
+                                        n++;
+
+                                        Log.e("main===", "n====" + n);
+
+                                        if(n>=6) break;
+
+                                    }
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                                m_myHandler.sendEmptyMessage(3);
+
+                            }
+                        }).start();
                     }
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                int n=0;
-                                while(macList.size() == 0){
-
-                                    Thread.sleep(1000);
-                                    n++;
-
-                                    Log.e("main===", "n====" + n);
-
-                                    if(n>=6) break;
-
-                                }
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            m_myHandler.sendEmptyMessage(3);
-
-                        }
-                    }).start();
-
-//				    connect();
-//
-//                    Log.e("main===", "188===="+type+"==="+m_nowMac+"==="+macList.size());
-//
-//                    startXB();
-//
-//                    if (lockLoading != null && !lockLoading.isShowing()){
-//                        lockLoading.setTitle("还车点确认中");
-//                        lockLoading.show();
-//                    }
-//
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                int n=0;
-//                                while(macList.size() == 0){
-//
-//                                    Thread.sleep(1000);
-//                                    n++;
-//
-//                                    if(n>=6) break;
-//                                }
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                            m_myHandler.sendEmptyMessage(2);
-//
-//                        }
-//                    }).start();
-
-
-//					if (first) {
-//						first = false;
-//					}
-
-//					if (macList.size() != 0) {
-//						macList.clear();
-//					}
-//					UUID[] uuids = {Config.xinbiaoUUID};
-//					mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
 
 					break;
 

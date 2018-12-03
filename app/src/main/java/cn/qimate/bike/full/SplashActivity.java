@@ -354,7 +354,7 @@ public class SplashActivity extends BaseActivity {
 //				startActivity(intent);
 
 //				UIHelper.goToAct(context, Main3Activity.class);
-				UIHelper.goToAct(context, WebActivity.class);
+//				UIHelper.goToAct(context, WebActivity.class);
 //				finishMine();
 
 //				myWebView=new WebView(context);

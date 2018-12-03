@@ -79,13 +79,32 @@
         <activity
             android:name=".full.SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppBlackTheme">
+            android:theme="@style/AppBlackTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--<activity-->
+            <!--android:name=".activity.Main2Activity"-->
+            <!--android:label="@string/app_name">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity
+            android:name=".activity.Main2Activity" ></activity>
+
+        <activity
+            android:name=".activity.Main3Activity" ></activity>
+
+
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
@@ -410,10 +429,8 @@
             android:name="JPUSH_APPKEY"
             android:value="f113c47412dbd4499c9c9a61" /> <!-- </>值来自开发者平台取得的AppKey -->
 
-        <activity android:name=".activity.Main2Activity" />
-        <activity
-            android:name=".activity.Main3Activity"
-            android:label="@string/title_activity_main3"></activity>
+
+
 
         <activity android:name=".activity.WebActivity" />
 
