@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dp90"
+    android:layout_width="105dp"
     android:layout_height="@dimen/dp90"
     android:layout_gravity="center"
     android:background="@drawable/loading_bg"
@@ -20,7 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp10"
-        android:layout_marginTop="@dimen/dp15">
+        android:layout_marginTop="@dimen/dp15"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/detail_tv"

@@ -94,37 +94,37 @@ public class Main3Activity extends Activity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-
-
-        if (myWebView != null) {
-            myWebView.getSettings().setJavaScriptEnabled(false);
-            myWebView.clearFormData();
-            myWebView.clearHistory();
-
-
-            myWebView.stopLoading();
-
-            myWebView.removeAllViews();
-
-            myWebView.setWebViewClient(null);
-            myWebView.clearHistory();
-            myWebView.clearCache(true);
-            myWebView.loadUrl("about:blank");
-            myWebView.freeMemory();
-            myWebView.pauseTimers();
-
-            ((ViewGroup) myWebView.getParent()).removeView(myWebView);
-            myWebView.destroy();
-            myWebView = null;
-        }
-
-        super.onDestroy();
-
-        Log.e("main3===onDestroy", "==="+myWebView);
-
-
-    }
+//    @Override
+//    protected void onDestroy() {
+//
+//
+//        if (myWebView != null) {
+//            myWebView.getSettings().setJavaScriptEnabled(false);
+//            myWebView.clearFormData();
+//            myWebView.clearHistory();
+//
+//
+//            myWebView.stopLoading();
+//
+//            myWebView.removeAllViews();
+//
+//            myWebView.setWebViewClient(null);
+//            myWebView.clearHistory();
+//            myWebView.clearCache(true);
+//            myWebView.loadUrl("about:blank");
+//            myWebView.freeMemory();
+//            myWebView.pauseTimers();
+//
+//            ((ViewGroup) myWebView.getParent()).removeView(myWebView);
+//            myWebView.destroy();
+//            myWebView = null;
+//        }
+//
+//        super.onDestroy();
+//
+//        Log.e("main3===onDestroy", "==="+myWebView);
+//
+//
+//    }
 
 }

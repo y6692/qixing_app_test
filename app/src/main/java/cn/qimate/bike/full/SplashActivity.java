@@ -98,7 +98,7 @@ public class SplashActivity extends BaseActivity {
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
 
-		android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
+//		android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
 
 
 		if (SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
@@ -109,32 +109,7 @@ public class SplashActivity extends BaseActivity {
 			SharedPreferencesUrls.getInstance().putBoolean("switcher", false);
 		}
 
-
-		ToastUtil.showMessageApp(this, SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + "===" + SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
-
-//		if(!"".equals(m_nowMac)){
-//
-//			if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//				ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//				finish();
-//			}
-//			//蓝牙锁
-//			BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//			mBluetoothAdapter = bluetoothManager.getAdapter();
-//
-//			if (mBluetoothAdapter == null) {
-//				ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//				finish();
-//				return;
-//			}
-//
-//			if (!mBluetoothAdapter.isEnabled()) {
-//				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//				startActivityForResult(enableBtIntent, 188);
-//			}else{
-//				connect();
-//			}
-//		}
+		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + "===" + SharedPreferencesUrls.getInstance().getString("m_nowMac", ""));
 
 		loadingImage = findViewById(R.id.plash_loading_main);
 		skipLayout = findViewById(R.id.plash_loading_skipLayout);
@@ -168,7 +143,13 @@ public class SplashActivity extends BaseActivity {
 		isStop = false;
 		isEnd = false;
 
-		handler.sendEmptyMessageDelayed(1, 900);
+//		handler.sendEmptyMessageDelayed(1, 900);
+		m_myHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				time();
+			}
+		}, 900);
 
 
 //		try {
@@ -195,87 +176,82 @@ public class SplashActivity extends BaseActivity {
 //		}
 	}
 
-//	@Override
-//	protected void handleReceiver(Context context, Intent intent) {
-//		// 广播处理
-//		if (intent == null) {
-//			return;
-//		}
-//
-//		String action = intent.getAction();
-//		String data = intent.getStringExtra("data");
-//		switch (action) {
-//			case Config.TOKEN_ACTION:
-//
-//				handler.postDelayed(new Runnable() {
-//					@Override
-//					public void run() {
-//						BaseApplication.getInstance().getIBLE().getBattery();
-//					}
-//				}, 500);
-//				if (null != lockLoading && lockLoading.isShowing()) {
-//					lockLoading.dismiss();
-//				}
-//				ToastUtil.showMessageApp(context,"splash===设备连接成功");
-//
-//				break;
-//			case Config.BATTERY_ACTION:
-////				BaseApplication.getInstance().getIBLE().getLockStatus();
-//
-//
-//				break;
-//			case Config.OPEN_ACTION:
-//				ToastUtil.showMessage(context,"splash===3");
-//				break;
-//			case Config.CLOSE_ACTION:
-//				ToastUtil.showMessage(context,"splash===4");
-//				break;
-//			case Config.LOCK_STATUS_ACTION:
-//
-//				if (loadingDialog != null && loadingDialog.isShowing()){
-//					loadingDialog.dismiss();
-//				}
-//				if (lockLoading != null && lockLoading.isShowing()){
-//					lockLoading.dismiss();
-//				}
-//
-//				if (TextUtils.isEmpty(data)) {
-//
-//					ToastUtil.showMessageApp(context,"splash====锁已关闭");
-//
-//					//锁已关闭
-//					submit(context, uid, access_token);
-//
-//				} else {
-//					//锁已开启
-//					ToastUtil.showMessageApp(context,"splash====您还未上锁，请给车上锁后还车");
-//				}
-//				break;
-//			case Config.LOCK_RESULT:
-//
-//				if (loadingDialog != null && loadingDialog.isShowing()){
-//					loadingDialog.dismiss();
-//				}
-//				if (lockLoading != null && lockLoading.isShowing()){
-//					lockLoading.dismiss();
-//				}
-//
-//
-//				ToastUtil.showMessageApp(context,"splash===恭喜您，您已成功上锁");
-//
-//				endBtn(context);
-//
-//				break;
-//		}
-//	}
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(mMessageReceiver);
+		super.onDestroy();
+		destroyLocation();
+		isStop = true;
+		isEnd = true;
 
+		m_myHandler.removeCallbacksAndMessages(null);
+	}
+
+//	Handler handler = new Handler() {
+//		@Override
+//		public void handleMessage(Message msg) {
+//			if (msg.what == 1) {
+//				if (num != 0) {
+//					skipLayout.setVisibility(View.VISIBLE);
+//					skipTime.setText("" + (--num) + "s");
+//				} else {
+//					skipLayout.setVisibility(View.GONE);
+//					if (!isStop) {
+//						stopLocation();
+////						if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
+////								&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+////							UIHelper.goToAct(context, MainActivity.class);
+////						} else {
+//							SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//							SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//							UIHelper.goToAct(context, EnterActivity.class);
+////						}
+//						isStop = true;
+//						isEnd = true;
+//						finishMine();
+//					}
+//				}
+//				if (!isEnd && !isStop) {
+//					handler.sendEmptyMessageDelayed(1, 900);
+//				}
+//			} else {
+////				Toast.makeText(context,"==》》》》",Toast.LENGTH_SHORT).show();
+//
+//			}
+//		}
+//	};
+
+	private void time(){
+		if (num != 0) {
+			skipLayout.setVisibility(View.VISIBLE);
+			skipTime.setText("" + (--num) + "s");
+		} else {
+			skipLayout.setVisibility(View.GONE);
+			if (!isStop) {
+				stopLocation();
+				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+					UIHelper.goToAct(context, MainActivity.class);
+				} else {
+					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+					UIHelper.goToAct(context, EnterActivity.class);
+				}
+				isStop = true;
+				isEnd = true;
+				finishMine();
+			}
+		}
+		if (!isEnd && !isStop) {
+			m_myHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					time();
+				}
+			}, 900);
+		}
+	}
 
 	private void init() {
-		/**
-		 *
-		 * 读写手机状态和身份
-		 *
-		 */
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			int checkPermission = this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
 			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
@@ -323,6 +299,9 @@ public class SplashActivity extends BaseActivity {
 					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
 					UIHelper.goToAct(context, EnterActivity.class);
 				}
+
+//				UIHelper.goToAct(context, Main3Activity.class);
+
 				isStop = true;
 				isEnd = true;
 				finishMine();
@@ -354,7 +333,7 @@ public class SplashActivity extends BaseActivity {
 //				startActivity(intent);
 
 //				UIHelper.goToAct(context, Main3Activity.class);
-//				UIHelper.goToAct(context, WebActivity.class);
+				UIHelper.goToAct(context, WebActivity.class);
 //				finishMine();
 
 //				myWebView=new WebView(context);
@@ -716,66 +695,35 @@ public class SplashActivity extends BaseActivity {
 		}
 	}
 
-	public Thread mThread = new Thread() {
-		public void run() {
-			try {
-				mThread.sleep(5 * 1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (!isStop && !isEnd) {
-				handler.sendEmptyMessageDelayed(2, 900);
+//	public Thread mThread = new Thread() {
+//		public void run() {
+//			try {
+//				mThread.sleep(5 * 1000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//			if (!isStop && !isEnd) {
+//				handler.sendEmptyMessageDelayed(2, 900);
+//
+//				stopLocation();
+//				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
+//						&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//					UIHelper.goToAct(context, MainActivity.class);
+//				} else {
+//					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//					UIHelper.goToAct(context, EnterActivity.class);
+//				}
+//				isStop = true;
+//				isEnd = true;
+//				finishMine();
+//			}
+//		}
+//
+//		;
+//	};
 
-				stopLocation();
-				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-						&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-					UIHelper.goToAct(context, MainActivity.class);
-				} else {
-					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-					UIHelper.goToAct(context, EnterActivity.class);
-				}
-				isStop = true;
-				isEnd = true;
-				finishMine();
-			}
-		}
 
-		;
-	};
-	Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			if (msg.what == 1) {
-				if (num != 0) {
-					skipLayout.setVisibility(View.VISIBLE);
-					skipTime.setText("" + (--num) + "s");
-				} else {
-					skipLayout.setVisibility(View.GONE);
-					if (!isStop) {
-						stopLocation();
-						if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-								&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-							UIHelper.goToAct(context, MainActivity.class);
-						} else {
-							SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-							SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-							UIHelper.goToAct(context, EnterActivity.class);
-						}
-						isStop = true;
-						isEnd = true;
-						finishMine();
-					}
-				}
-				if (!isEnd && !isStop) {
-					handler.sendEmptyMessageDelayed(1, 900);
-				}
-			} else {
-//				Toast.makeText(context,"==》》》》",Toast.LENGTH_SHORT).show();
-
-			}
-		}
-	};
 
 	// 初始化极光
 	private void initjpush() {
@@ -783,14 +731,7 @@ public class SplashActivity extends BaseActivity {
 	}
 
 
-	@Override
-	protected void onDestroy() {
-		unregisterReceiver(mMessageReceiver);
-		super.onDestroy();
-		destroyLocation();
-		isStop = true;
-		isEnd = true;
-	}
+
 
 	// for receive customer msg from jpush server
 	private MessageReceiver mMessageReceiver;

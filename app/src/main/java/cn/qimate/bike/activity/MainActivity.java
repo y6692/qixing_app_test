@@ -255,6 +255,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 		isContainsList = new ArrayList<>();
 		macList = new ArrayList<>();
+        macList2 = new ArrayList<>();
 		pOptions = new ArrayList<>();
 
 		IntentFilter filter = new IntentFilter();
@@ -262,7 +263,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		filter.addAction(Intent.ACTION_USER_PRESENT);
 		registerReceiver(mScreenReceiver, filter);
-
 
 		mapView = (MapView) findViewById(R.id.mainUI_map);
 		mapView.onCreate(savedInstanceState);// 此方法必须重写
@@ -563,7 +563,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         authBtn.setText("您还未认证，点我快速认证");
                         break;
                     case 2:
-                        if (!"".equals(m_nowMac)) {
+                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
                             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                                 ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
                                 finish();
@@ -585,89 +585,36 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                                 startActivityForResult(enableBtIntent, 188);
                             } else {
-                                if (first) {
-                                    first = false;
+                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+                                    @Override
+                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                                        k++;
+                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
 
-
-                                    mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-                                        @Override
-                                        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                                            k++;
-                                            Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-
-                                            if (!macList.contains(""+device)){
-                                                macList.add(""+device);
-                                                m_myHandler.sendEmptyMessage(3);
-                                            }
-
+                                        if (!macList.contains(""+device)){
+                                            macList.add(""+device);
+                                            m_myHandler.sendEmptyMessage(3);
                                         }
-                                    };
 
-                                    startXB();
-
-                                    if (lockLoading != null && !lockLoading.isShowing()){
-                                        lockLoading.setTitle("还车点确认中");
-                                        lockLoading.show();
                                     }
+                                };
 
-                                    m_myHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if(macList.size() == 0) {
-                                                m_myHandler.sendEmptyMessage(3);
-                                            }
-                                        }
-                                    }, 6 * 1000);
+                                startXB();
 
-
-//                                    int n=0;
-//                                    m_myHandler.postDelayed(new Runnable() {
-////                                            int n=n1;
-//
-//                                        @Override
-//                                        public void run() {
-//
-//                                            n++;
-//                                            Log.e("main===", "n====" + n);
-//
-//                                            if (n >= 6) break;
-//
-//
-//                                            while(macList.size() == 0) {
-//
-//                                            }
-//
-//                                        }
-//                                    }, 1 * 1000);
-//
-//
-//                                    m_myHandler.sendEmptyMessage(3);
-
-//                                    new Thread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            try {
-//                                                int n=0;
-//                                                while(macList.size() == 0){
-//
-//                                                    Thread.sleep(1000);
-//                                                    n++;
-//
-//                                                    Log.e("main===", "n====" + n);
-//
-//                                                    if(n>=6) break;
-//
-//                                                }
-//
-//                                                m_myHandler.sendEmptyMessage(3);
-//
-//                                            } catch (Exception e) {
-//                                                e.printStackTrace();
-//                                            }
-//
-//                                        }
-//                                    }).start();
+                                if (lockLoading != null && !lockLoading.isShowing()){
+                                    lockLoading.setTitle("还车点确认中");
+                                    lockLoading.show();
                                 }
+
+                                m_myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(macList.size() == 0) {
+                                            m_myHandler.sendEmptyMessage(3);
+                                        }
+                                    }
+                                }, 6 * 1000);
+
                             }
                         }
 
@@ -755,49 +702,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                     SharedPreferencesUrls.getInstance().putString("osn", osn);
                                     SharedPreferencesUrls.getInstance().putString("type", type);
 
-//                                    if (mBluetoothAdapter.isEnabled()) {
-//                                        if (!TextUtils.isEmpty(m_nowMac)) {
-//                                            connect();
-//                                        }
-//                                    }
-
-
-
-//									if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//										ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//										finish();
-//									}
-//									//蓝牙锁
-//									if (mBluetoothAdapter == null) {
-//										BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//										mBluetoothAdapter = bluetoothManager.getAdapter();
-//									}
-//
-//
-//									if (mBluetoothAdapter == null) {
-//										ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//										finish();
-//										return;
-//									}
-//
-//									if (!mBluetoothAdapter.isEnabled()) {
-//										Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//										startActivityForResult(enableBtIntent, 188);
-//									} else {
-//
-//
-//										if (first) {
-//											first = false;
-//											connect();
-//										}
-//
-//
-//										if (macList.size() != 0) {
-//											macList.clear();
-//										}
-//										UUID[] uuids = {Config.xinbiaoUUID};
-//										mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
-//									}
                                 }
 
                                 Log.e("main===", "getStatus====" + bean.getStatus());
@@ -911,7 +815,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 ToastUtil.showMessage(context, "main===蓝牙CHANGED");
                 int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
                 switch (blueState) {
-
                     case BluetoothAdapter.STATE_TURNING_ON:
                         break;
 
@@ -1722,10 +1625,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude", "");
 					String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude", "");
 					if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
-						if (AMapUtils.calculateLineDistance(new LatLng(
-								Double.parseDouble(latitude), Double.parseDouble(longitude)
+						if (AMapUtils.calculateLineDistance(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)
 						), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
-
 							SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
 							SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
 							addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
@@ -1739,7 +1640,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					referLongitude = amapLocation.getLongitude();
 					myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
 
-
 					if (mFirstFix) {
 						mFirstFix = false;
 						schoolrangeList();
@@ -1749,9 +1649,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						centerMarker.remove();
 						mCircle.remove();
 
-//								centerMarker.setPosition(myLocation);
-//								mCircle.setCenter(myLocation);
-
 						if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
 							isContainsList.clear();
 						}
@@ -1760,40 +1657,42 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 						}
 					}
 
-//							title.setText(isContainsList.contains(true) + "===" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
 					ToastUtil.showMessage(context, isContainsList.contains(true) + "======" + near);
 
 					addChooseMarker();
 					addCircle(myLocation, amapLocation.getAccuracy());
 
-                    if (start) {
-                        start = false;
+                    if(!SharedPreferencesUrls.getInstance().getBoolean("switcher",false)){
+                        if (start) {
+                            start = false;
 
-                        if (mlocationClient != null) {
-                            mlocationClient.setLocationListener(MainActivity.this);
-                            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-                            mLocationOption.setInterval(2 * 1000);
-                            mlocationClient.setLocationOption(mLocationOption);
-                            mlocationClient.startLocation();
-                        }
+                            if (mlocationClient != null) {
+                                mlocationClient.setLocationListener(MainActivity.this);
+                                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+                                mLocationOption.setInterval(2 * 1000);
+                                mlocationClient.setLocationOption(mLocationOption);
+                                mlocationClient.startLocation();
+                            }
 
-                        macList2 = new ArrayList<> (macList);
-                        BaseApplication.getInstance().getIBLE().getLockStatus();
-                    } else {
-
-                        if (isContainsList.contains(true) && near==1){
                             macList2 = new ArrayList<> (macList);
-
-                            ToastUtil.showMessage(context,"biking---》》》里");
                             BaseApplication.getInstance().getIBLE().getLockStatus();
-                        }else if (!isContainsList.contains(true) && near==0){
-                            macList2 = new ArrayList<> (macList);
+                        } else {
 
-                            ToastUtil.showMessage(context,"biking---》》》外");
-                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                            if (isContainsList.contains(true) && near==1){
+                                macList2 = new ArrayList<> (macList);
+
+                                ToastUtil.showMessage(context,"biking---》》》里");
+                                BaseApplication.getInstance().getIBLE().getLockStatus();
+                            }else if (!isContainsList.contains(true) && near==0){
+                                macList2 = new ArrayList<> (macList);
+
+                                ToastUtil.showMessage(context,"biking---》》》外");
+                                BaseApplication.getInstance().getIBLE().getLockStatus();
+                            }
+
                         }
-
                     }
+
 
 					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
 						near = 0;
@@ -2091,8 +1990,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                     lockLoading.dismiss();
                                 }
 
-
-
                                 if(!isConnect){
                                     if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
                                         CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
@@ -2170,7 +2067,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							macList2 = new ArrayList<> (macList);
 							BaseApplication.getInstance().getIBLE().getLockStatus();
 						}else {
-
 							if (lockLoading != null && !lockLoading.isShowing()){
 								lockLoading.setTitle("正在连接");
 								lockLoading.show();
@@ -2419,7 +2315,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				Log.e("main===", tz + ">>>present===" + m_nowMac);
 
 				if (tz == 0) {
-					if (!"".equals(m_nowMac)) {
+					if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
 
 						if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
 							ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
@@ -2492,8 +2388,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 					UIHelper.goToAct(MainActivity.this, CurRoadBikedActivity.class);
 					Log.e("main===", "main===CurRoadBiked");
 				}
-
-
 			}
 		}
 	};
@@ -2503,7 +2397,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	private void closeBroadcast() {
 		try {
-
 			stopXB();
 
             first = true;
@@ -2516,7 +2409,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			}
 
 			ToastUtil.showMessage(this, "main====closeBroadcast===" + internalReceiver);
-
+            Log.e("main====", "closeBroadcast===" + internalReceiver);
 
 		} catch (Exception e) {
 			ToastUtil.showMessage(this, "eee====" + e);

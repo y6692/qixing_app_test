@@ -25,8 +25,8 @@ import cn.qimate.bike.core.common.SharedPreferencesUrls;
 public class WebActivity extends BaseActivity {
     Context mContext;
 
-//    private static final String url ="https://item.taobao.com/item.htm?spm=a230r.1.14.16.1b075e4fooLHwL&id=581644369639&ns=1&abbucket=1#detail";
-    private String url="";
+    private String url ="https://item.taobao.com/item.htm?spm=a230r.1.14.16.1b075e4fooLHwL&id=581644369639&ns=1&abbucket=1#detail";
+//    private String url="";
 
     private WebView myWebView;
 
@@ -37,7 +37,7 @@ public class WebActivity extends BaseActivity {
         setContentView(R.layout.activity_web);
         mContext=this;
 
-        url = SharedPreferencesUrls.getInstance().getString("ad_link", "");
+//        url = SharedPreferencesUrls.getInstance().getString("ad_link", "");
 
         myWebView = (WebView) findViewById(R.id.myWebView);
         WebSettings mysettings = myWebView.getSettings();
@@ -97,38 +97,38 @@ public class WebActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-
-
-        if (myWebView != null) {
-            myWebView.getSettings().setJavaScriptEnabled(false);
-            myWebView.clearFormData();
-            myWebView.clearHistory();
-
-
-            myWebView.stopLoading();
-
-            myWebView.removeAllViews();
-
-            myWebView.setWebViewClient(null);
-            myWebView.clearHistory();
-            myWebView.clearCache(true);
-            myWebView.loadUrl("about:blank");
-            myWebView.freeMemory();
-            myWebView.pauseTimers();
-
-            ((ViewGroup) myWebView.getParent()).removeView(myWebView);
-            myWebView.destroy();
-            myWebView = null;
-        }
-
-        super.onDestroy();
-
-        Log.e("web===onDestroy", "==="+myWebView);
-
-
-    }
+//    @Override
+//    protected void onDestroy() {
+//
+//
+//        if (myWebView != null) {
+//            myWebView.getSettings().setJavaScriptEnabled(false);
+//            myWebView.clearFormData();
+//            myWebView.clearHistory();
+//
+//
+//            myWebView.stopLoading();
+//
+//            myWebView.removeAllViews();
+//
+//            myWebView.setWebViewClient(null);
+//            myWebView.clearHistory();
+//            myWebView.clearCache(true);
+//            myWebView.loadUrl("about:blank");
+//            myWebView.freeMemory();
+//            myWebView.pauseTimers();
+//
+//            ((ViewGroup) myWebView.getParent()).removeView(myWebView);
+//            myWebView.destroy();
+//            myWebView = null;
+//        }
+//
+//        super.onDestroy();
+//
+//        Log.e("web===onDestroy", "==="+myWebView);
+//
+//
+//    }
 
 
 

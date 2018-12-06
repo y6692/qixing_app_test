@@ -153,7 +153,7 @@
 
                 <TextView
                     android:id="@+id/tv_stop"
-                    android:layout_width="60dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp30"
                     android:text="临时停车"
                     android:textSize="@dimen/sp13"
