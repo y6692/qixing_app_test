@@ -2,6 +2,7 @@ package cn.qimate.bike.activity;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -47,7 +48,7 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
     private RelativeLayout headLayout;
     private MLImageView header;
     private TextView money;
-    private Button rechargeBtn;
+    private TextView rechargeBtn;
     private Button activationBtn;
 
     private Dialog dialog;
@@ -78,9 +79,11 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
         header = (MLImageView)findViewById(R.id.myPurseUI_headImage);
         money = (TextView)findViewById(R.id.myPurseUI_money);
         money.setText(SharedPreferencesUrls.getInstance().getString("money",""));
-        rechargeBtn = (Button)findViewById(R.id.myPurseUI_rechargeBtn);
+        rechargeBtn = (TextView)findViewById(R.id.myPurseUI_rechargeBtn);
         activationBtn = (Button)findViewById(R.id.myPurseUI_activationNum_btn);
         monthCard = (Button)findViewById(R.id.myPurseUI_monthCard);
+
+        rechargeBtn.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
 
         // 设置广告高度为屏幕高度0.6倍
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) headLayout.getLayoutParams();

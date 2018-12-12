@@ -619,7 +619,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                         Log.e("scan===", "getCurrentorder===="+result.getData());
 
                         if ("[]".equals(result.getData()) || 0 == result.getData().length()){
-                            if(n<2){
+                            if(n<5){
                                 n++;
 
                                 m_myHandler.postDelayed(new Runnable() {

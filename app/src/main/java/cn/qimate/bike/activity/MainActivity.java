@@ -2302,7 +2302,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				ToastUtil.showMessage(context, "===off");
 				Log.e("main===", "===off");
 
-
 			} else if (Intent.ACTION_SCREEN_ON.equals(action)) { // 开屏
 
 				ToastUtil.showMessage(context, "===on");
@@ -2310,14 +2309,15 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 			} else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
 
-
 				ToastUtil.showMessage(context, "===present");
 				Log.e("main===", tz + ">>>present===" + m_nowMac);
 
 				if (tz == 0) {
 					if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
 
-						if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                        if (CurRoadBikingActivity.flagm == 1) return;
+
+					    if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
 							ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
 							finish();
 						}
@@ -2327,7 +2327,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							mBluetoothAdapter = bluetoothManager.getAdapter();
 						}
 
-
 						Log.e("main===", "present===1");
 
 						if (mBluetoothAdapter == null) {
@@ -2336,9 +2335,11 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							return;
 						}
 
-						Log.e("main===", "present===2");
+						Log.e("main===", "present===2==="+CurRoadBikingActivity.flagm);
 
 						if (!mBluetoothAdapter.isEnabled()) {
+                            Log.e("main===", "present===3==="+CurRoadBikingActivity.flagm);
+
                             flag = 1;
 							Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 							startActivityForResult(enableBtIntent, 188);
@@ -2370,7 +2371,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                                     }
 
                                     m_myHandler.sendEmptyMessage(3);
-
                                 }
                             }).start();
 

@@ -122,10 +122,10 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
      */
     BluetoothDevice mDevice;
 
-    BluetoothAdapter mBluetoothAdapter;
+    public static BluetoothAdapter mBluetoothAdapter;
     private String m_nowMac = "";
 
-    static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
+    private static final int REQUEST_CODE_ASK_PERMISSIONS = 101;
     public static boolean isForeground = false;
     private Context context;
     private  LoadingDialog loadingDialog;
@@ -196,7 +196,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     private List<String> macList;
     private List<String> macList2;
     private int flag = 0;
-    private int flagm = 0;
+    public static int flagm = 0;
     boolean isFrist1 = true;
     boolean stopScan = false;
     private CustomDialog customDialog;
@@ -282,6 +282,8 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
         super.onResume();
         mapView.onResume();
+
+        Log.e("biking===", "biking====flagm==="+flagm);
 
         if (flagm == 1) {
             flagm = 0;

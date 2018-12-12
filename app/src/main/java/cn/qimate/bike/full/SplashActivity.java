@@ -44,6 +44,8 @@ import com.sunshine.blelibrary.utils.GlobalParameterUtils;
 import org.apache.http.Header;
 import org.json.JSONArray;
 
+import java.lang.ref.WeakReference;
+
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
@@ -53,6 +55,7 @@ import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.WebActivity;
 import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.base.BaseApplication;
+import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.core.common.AppManager;
 import cn.qimate.bike.core.common.HttpHelper;
 import cn.qimate.bike.core.common.Md5Helper;
@@ -87,7 +90,10 @@ public class SplashActivity extends BaseActivity {
 	private static long ExitTime = 0;
 	private boolean isEnd = false;
 	private WebView myWebView;
-	WebView webView;
+	private WebView webView;
+//	private Myhandler myhandler;
+
+	private Handler m_myHandler = new MainHandler(this);
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -140,115 +146,29 @@ public class SplashActivity extends BaseActivity {
 
 		Log.e("splash===onResume", "===");
 
-		isStop = false;
-		isEnd = false;
-
-//		handler.sendEmptyMessageDelayed(1, 900);
-		m_myHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				time();
-			}
-		}, 900);
 
 
-//		try {
-//			registerReceiver(Config.initFilter());
-//			GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-//		} catch (Exception e) {
-//			ToastUtil.showMessage(this, "eee===="+e);
-//		}
-	}
+//		m_myHandler = new Handler();
+//		myhandler = new Myhandler();
 
-	@Override
-	protected void onPause() {
-		isForeground = false;
-		super.onPause();
-		JPushInterface.onPause(this);
+		if(isStop == true && isEnd == true){
+			isStop = false;
+			isEnd = false;
 
-//		try {
-//			if (internalReceiver != null) {
-//				unregisterReceiver(internalReceiver);
-//				internalReceiver = null;
-//			}
-//		} catch (Exception e) {
-//			ToastUtil.showMessage(this, "eee===="+e);
-//		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		unregisterReceiver(mMessageReceiver);
-		super.onDestroy();
-		destroyLocation();
-		isStop = true;
-		isEnd = true;
-
-		m_myHandler.removeCallbacksAndMessages(null);
-	}
-
-//	Handler handler = new Handler() {
-//		@Override
-//		public void handleMessage(Message msg) {
-//			if (msg.what == 1) {
-//				if (num != 0) {
-//					skipLayout.setVisibility(View.VISIBLE);
-//					skipTime.setText("" + (--num) + "s");
-//				} else {
-//					skipLayout.setVisibility(View.GONE);
-//					if (!isStop) {
-//						stopLocation();
-////						if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-////								&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-////							UIHelper.goToAct(context, MainActivity.class);
-////						} else {
-//							SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-//							SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-//							UIHelper.goToAct(context, EnterActivity.class);
-////						}
-//						isStop = true;
-//						isEnd = true;
-//						finishMine();
-//					}
-//				}
-//				if (!isEnd && !isStop) {
-//					handler.sendEmptyMessageDelayed(1, 900);
-//				}
-//			} else {
-////				Toast.makeText(context,"==》》》》",Toast.LENGTH_SHORT).show();
-//
-//			}
-//		}
-//	};
-
-	private void time(){
-		if (num != 0) {
-			skipLayout.setVisibility(View.VISIBLE);
-			skipTime.setText("" + (--num) + "s");
-		} else {
-			skipLayout.setVisibility(View.GONE);
-			if (!isStop) {
-				stopLocation();
-				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-					UIHelper.goToAct(context, MainActivity.class);
-				} else {
-					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-					UIHelper.goToAct(context, EnterActivity.class);
-				}
-				isStop = true;
-				isEnd = true;
-				finishMine();
-			}
+			handler.sendEmptyMessageDelayed(1, 900);
 		}
-		if (!isEnd && !isStop) {
-			m_myHandler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					time();
-				}
-			}, 900);
-		}
+
+
+//		m_myHandler.sendEmptyMessage(0);
+//		m_myHandler.sendEmptyMessageDelayed(0, 900);
+//		m_myHandler.postDelayed(myhandler, 900);
+//		m_myHandler.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				time();
+//			}
+//		}, 900);
+
 	}
 
 	private void init() {
@@ -310,21 +230,26 @@ public class SplashActivity extends BaseActivity {
 		loadingImage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				String uid = SharedPreferencesUrls.getInstance().getString("uid","");
-//				String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
-//				if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
-//					UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
-//					if (app_type != null && !"".equals(app_type)){
-//						if (!"#".equals(ad_link) && ad_link != null && !"".equals(ad_link)) {
-//							isStop = true;
-//							isEnd = true;
-//							finishMine();
-//						}
-//					}
-//				}
+				String uid = SharedPreferencesUrls.getInstance().getString("uid","");
+				String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
+				if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
 
-				isStop = true;
-				isEnd = true;
+//					ad_link="http://www.7mate.cn/Home/Games/index.html?from=singlemessage";
+
+					Log.e("splash===", "loadingImage==="+app_type+"==="+app_id+"==="+ad_link);
+
+					UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
+					if (app_type != null && !"".equals(app_type)){
+						if (!"#".equals(ad_link) && ad_link != null && !"".equals(ad_link)) {
+							isStop = true;
+							isEnd = true;
+//							finishMine();
+						}
+					}
+				}
+
+//				isStop = true;
+//				isEnd = true;
 
 //				Intent intent = new Intent();
 //				intent.setAction("android.intent.action.VIEW");
@@ -333,145 +258,216 @@ public class SplashActivity extends BaseActivity {
 //				startActivity(intent);
 
 //				UIHelper.goToAct(context, Main3Activity.class);
-				UIHelper.goToAct(context, WebActivity.class);
+//				UIHelper.goToAct(context, WebActivity.class);
 //				finishMine();
 
-//				myWebView=new WebView(context);
-//				myWebView.setWebViewClient(new WebViewClient(){
-//					@Override
-//					public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//
-//						if (url.startsWith("weixin://wap/pay?")) {
-//							Intent intent = new Intent();
-//							intent.setAction(Intent.ACTION_VIEW);
-//							intent.setData(Uri.parse(url));
-//							startActivity(intent);
-//
-//							return true;
-//						}
-////						else{
-////							view.loadUrl(url);
-////							return true;
-////						}
-//						return super.shouldOverrideUrlLoading(view, url);
-//
-//					}
-//				});
-//
-//				WebSettings mysettings = myWebView.getSettings();
-//				mysettings.setSupportZoom(true);
-//				mysettings.setBuiltInZoomControls(true);
-//				mysettings.setJavaScriptEnabled(true);
-//				mysettings.setDomStorageEnabled(true);
-//
-////				myWebView.getSettings().setJavaScriptEnabled(true);//设置webView属性，运行JS脚本
-////				myWebView.loadUrl("http://blog.csdn.net/xiangyong_1521");//连接
-//				myWebView.loadUrl(ad_link);//连接
-//				setContentView(myWebView);//显示
-//
-//
-//
-////				url = SharedPreferencesUrls.getInstance().getString("ad_link", "");
-//
-//				myWebView = (WebView) findViewById(R.id.myWebView);
-//				myWebView.setVisibility(View.VISIBLE);
-//				myWebView = new WebView(context);
-//				WebSettings mysettings = myWebView.getSettings();
-//				mysettings.setSupportZoom(true);
-//				mysettings.setBuiltInZoomControls(true);
-//				mysettings.setJavaScriptEnabled(true);
-//				mysettings.setDomStorageEnabled(true);
-//
-//				myWebView.setClickable(true);
-//				myWebView.setWebViewClient(new WebViewClient());
-//				myWebView.loadUrl(ad_link);
-//
-//
-//
-//				myWebView.setWebViewClient(new WebViewClient() {
-//					@Override
-//					public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//						// 如下方案可在非微信内部WebView的H5页面中调出微信支付
-//						if (url.startsWith("weixin://wap/pay?")) {
-//							Intent intent = new Intent();
-//							intent.setAction(Intent.ACTION_VIEW);
-//							intent.setData(Uri.parse(url));
-//							startActivity(intent);
-//
-//							return true;
-//						}
-////						else{
-////							view.loadUrl(url);
-////							return true;
-////						}
-//						return super.shouldOverrideUrlLoading(view, url);
-//					}
-//
-//					@Override
-//					public void onPageFinished(WebView view, String url) {
-//						super.onPageFinished(view, url);
-//					}
-//
-//					@Override
-//					public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-//						super.onReceivedError(view, errorCode, description, failingUrl);
-//					}
-//
-//				});
-//
-//
-////				myWebView.setOnKeyListener(new View.OnKeyListener() {
-////					@Override
-////					public boolean onKey(View v, int keyCode, KeyEvent event) {
-////						if (event.getAction() == KeyEvent.ACTION_DOWN) {
-////
-////							Log.e("main===WebView", myWebView+"==="+myWebView.canGoBack());
-////
-////							if (keyCode == KeyEvent.KEYCODE_BACK && myWebView.canGoBack()) {  //表示按返回键
-////								myWebView.goBack();   //后退
-////
-////								return true;    //已处理
-////							}else{
-////
-////								if (myWebView != null) {
-////									myWebView.getSettings().setJavaScriptEnabled(false);
-////									myWebView.clearFormData();
-////									myWebView.clearHistory();
-////
-////
-////									myWebView.stopLoading();
-////
-////									myWebView.removeAllViews();
-////
-////									myWebView.setWebViewClient(null);
-////									myWebView.clearHistory();
-////									myWebView.clearCache(true);
-////									myWebView.loadUrl("about:blank");
-////									myWebView.freeMemory();
-////									myWebView.pauseTimers();
-////
-////									((ViewGroup) myWebView.getParent()).removeView(myWebView);
-////									myWebView.destroy();
-////									myWebView = null;
-////								}
-////
-////								setContentView(R.layout.main_enter);
-////
-////								return true;
-////							}
-////						}
-////						return false;
-////					}
-////				});
-//
-//
-//				setContentView(myWebView);
 
 			}
 		});
-//		mThread.start();
-//		handler.sendEmptyMessageDelayed(1, 900);
+		mThread.start();
+		handler.sendEmptyMessageDelayed(1, 900);
+
+		Log.e("splash===init", "===");
 	}
+
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if (msg.what == 1) {
+				if (num != 0) {
+					skipLayout.setVisibility(View.VISIBLE);
+					skipTime.setText("" + (--num) + "s");
+				} else {
+					skipLayout.setVisibility(View.GONE);
+					if (!isStop) {
+						stopLocation();
+						if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
+								&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+							UIHelper.goToAct(context, MainActivity.class);
+						} else {
+							SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+							SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+							UIHelper.goToAct(context, EnterActivity.class);
+						}
+						isStop = true;
+						isEnd = true;
+						finishMine();
+					}
+				}
+				if (!isEnd && !isStop) {
+					handler.sendEmptyMessageDelayed(1, 900);
+				}
+			} else {
+//				Toast.makeText(context,"==》》》》",Toast.LENGTH_SHORT).show();
+
+			}
+		}
+	};
+
+
+
+	@Override
+	protected void onPause() {
+		isForeground = false;
+		super.onPause();
+		JPushInterface.onPause(this);
+
+//		try {
+//			if (internalReceiver != null) {
+//				unregisterReceiver(internalReceiver);
+//				internalReceiver = null;
+//			}
+//		} catch (Exception e) {
+//			ToastUtil.showMessage(this, "eee===="+e);
+//		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(mMessageReceiver);
+		super.onDestroy();
+
+//		m_myHandler.removeCallbacksAndMessages(null);
+
+		destroyLocation();
+		isStop = true;
+		isEnd = true;
+
+//		m_myHandler.removeCallbacks(myhandler);
+
+	}
+
+//	private static Handler m_myHandler = new Handler(new Handler.Callback() {
+//		@Override
+//		public boolean handleMessage(Message mes) {
+//			switch (mes.what) {
+//				case 0:
+//					break;
+//				default:
+//					break;
+//			}
+//			return false;
+//		}
+//	});
+
+
+//	class Myhandler implements Runnable{
+//		public void run(){
+//			if (num != 0) {
+//				skipLayout.setVisibility(View.VISIBLE);
+//				skipTime.setText("" + (--num) + "s");
+//			} else {
+//				skipLayout.setVisibility(View.GONE);
+//				if (!isStop) {
+//					stopLocation();
+//					if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//						UIHelper.goToAct(context, MainActivity.class);
+//					} else {
+//						SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//						SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//						UIHelper.goToAct(context, EnterActivity.class);
+//					}
+//					isStop = true;
+//					isEnd = true;
+//					finishMine();
+//				}
+//			}
+//			if (!isEnd && !isStop) {
+//				m_myHandler.postDelayed(myhandler, 900);
+//			}
+//		}
+//	}
+
+	private static class MainHandler extends Handler {
+//		class MainHandler extends Handler {
+		WeakReference<SplashActivity> softReference;
+
+		public MainHandler(SplashActivity activity) {
+			softReference = new WeakReference<SplashActivity>(activity);
+		}
+
+		@Override
+		public void handleMessage(Message mes) {
+			SplashActivity splashActivity = softReference.get();
+
+			switch (mes.what) {
+				case 0:
+//					time();
+					splashActivity.time();
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+
+	private void time(){
+//		UIHelper.goToAct(context, MainActivity.class);
+
+//		isStop = true;
+//		isEnd = true;
+//		finishMine();
+
+
+		if (num != 0) {
+			skipLayout.setVisibility(View.VISIBLE);
+			skipTime.setText("" + (--num) + "s");
+		} else {
+			skipLayout.setVisibility(View.GONE);
+			if (!isStop) {
+				stopLocation();
+				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+					UIHelper.goToAct(context, MainActivity.class);
+				} else {
+					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+					UIHelper.goToAct(context, EnterActivity.class);
+				}
+				isStop = true;
+				isEnd = true;
+				finishMine();
+			}
+		}
+		if (!isEnd && !isStop) {
+//			m_myHandler.sendEmptyMessage(0);
+			m_myHandler.sendEmptyMessageDelayed(0, 900);
+//			m_myHandler.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					time();
+//				}
+//			}, 900);
+		}
+	}
+
+	public Thread mThread = new Thread() {
+		public void run() {
+			try {
+				mThread.sleep(5 * 1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			if (!isStop && !isEnd){
+				stopLocation();
+				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
+						&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+					UIHelper.goToAct(context, MainActivity.class);
+				} else {
+					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+					UIHelper.goToAct(context, EnterActivity.class);
+				}
+				isStop = true;
+				isEnd = true;
+				finishMine();
+			}
+		};
+	};
+
+
+
+
 
 
 //	@Override

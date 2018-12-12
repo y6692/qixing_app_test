@@ -52,6 +52,7 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -120,6 +121,8 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 	public static double referLatitude = 0.0;
 	public static double referLongitude = 0.0;
+
+	protected Handler m_myHandler = new MainHandler(this);
 
 
 //	public static LoadingDialog loadingDialog;
@@ -533,16 +536,26 @@ public class BaseFragmentActivity extends AppCompatActivity
 
 
 
-	protected Handler m_myHandler = new Handler(new Handler.Callback() {
+//	public static Handler m_myHandler = new Handler(new Handler.Callback() {
+//	public static
+class MainHandler extends Handler {
+		WeakReference<BaseFragmentActivity> softReference;
+
+		public MainHandler(BaseFragmentActivity activity) {
+			softReference = new WeakReference<BaseFragmentActivity>(activity);
+		}
+
 		@Override
-		public boolean handleMessage(Message mes) {
+		public void handleMessage(Message mes) {
+			BaseFragmentActivity baseFragmentActivity = softReference.get();
+
 			switch (mes.what) {
 				case 0:
 					if (!BaseApplication.getInstance().getIBLE().isEnable()){
 
 						break;
 					}
-					BaseApplication.getInstance().getIBLE().connect(m_nowMac, BaseFragmentActivity.this);
+					BaseApplication.getInstance().getIBLE().connect(m_nowMac, baseFragmentActivity);
 					break;
 				case 1:
 
@@ -554,14 +567,14 @@ public class BaseFragmentActivity extends AppCompatActivity
 				case 9:
 					break;
 				case 0x99://搜索超时
-					BaseApplication.getInstance().getIBLE().connect(m_nowMac, BaseFragmentActivity.this);
+					BaseApplication.getInstance().getIBLE().connect(m_nowMac, baseFragmentActivity);
 					break;
 				default:
 					break;
 			}
-			return false;
+//			return false;
 		}
-	});
+	}
 
 
 //	protected void handleReceiver(Context context, Intent intent) {

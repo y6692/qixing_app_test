@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -61,9 +62,12 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     private TextView daysText;
 
     private RelativeLayout alipayTypeLayout,WeChatTypeLayout,balanceTypeLayout;
+    private RelativeLayout moreLayout;
+    private LinearLayout moreLayout2;
     private ImageView alipayTypeImage,WeChatTypeImage,balanceTypeImage;
     private LinearLayout type1Layout,type2Layout,type3Layout;
     private TextView type1Text,type2Text,type3Text;
+    private TextView type1Text2,type2Text2;
     private TextView days1Text,days2Text,days3Text;
     private Button submitBtn;
     private String paytype = "1";
@@ -112,6 +116,9 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         WeChatTypeImage = (ImageView)findViewById(R.id.ui_payMonth_cart_WeChatTypeImage);
         balanceTypeImage = (ImageView)findViewById(R.id.ui_payMonth_cart_balanceTypeImage);
 
+        moreLayout = (RelativeLayout)findViewById(R.id.ui_payMonth_cart_moreLayout);
+        moreLayout2 = (LinearLayout)findViewById(R.id.ui_payMonth_cart_moreLayout2);
+
         type1Layout = (LinearLayout)findViewById(R.id.ui_payMonth_cart_type1Layout);
         type2Layout = (LinearLayout)findViewById(R.id.ui_payMonth_cart_type2Layout);
         type3Layout = (LinearLayout)findViewById(R.id.ui_payMonth_cart_type3Layout);
@@ -120,13 +127,19 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         type2Text = (TextView)findViewById(R.id.ui_payMonth_cart_type2Text);
         type3Text = (TextView)findViewById(R.id.ui_payMonth_cart_type3Text);
 
+        type1Text2 = (TextView)findViewById(R.id.ui_payMonth_cart_type1Text2);
+        type2Text2 = (TextView)findViewById(R.id.ui_payMonth_cart_type2Text2);
+
+        type1Text2.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        type2Text2.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+
         days1Text = (TextView)findViewById(R.id.ui_payMonth_cart_days1Text);
         days2Text = (TextView)findViewById(R.id.ui_payMonth_cart_days2Text);
         days3Text = (TextView)findViewById(R.id.ui_payMonth_cart_days3Text);
 
         submitBtn = (Button)findViewById(R.id.ui_payMonth_cart_submitBtn);
         backImg.setOnClickListener(this);
-
+        moreLayout.setOnClickListener(this);
         alipayTypeLayout.setOnClickListener(this);
         WeChatTypeLayout.setOnClickListener(this);
         balanceTypeLayout.setOnClickListener(this);
@@ -143,6 +156,15 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         switch (v.getId()){
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
+                break;
+            case R.id.ui_payMonth_cart_moreLayout:
+                moreLayout.setVisibility(View.GONE);
+                moreLayout2.setVisibility(View.VISIBLE);
+//                if(moreLayout.getVisibility()==View.GONE){
+//                    moreLayout2.setVisibility(View.VISIBLE);
+//                }else{
+//                    moreLayout2.setVisibility(View.GONE);
+//                }
                 break;
             case R.id.ui_payMonth_cart_alipayTypeLayout:
                 alipayTypeImage.setImageResource(R.drawable.pay_type_selected);

@@ -86,22 +86,10 @@
                     android:background="@drawable/btn_bcg"
                     android:gravity="center"
                     android:maxHeight="0dp"
-                    android:text="购买月卡"
+                    android:text="购买套餐(骑行更划算)"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp16"/>
-                <Button
-                    android:id="@+id/myPurseUI_rechargeBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp45"
-                    android:layout_marginLeft="@dimen/dp15"
-                    android:layout_marginRight="@dimen/dp15"
-                    android:layout_marginTop="@dimen/dp20"
-                    android:background="@drawable/btn_bcg"
-                    android:gravity="center"
-                    android:maxHeight="0dp"
-                    android:text="余额充值"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp16" />
+
 
                 <Button
                     android:id="@+id/myPurseUI_activationNum_btn"
@@ -116,6 +104,20 @@
                     android:text="我有兑换码,点此处兑换>>>"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp16"/>
+
+                <TextView
+                    android:id="@+id/myPurseUI_rechargeBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp45"
+                    android:layout_marginLeft="@dimen/dp15"
+                    android:layout_marginRight="@dimen/dp15"
+                    android:layout_marginTop="@dimen/dp20"
+                    android:gravity="center"
+                    android:maxHeight="0dp"
+                    android:text="余额充值"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/sp12" />
+
             </LinearLayout>
         </cn.qimate.bike.core.widget.MyScrollView>
     </LinearLayout>
