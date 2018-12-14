@@ -91,9 +91,10 @@ public class SplashActivity extends BaseActivity {
 	private boolean isEnd = false;
 	private WebView myWebView;
 	private WebView webView;
+
 //	private Myhandler myhandler;
 
-	private Handler m_myHandler = new MainHandler(this);
+//	private Handler handler = new MainHandler(this);
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -155,7 +156,7 @@ public class SplashActivity extends BaseActivity {
 			isStop = false;
 			isEnd = false;
 
-			handler.sendEmptyMessageDelayed(1, 900);
+			handler.sendEmptyMessageDelayed(0, 900);
 		}
 
 
@@ -211,20 +212,25 @@ public class SplashActivity extends BaseActivity {
 		skipLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-						&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-					UIHelper.goToAct(context, MainActivity.class);
-				} else {
-					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-					UIHelper.goToAct(context, EnterActivity.class);
+//				finish = true;
+
+				if(!isStop){
+					isStop = true;
+					isEnd = true;
+
+					if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
+							&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+						UIHelper.goToAct(context, MainActivity.class);
+					} else {
+						SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+						SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+						UIHelper.goToAct(context, EnterActivity.class);
+					}
+
+					finishMine();
 				}
 
-//				UIHelper.goToAct(context, Main3Activity.class);
 
-				isStop = true;
-				isEnd = true;
-				finishMine();
 			}
 		});
 		loadingImage.setOnClickListener(new View.OnClickListener() {
@@ -234,7 +240,8 @@ public class SplashActivity extends BaseActivity {
 				String access_token = SharedPreferencesUrls.getInstance().getString("access_token","");
 				if (uid != null && !"".equals(uid) && access_token != null && !"".equals(access_token)){
 
-//					ad_link="http://www.7mate.cn/Home/Games/index.html?from=singlemessage";
+//					ad_link = "http://www.7mate.cn/App/Helper/event.html";
+//					app_type = "4";
 
 					Log.e("splash===", "loadingImage==="+app_type+"==="+app_id+"==="+ad_link);
 
@@ -264,22 +271,49 @@ public class SplashActivity extends BaseActivity {
 
 			}
 		});
-		mThread.start();
-		handler.sendEmptyMessageDelayed(1, 900);
+//		mThread.start();
+		handler.sendEmptyMessageDelayed(0, 900);
 
 		Log.e("splash===init", "===");
 	}
 
+//	public Thread mThread = new Thread() {
+//		public void run() {
+//			try {
+//				mThread.sleep(5 * 1000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//			if (!isStop && !isEnd){
+//				stopLocation();
+//				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
+//						&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//					UIHelper.goToAct(context, MainActivity.class);
+//				} else {
+//					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//					UIHelper.goToAct(context, EnterActivity.class);
+//				}
+//				isStop = true;
+//				isEnd = true;
+//				finishMine();
+//			}
+//		};
+//	};
+
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.what == 1) {
+			if (msg.what == 0) {
 				if (num != 0) {
 					skipLayout.setVisibility(View.VISIBLE);
 					skipTime.setText("" + (--num) + "s");
 				} else {
 					skipLayout.setVisibility(View.GONE);
 					if (!isStop) {
+						isStop = true;
+						isEnd = true;
+
 						stopLocation();
 						if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
 								&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
@@ -289,13 +323,12 @@ public class SplashActivity extends BaseActivity {
 							SharedPreferencesUrls.getInstance().putInt("version", getVersion());
 							UIHelper.goToAct(context, EnterActivity.class);
 						}
-						isStop = true;
-						isEnd = true;
+
 						finishMine();
 					}
 				}
 				if (!isEnd && !isStop) {
-					handler.sendEmptyMessageDelayed(1, 900);
+					handler.sendEmptyMessageDelayed(0, 900);
 				}
 			} else {
 //				Toast.makeText(context,"==》》》》",Toast.LENGTH_SHORT).show();
@@ -327,7 +360,7 @@ public class SplashActivity extends BaseActivity {
 		unregisterReceiver(mMessageReceiver);
 		super.onDestroy();
 
-//		m_myHandler.removeCallbacksAndMessages(null);
+		handler.removeCallbacksAndMessages(null);
 
 		destroyLocation();
 		isStop = true;
@@ -409,7 +442,6 @@ public class SplashActivity extends BaseActivity {
 //		isEnd = true;
 //		finishMine();
 
-
 		if (num != 0) {
 			skipLayout.setVisibility(View.VISIBLE);
 			skipTime.setText("" + (--num) + "s");
@@ -431,7 +463,7 @@ public class SplashActivity extends BaseActivity {
 		}
 		if (!isEnd && !isStop) {
 //			m_myHandler.sendEmptyMessage(0);
-			m_myHandler.sendEmptyMessageDelayed(0, 900);
+			handler.sendEmptyMessageDelayed(0, 900);
 //			m_myHandler.postDelayed(new Runnable() {
 //				@Override
 //				public void run() {
@@ -441,29 +473,7 @@ public class SplashActivity extends BaseActivity {
 		}
 	}
 
-	public Thread mThread = new Thread() {
-		public void run() {
-			try {
-				mThread.sleep(5 * 1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (!isStop && !isEnd){
-				stopLocation();
-				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-						&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-					UIHelper.goToAct(context, MainActivity.class);
-				} else {
-					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-					UIHelper.goToAct(context, EnterActivity.class);
-				}
-				isStop = true;
-				isEnd = true;
-				finishMine();
-			}
-		};
-	};
+
 
 
 

@@ -1355,6 +1355,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				}
 				break;
 			case R.id.ui_adv_image:
+
+                Log.e("main===", "ui_adv==="+app_type+"==="+app_id+"==="+ad_link);
+
 				UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
 				break;
 			case R.id.ui_adv_closeBtn:

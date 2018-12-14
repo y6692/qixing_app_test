@@ -160,11 +160,6 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
             case R.id.ui_payMonth_cart_moreLayout:
                 moreLayout.setVisibility(View.GONE);
                 moreLayout2.setVisibility(View.VISIBLE);
-//                if(moreLayout.getVisibility()==View.GONE){
-//                    moreLayout2.setVisibility(View.VISIBLE);
-//                }else{
-//                    moreLayout2.setVisibility(View.GONE);
-//                }
                 break;
             case R.id.ui_payMonth_cart_alipayTypeLayout:
                 alipayTypeImage.setImageResource(R.drawable.pay_type_selected);
@@ -428,8 +423,8 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     //余额充值
     public void banlancePay(final String osn,String uid,String access_token) {
         RequestParams params = new RequestParams();
-        params.put("uid",uid);
-        params.put("access_token",access_token);
+        params.put("uid", uid);
+        params.put("access_token", access_token);
         params.put("osn", osn);
         HttpHelper.post(context, Urls.payMonth, params, new TextHttpResponseHandler() {
             @Override
@@ -446,7 +441,10 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
-                        UIHelper.goToAct(context,MainActivity.class);
+                        UIHelper.goToAct(context, MainActivity.class);
+
+//                        http://www.7mate.cn/Home/Games/index.html?from=singlemessage
+
                         scrollToFinishActivity();
                     } else {
                         UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);

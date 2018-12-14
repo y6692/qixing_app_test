@@ -6,6 +6,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.activity.InsureanceActivity;
 import cn.qimate.bike.activity.InviteCodeActivity;
 import cn.qimate.bike.activity.MainActivity;
+import cn.qimate.bike.activity.MonthlyCardActivity;
 import cn.qimate.bike.activity.WebviewActivity;
 import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.core.widget.ConfirmDialog;
@@ -355,14 +356,24 @@ public class UIHelper {
 			}
 			break;
 		case 2:
-			Intent intent = new Intent(context,InviteCodeActivity.class);
+			Intent intent = new Intent(context, InviteCodeActivity.class);
 			intent.putExtra("isBack",false);
 			context.startActivity(intent);
 			break;
 		case 3:
-			Intent intent1 = new Intent(context,InsureanceActivity.class);
+			Intent intent1 = new Intent(context, InsureanceActivity.class);
 			intent1.putExtra("isBack",false);
 			context.startActivity(intent1);
+			break;
+		case 4:
+			if (!"#".equals(link) && link != null && !"".equals(link)) {
+				Intent intent2 = new Intent(context, MonthlyCardActivity.class);
+				intent2.putExtra("link", link);
+				intent2.putExtra("title", "拼手气 拿手机");
+//				intent2.putExtra("isBack",false);
+				context.startActivity(intent2);
+			}
+
 			break;
 		default:
 			if (!MainActivity.isForeground){
