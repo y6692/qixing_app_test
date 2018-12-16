@@ -3,6 +3,7 @@ package cn.qimate.bike.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -340,7 +341,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                         return;
                     }
 
-                    Toast.makeText(context, "==="+imageurl, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "==="+imageurl, Toast.LENGTH_SHORT).show();
 
                     AutoSubmitBtn(uid, access_token, realname, classText.getText().toString().trim(), stunum);
 
@@ -431,7 +432,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 }
                 //UIHelper.ToastError(context, throwable.toString());
 
-                Toast.makeText(context, "===zzz", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "===zzz", Toast.LENGTH_SHORT).show();
 
                 SubmitBtn(uid, access_token, realname, classText.getText().toString().trim(), stunum);
             }
@@ -642,7 +643,7 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                 break;
             case REQUESTCODE_TAKE:// 调用相机拍照
                 if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
-                    File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+                    File temp = new File(Environment.getExternalStorageDirectory() + "/images/" + IMAGE_FILE_NAME);
                     if (Uri.fromFile(temp) != null) {
                         urlpath = getRealFilePath(context, Uri.fromFile(temp));
                         if (loadingDialog != null && !loadingDialog.isShowing()) {
@@ -880,16 +881,37 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
                     }
                     if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
                         Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
-                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                            takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        }else {
-                            // 下面这句指定调用相机拍照后的照片存储的路径
-                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                    Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, RxFileTool.getUriForFile(context,
+//                                    new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                            takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                            takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                        }else {
+//                            // 下面这句指定调用相机拍照后的照片存储的路径
+//                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                                    Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                        }
+
+                        File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+                        if(!file.getParentFile().exists()){
+                            file.getParentFile().mkdirs();
                         }
+
+
+//                        File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+//                        File file = new File(Environment.getExternalStorageDirectory()+"/", IMAGE_FILE_NAME);
+
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(RealNameAuthActivity.this,
+                                    BuildConfig.APPLICATION_ID + ".fileprovider",
+                                    file));
+
+                        }else {
+                            takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                        }
+
+
                         startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                     }else {
                         Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
@@ -922,16 +944,47 @@ public class RealNameAuthActivity extends SwipeBackActivity implements View.OnCl
 
                         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
                             Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+
+//                            String path = getFilesDir() + File.separator + "images" + File.separator;
+//                            File file = new File(path, "test.jpg");
+//                            if(!file.getParentFile().exists())
+//                                file.getParentFile().mkdirs();
+
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                //步骤二：Android 7.0及以上获取文件 Uri
+//                                mUri = FileProvider.getUriForFile(RealNameAuthActivity.this, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+//                            }
+
+//                            File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+
+                            File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+                            if(!file.getParentFile().exists()){
+                                file.getParentFile().mkdirs();
+                            }
+
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(RealNameAuthActivity.this,
-                                        BuildConfig.APPLICATION_ID + ".provider",
-                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                        BuildConfig.APPLICATION_ID + ".fileprovider",
+//                                        "com.vondear.rxtools.fileprovider",
+                                        file));
+
+
+//                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+
+//                                ContentValues contentValues = new ContentValues(1);
+//                                contentValues.put(MediaStore.Images.Media.DATA, new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME).getAbsolutePath());
+//                                Uri uri = getApplication().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+//                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+
                             }else {
                                 // 下面这句指定调用相机拍照后的照片存储的路径
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                        Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+
+                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                             }
                             startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                         }else {

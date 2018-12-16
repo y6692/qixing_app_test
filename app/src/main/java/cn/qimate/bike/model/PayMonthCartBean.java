@@ -8,6 +8,15 @@ public class PayMonthCartBean {
     private String quarter_day;
     private String week_money;
     private String week_day;
+    private String gamestatus;
+
+    public String getGamestatus() {
+        return gamestatus;
+    }
+
+    public void setGamestatus(String gamestatus) {
+        this.gamestatus = gamestatus;
+    }
 
     public String getMonth_money() {
         return month_money;

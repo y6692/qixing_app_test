@@ -1166,37 +1166,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 				UIHelper.goToAct(MainActivity.this, ActionCenterActivity.class);
 
-//				if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//					return;
-//				}
-//				Location location = locationManager.getLastKnownLocation(provider);// 调用getLastKnownLocation()方法获取当前的位置信息
-//
-//				double lat = location.getLatitude();//获取纬度
-//				double lng = location.getLongitude();//获取经度
-//
-//				LatLng myLoc = new LatLng(lat, lng);
-//
-//				if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
-//					isContainsList.clear();
-//				}
-//				for (int i = 0; i < pOptions.size(); i++) {
-//					isContainsList.add(pOptions.get(i).contains(myLoc));
-//				}
-//
-//				Log.e("main===", "main====onStart===" + myLoc + "===" + isContainsList.contains(true));
-//				marquee.setText("main====onStart===" + myLoc + "===" + isContainsList.contains(true));
-
-//				endBtn();
-//				connect();
-
-//				BaseApplication.getInstance().getIBLE().connect(m_nowMac, this);
-//				BaseApplication.getInstance().getIBLE().getLockStatus();
+//                UIHelper.goToAct(context,RealNameAuthActivity.class);
 
 
-//				finish();
-
-//				UIHelper.goToAct(context, Main2Activity.class);
-//				UIHelper.goToAct(context, CurRoadBikingActivity.class);
 				break;
 			case R.id.mainUI_rightBtn:
 				if (SharedPreferencesUrls.getInstance().getString("uid","") == null || "".equals(

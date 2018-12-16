@@ -73,6 +73,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     private String paytype = "1";
     private String osn = "";
     private int type = 2;
+    private String gamestatus = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,14 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            UIHelper.goToAct(context,MainActivity.class);
+            if("1".equals(gamestatus)){
+                UIHelper.goToAct(context,MainActivity.class);
+            }else{
+                Intent intent2 = new Intent(context, WebviewActivity.class);
+                intent2.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
+                intent2.putExtra("title", "抽奖");
+                startActivity(intent2);
+            }
             scrollToFinishActivity();
         }
     };
@@ -349,7 +357,16 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                     // 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
                     if (TextUtils.equals(resultStatus, "9000")) {
                         Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
-                        UIHelper.goToAct(context,MainActivity.class);
+
+                        if("1".equals(gamestatus)){
+                            UIHelper.goToAct(context,MainActivity.class);
+                        }else{
+                            Intent intent = new Intent(context, WebviewActivity.class);
+                            intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
+                            intent.putExtra("title", "抽奖");
+                            startActivity(intent);
+                        }
+
                         scrollToFinishActivity();
                     } else {
                         if (TextUtils.equals(resultStatus, "8000")) {
@@ -441,7 +458,15 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                     ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                     if (result.getFlag().equals("Success")) {
                         Toast.makeText(context, "恭喜您,支付成功", Toast.LENGTH_SHORT).show();
-                        UIHelper.goToAct(context, MainActivity.class);
+
+                        if("1".equals(gamestatus)){
+                            UIHelper.goToAct(context,MainActivity.class);
+                        }else{
+                            Intent intent = new Intent(context, WebviewActivity.class);
+                            intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
+                            intent.putExtra("title", "抽奖");
+                            startActivity(intent);
+                        }
 
 //                        http://www.7mate.cn/Home/Games/index.html?from=singlemessage
 
@@ -491,6 +516,11 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                         days2Text.setText("("+bean.getQuarter_day()+"天不限次)");
                         type3Text.setText(bean.getWeek_money()+"元");
                         days3Text.setText("("+bean.getWeek_day()+"天不限次)");
+
+                        gamestatus = bean.getGamestatus();
+
+                        Log.e("userMonth===", "==="+bean.getGamestatus());
+
                     } else {
                         UIHelper.showToastMsg(context, result.getMsg(), R.drawable.ic_error);
                     }
