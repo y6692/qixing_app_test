@@ -94,7 +94,7 @@ public class SplashActivity extends BaseActivity {
 
 //	private Myhandler myhandler;
 
-//	private Handler handler = new MainHandler(this);
+	private Handler handler = new MainHandler(this);
 
 	@Override
 	protected void onCreate(Bundle bundle) {
@@ -306,54 +306,49 @@ public class SplashActivity extends BaseActivity {
 //		};
 //	};
 
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-
-			try{
-				if (msg.what == 0) {
-
-					if (num != 0) {
-						skipLayout.setVisibility(View.VISIBLE);
-						skipTime.setText("" + (--num) + "s");
-					} else {
-						skipLayout.setVisibility(View.GONE);
-
-						if (!isStop && !isEnd) {
-							isStop = true;
-							isEnd = true;
-
-							stopLocation();
-							if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-									&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-								UIHelper.goToAct(context, MainActivity.class);
-							} else {
-								SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-								SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-								UIHelper.goToAct(context, EnterActivity.class);
-							}
-
-							finishMine();
-						}
-
-
-					}
-
-
-
-
-					if (!isStop && !isEnd) {
-						handler.sendEmptyMessageDelayed(0, 900);
-					}
-				} else {
-				}
-			}catch (Exception e){
-
-			}
-
-
-		}
-	};
+//	private Handler handler = new Handler() {
+//		@Override
+//		public void handleMessage(Message msg) {
+//
+//			try{
+//				if (msg.what == 0) {
+//
+//					if (num != 0) {
+//						skipLayout.setVisibility(View.VISIBLE);
+//						skipTime.setText("" + (--num) + "s");
+//					} else {
+//						skipLayout.setVisibility(View.GONE);
+//
+//						if (!isStop && !isEnd) {
+//							isStop = true;
+//							isEnd = true;
+//
+//							stopLocation();
+//							if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
+//									&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//								UIHelper.goToAct(context, MainActivity.class);
+//							} else {
+//								SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//								SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//								UIHelper.goToAct(context, EnterActivity.class);
+//							}
+//
+//							finishMine();
+//						}
+//					}
+//
+//					if (!isStop && !isEnd) {
+//						handler.sendEmptyMessageDelayed(0, 900);
+//					}
+//				} else {
+//				}
+//			}catch (Exception e){
+//
+//			}
+//
+//
+//		}
+//	};
 
 
 
