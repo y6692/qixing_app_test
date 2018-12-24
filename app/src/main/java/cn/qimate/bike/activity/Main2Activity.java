@@ -36,8 +36,8 @@ public class Main2Activity extends BaseFragmentActivity implements View.OnClickL
 
         switch (v.getId()) {
             case R.id.mainUI_title:
-                Intent intent = new Intent(this, Main3Activity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, Main3Activity.class);
+//                startActivity(intent);
                 break;
 
             default:

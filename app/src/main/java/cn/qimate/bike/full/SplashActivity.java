@@ -45,11 +45,15 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 
 import java.lang.ref.WeakReference;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.CrashHandler;
+import cn.qimate.bike.activity.Main2Activity;
 import cn.qimate.bike.activity.Main3Activity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.WebActivity;
@@ -91,6 +95,9 @@ public class SplashActivity extends BaseActivity {
 	private boolean isEnd = false;
 	private WebView myWebView;
 	private WebView webView;
+	private Context context;
+
+	private Runnable runnable;
 
 //	private Myhandler myhandler;
 
@@ -100,13 +107,11 @@ public class SplashActivity extends BaseActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.main_enter);
-//		context = this;
-
-//		registerReceiver(broadcastReceiver2, Config.initFilter());
-//		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+		context = this;
 
 //		android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
 
+		CrashHandler.getInstance().init(this);
 
 		if (SharedPreferencesUrls.getInstance().getBoolean("isStop", true)) {
 			SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
@@ -122,20 +127,7 @@ public class SplashActivity extends BaseActivity {
 		skipLayout = findViewById(R.id.plash_loading_skipLayout);
 		skipTime = findViewById(R.id.plash_loading_skipTime);
 		initHttp();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-				if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-					requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-							101);
-				} else {
-					SplashActivity.this.requestPermissions(
-							new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-							101);
-					return;
-				}
-			}
-		}
+
 		init();
 	}
 
@@ -174,15 +166,26 @@ public class SplashActivity extends BaseActivity {
 
 	private void init() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+				if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+					requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+				} else {
+					requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+				}
+				return;
+			}
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			int checkPermission = this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
 			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
 				if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
 					requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
 				} else {
-					SplashActivity.this.requestPermissions(
-							new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
-					return;
+					requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
 				}
+				return;
 			}
 		}
 		// <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
@@ -190,15 +193,11 @@ public class SplashActivity extends BaseActivity {
 			int checkPermission = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
 			if (checkPermission != PackageManager.PERMISSION_GRANTED) {
 				if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-							Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 				} else {
-					SplashActivity.this.requestPermissions(
-							new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-									Manifest.permission.WRITE_EXTERNAL_STORAGE},
-							0);
-					return;
+					requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 				}
+				return;
 			}
 		}
 
@@ -207,19 +206,17 @@ public class SplashActivity extends BaseActivity {
 		}
 		initjpush();
 		registerMessageReceiver();
-		initLocation();
+//		initLocation();
 
 		skipLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				finish = true;
 
 				try{
 					if(!isStop && !isEnd){
 						isStop = true;
 						isEnd = true;
 
-//						handler.removeCallbacksAndMessages(null);
 						handler.removeMessages(0);
 
 						if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
@@ -235,6 +232,20 @@ public class SplashActivity extends BaseActivity {
 				}catch (Exception e){
 
 				}
+
+
+//				timer.cancel();
+//
+//				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//					UIHelper.goToAct(context, Main2Activity.class);
+//				} else {
+////					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+////					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+////					UIHelper.goToAct(context, EnterActivity.class);
+//				}
+//
+//				finishMine();
+
 
 			}
 		});
@@ -260,27 +271,67 @@ public class SplashActivity extends BaseActivity {
 					}
 				}
 
-//				isStop = true;
-//				isEnd = true;
-
-//				Intent intent = new Intent();
-//				intent.setAction("android.intent.action.VIEW");
-//				Uri uri = Uri.parse(ad_link); // 商品地址
-//				intent.setData(uri);
-//				startActivity(intent);
-
-//				UIHelper.goToAct(context, Main3Activity.class);
-//				UIHelper.goToAct(context, WebActivity.class);
-//				finishMine();
-
-
 			}
 		});
 //		mThread.start();
 		handler.sendEmptyMessageDelayed(0, 900);
 
+
+//		handler = new Handler();
+//		handler.postDelayed(runnable = new Runnable() {
+//			@Override
+//			public void run() {
+//				//从闪屏界面跳转到首界面
+//				Intent intent = new Intent(context, MainActivity.class);
+//				startActivity(intent);
+//				finish();
+//			}
+//		}, 5000);
+
+
+
+//		Countdown();
+
 		Log.e("splash===init", "===");
 	}
+
+//	private Timer timer;
+//	private Handler handler = new Handler(){
+//		public void handleMessage(Message msg){
+//			switch(msg.what){
+//				case 200:
+//
+//					skipLayout.setVisibility(View.VISIBLE);
+//					skipTime.setText("" + num + "s");
+//
+//					num--;
+//					if (num<0){
+//						timer.cancel();
+//						Intent intent = new Intent(context, Main2Activity.class);
+//						startActivity(intent);
+//						finish();
+//					}
+//			}
+//		}
+//	};
+//
+//
+//
+//	private void Countdown() {
+//		//定时器
+//		timer = new Timer();
+//		TimerTask task = new TimerTask() {
+//			@Override
+//			public void run() {
+//				handler.sendEmptyMessage(200);
+//			}
+//		};
+//
+//		//开启定时器，时间差值为1000毫秒
+//		timer.schedule(task,1,1000);
+//	}
+
+
 
 //	public Thread mThread = new Thread() {
 //		public void run() {
@@ -382,6 +433,11 @@ public class SplashActivity extends BaseActivity {
 		isEnd = true;
 
 		handler.removeMessages(0);
+
+//		if (runnable != null) {
+//			handler.removeCallbacks(runnable);
+//		}
+
 
 //		m_myHandler.removeCallbacks(myhandler);
 
@@ -592,20 +648,20 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private void initLocation() {
-		if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
-			//初始化client
-			locationClient = new AMapLocationClient(this.getApplicationContext());
-			//设置定位参数
-			locationClient.setLocationOption(getDefaultOption());
-			// 设置定位监听
-			locationClient.setLocationListener(locationListener);
-			startLocation();
-		} else {
-			Toast.makeText(context, "暂无网络连接，请连接网络", Toast.LENGTH_SHORT).show();
-			return;
-		}
-	}
+//	private void initLocation() {
+//		if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
+//			//初始化client
+//			locationClient = new AMapLocationClient(this.getApplicationContext());
+//			//设置定位参数
+//			locationClient.setLocationOption(getDefaultOption());
+//			// 设置定位监听
+//			locationClient.setLocationListener(locationListener);
+//			startLocation();
+//		} else {
+//			Toast.makeText(context, "暂无网络连接，请连接网络", Toast.LENGTH_SHORT).show();
+//			return;
+//		}
+//	}
 
 	/**
 	 * 默认的定位参数
@@ -632,42 +688,42 @@ public class SplashActivity extends BaseActivity {
 	/**
 	 * 定位监听
 	 */
-	AMapLocationListener locationListener = new AMapLocationListener() {
-		@Override
-		public void onLocationChanged(AMapLocation loc) {
-			if (null != loc) {
-//				Toast.makeText(context,"===="+loc.getLongitude(),Toast.LENGTH_SHORT).show();
-
-				if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
-					PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
-				} else {
-					CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity.this);
-					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
-							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int which) {
-									dialog.cancel();
-									finishMine();
-								}
-							}).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.cancel();
-							Intent localIntent = new Intent();
-							localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-							startActivity(localIntent);
-							finishMine();
-						}
-					});
-					customBuilder.create().show();
-					return;
-				}
-			} else {
-				Toast.makeText(context, "定位失败", Toast.LENGTH_SHORT).show();
-				finishMine();
-			}
-		}
-	};
+//	AMapLocationListener locationListener = new AMapLocationListener() {
+//		@Override
+//		public void onLocationChanged(AMapLocation loc) {
+//			if (null != loc) {
+////				Toast.makeText(context,"===="+loc.getLongitude(),Toast.LENGTH_SHORT).show();
+//
+//				if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
+//					PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+//				} else {
+//					CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity.this);
+//					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
+//							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//								public void onClick(DialogInterface dialog, int which) {
+//									dialog.cancel();
+//									finishMine();
+//								}
+//							}).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+//						public void onClick(DialogInterface dialog, int which) {
+//							dialog.cancel();
+//							Intent localIntent = new Intent();
+//							localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+//							startActivity(localIntent);
+//							finishMine();
+//						}
+//					});
+//					customBuilder.create().show();
+//					return;
+//				}
+//			} else {
+//				Toast.makeText(context, "定位失败", Toast.LENGTH_SHORT).show();
+//				finishMine();
+//			}
+//		}
+//	};
 
 	/**
 	 * 开始定位
@@ -850,7 +906,7 @@ public class SplashActivity extends BaseActivity {
 				});
 //				mThread.start();
 			} catch (Exception e) {
-				showDialog();
+//				showDialog();
 				return;
 			}
 		}else{
@@ -864,18 +920,18 @@ public class SplashActivity extends BaseActivity {
 		switch (requestCode) {
 			case 0:
 				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-						int checkPermission = this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
-						if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-							if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
-								requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE }, 100);
-							} else {
-								SplashActivity.this.requestPermissions(
-										new String[] { Manifest.permission.READ_PHONE_STATE }, 100);
-								return;
-							}
-						}
-					}
+//					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//						int checkPermission = this.checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
+//						if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+//							if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
+//								requestPermissions(new String[] { Manifest.permission.READ_PHONE_STATE }, 100);
+//							} else {
+//								SplashActivity.this.requestPermissions(
+//										new String[] { Manifest.permission.READ_PHONE_STATE }, 100);
+//								return;
+//							}
+//						}
+//					}
 					init();
 				} else {
 					CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
@@ -903,24 +959,42 @@ public class SplashActivity extends BaseActivity {
 				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
 					// <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-						int checkPermission = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-						if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-							if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-								requestPermissions(new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
-										Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
-							} else {
-								SplashActivity.this.requestPermissions(
-										new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
-												Manifest.permission.WRITE_EXTERNAL_STORAGE },
-										0);
-								return;
-							}
-						}
-					}
+//					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//						int checkPermission = this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+//						if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+//							if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+//								requestPermissions(new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
+//										Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+//							} else {
+//								SplashActivity.this.requestPermissions(
+//										new String[] { Manifest.permission.READ_EXTERNAL_STORAGE,
+//												Manifest.permission.WRITE_EXTERNAL_STORAGE },
+//										0);
+//								return;
+//							}
+//						}
+//					}
 					init();
 				} else {
-					showDialog();
+					CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里允许设备信息权限！")
+							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+									finishMine();
+								}
+							}).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							Intent localIntent = new Intent();
+							localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+							startActivity(localIntent);
+							finishMine();
+						}
+					});
+					customBuilder.create().show();
 				}
 				return;
 			case 101:
@@ -953,26 +1027,5 @@ public class SplashActivity extends BaseActivity {
 		}
 	}
 
-	private void showDialog() {
-		CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-		customBuilder.setTitle("温馨提示").setMessage("您需要在设置里允许设备信息权限！")
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-						finishMine();
-					}
-				}).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-				Intent localIntent = new Intent();
-				localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-				localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-				startActivity(localIntent);
-				finishMine();
-			}
-		});
-		customBuilder.create().show();
-		return;
-	}
+
 }
