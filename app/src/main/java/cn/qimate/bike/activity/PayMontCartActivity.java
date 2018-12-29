@@ -92,7 +92,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
             }else{
                 Intent intent2 = new Intent(context, WebviewActivity.class);
                 intent2.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
-                intent2.putExtra("title", "抽奖");
+                intent2.putExtra("title", "活动详情");
                 startActivity(intent2);
             }
             scrollToFinishActivity();
@@ -363,7 +363,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                         }else{
                             Intent intent = new Intent(context, WebviewActivity.class);
                             intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
-                            intent.putExtra("title", "抽奖");
+                            intent.putExtra("title", "活动详情");
                             startActivity(intent);
                         }
 
@@ -464,7 +464,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                         }else{
                             Intent intent = new Intent(context, WebviewActivity.class);
                             intent.putExtra("link", "http://www.7mate.cn/Home/Games/index.html");
-                            intent.putExtra("title", "抽奖");
+                            intent.putExtra("title", "活动详情");
                             startActivity(intent);
                         }
 

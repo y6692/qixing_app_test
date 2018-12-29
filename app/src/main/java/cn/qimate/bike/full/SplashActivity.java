@@ -234,18 +234,6 @@ public class SplashActivity extends BaseActivity {
 				}
 
 
-//				timer.cancel();
-//
-//				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-//					UIHelper.goToAct(context, Main2Activity.class);
-//				} else {
-////					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-////					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-////					UIHelper.goToAct(context, EnterActivity.class);
-//				}
-//
-//				finishMine();
-
 
 			}
 		});
@@ -277,129 +265,13 @@ public class SplashActivity extends BaseActivity {
 		handler.sendEmptyMessageDelayed(0, 900);
 
 
-//		handler = new Handler();
-//		handler.postDelayed(runnable = new Runnable() {
-//			@Override
-//			public void run() {
-//				//从闪屏界面跳转到首界面
-//				Intent intent = new Intent(context, MainActivity.class);
-//				startActivity(intent);
-//				finish();
-//			}
-//		}, 5000);
-
-
-
 //		Countdown();
 
 		Log.e("splash===init", "===");
 	}
 
-//	private Timer timer;
-//	private Handler handler = new Handler(){
-//		public void handleMessage(Message msg){
-//			switch(msg.what){
-//				case 200:
-//
-//					skipLayout.setVisibility(View.VISIBLE);
-//					skipTime.setText("" + num + "s");
-//
-//					num--;
-//					if (num<0){
-//						timer.cancel();
-//						Intent intent = new Intent(context, Main2Activity.class);
-//						startActivity(intent);
-//						finish();
-//					}
-//			}
-//		}
-//	};
-//
-//
-//
-//	private void Countdown() {
-//		//定时器
-//		timer = new Timer();
-//		TimerTask task = new TimerTask() {
-//			@Override
-//			public void run() {
-//				handler.sendEmptyMessage(200);
-//			}
-//		};
-//
-//		//开启定时器，时间差值为1000毫秒
-//		timer.schedule(task,1,1000);
-//	}
 
 
-
-//	public Thread mThread = new Thread() {
-//		public void run() {
-//			try {
-//				mThread.sleep(5 * 1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//			if (!isStop && !isEnd){
-//				stopLocation();
-//				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-//						&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-//					UIHelper.goToAct(context, MainActivity.class);
-//				} else {
-//					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-//					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-//					UIHelper.goToAct(context, EnterActivity.class);
-//				}
-//				isStop = true;
-//				isEnd = true;
-//				finishMine();
-//			}
-//		};
-//	};
-
-//	private Handler handler = new Handler() {
-//		@Override
-//		public void handleMessage(Message msg) {
-//
-//			try{
-//				if (msg.what == 0) {
-//
-//					if (num != 0) {
-//						skipLayout.setVisibility(View.VISIBLE);
-//						skipTime.setText("" + (--num) + "s");
-//					} else {
-//						skipLayout.setVisibility(View.GONE);
-//
-//						if (!isStop && !isEnd) {
-//							isStop = true;
-//							isEnd = true;
-//
-//							stopLocation();
-//							if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-//									&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-//								UIHelper.goToAct(context, MainActivity.class);
-//							} else {
-//								SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-//								SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-//								UIHelper.goToAct(context, EnterActivity.class);
-//							}
-//
-//							finishMine();
-//						}
-//					}
-//
-//					if (!isStop && !isEnd) {
-//						handler.sendEmptyMessageDelayed(0, 900);
-//					}
-//				} else {
-//				}
-//			}catch (Exception e){
-//
-//			}
-//
-//
-//		}
-//	};
 
 
 
@@ -443,46 +315,6 @@ public class SplashActivity extends BaseActivity {
 
 	}
 
-//	private static Handler m_myHandler = new Handler(new Handler.Callback() {
-//		@Override
-//		public boolean handleMessage(Message mes) {
-//			switch (mes.what) {
-//				case 0:
-//					break;
-//				default:
-//					break;
-//			}
-//			return false;
-//		}
-//	});
-
-
-//	class Myhandler implements Runnable{
-//		public void run(){
-//			if (num != 0) {
-//				skipLayout.setVisibility(View.VISIBLE);
-//				skipTime.setText("" + (--num) + "s");
-//			} else {
-//				skipLayout.setVisibility(View.GONE);
-//				if (!isStop) {
-//					stopLocation();
-//					if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-//						UIHelper.goToAct(context, MainActivity.class);
-//					} else {
-//						SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-//						SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-//						UIHelper.goToAct(context, EnterActivity.class);
-//					}
-//					isStop = true;
-//					isEnd = true;
-//					finishMine();
-//				}
-//			}
-//			if (!isEnd && !isStop) {
-//				m_myHandler.postDelayed(myhandler, 900);
-//			}
-//		}
-//	}
 
 	private static class MainHandler extends Handler {
 //		class MainHandler extends Handler {
@@ -509,11 +341,6 @@ public class SplashActivity extends BaseActivity {
 
 
 	private void time(){
-//		UIHelper.goToAct(context, MainActivity.class);
-
-//		isStop = true;
-//		isEnd = true;
-//		finishMine();
 
 		if (num != 0) {
 			skipLayout.setVisibility(View.VISIBLE);
@@ -528,6 +355,7 @@ public class SplashActivity extends BaseActivity {
 				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
 					UIHelper.goToAct(context, MainActivity.class);
 				} else {
+
 					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
 					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
 					UIHelper.goToAct(context, EnterActivity.class);
@@ -776,33 +604,6 @@ public class SplashActivity extends BaseActivity {
 		}
 	}
 
-//	public Thread mThread = new Thread() {
-//		public void run() {
-//			try {
-//				mThread.sleep(5 * 1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//			if (!isStop && !isEnd) {
-//				handler.sendEmptyMessageDelayed(2, 900);
-//
-//				stopLocation();
-//				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true)
-//						&& getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-//					UIHelper.goToAct(context, MainActivity.class);
-//				} else {
-//					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-//					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-//					UIHelper.goToAct(context, EnterActivity.class);
-//				}
-//				isStop = true;
-//				isEnd = true;
-//				finishMine();
-//			}
-//		}
-//
-//		;
-//	};
 
 
 

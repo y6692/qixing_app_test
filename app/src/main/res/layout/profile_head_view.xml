@@ -34,7 +34,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp80">
+        android:layout_marginTop="@dimen/dp80"
+        android:layout_marginBottom="@dimen/dp5">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,6 +94,55 @@
                     android:scaleType="centerInside"
                     android:visibility="gone"/>
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/personUI_bottom_myIntegralLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp20"
+                android:gravity="center"
+
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:background="@drawable/btn_credit"
+                    android:layout_alignParentLeft="true"
+>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp5"
+                        android:text="信用分"
+                        android:textColor="@color/tx_black"
+                        android:textSize="@dimen/sp12"
+                        />
+
+                    <TextView
+                        android:id="@+id/personUI_bottom_myIntegral"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp5"
+                        android:textSize="@dimen/sp12"
+                        android:textColor="#ff2f2f"
+                        android:text=""/>
+
+                    <ImageView
+                        android:layout_width="@dimen/dp25"
+                        android:layout_height="@dimen/dp25"
+                        android:src="@drawable/arrows_right"
+                        android:padding="@dimen/dp5"
+                        android:scaleType="centerInside"/>
+
+
+                </LinearLayout>
+            </RelativeLayout>
+
+
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

@@ -265,6 +265,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
         mapView = (MapView) findViewById(R.id.mainUI_map);
+//        mapView.onCreate(savedInstanceState);
         mapView.onCreate(savedIS);// 此方法必须重写
 
 		IntentFilter filter = new IntentFilter();
@@ -426,6 +427,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             setUpMap();
         }
 
+        aMap.setMapType(AMap.MAP_TYPE_NAVI);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
@@ -1163,9 +1165,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //		}
 
 		JPushInterface.onPause(this);
-		if(mapView!=null){
-            mapView.onPause();
-        }
+//		if(mapView!=null){
+//            mapView.onPause();
+//        }
 
 //		deactivate();
 //		mFirstFix = false;

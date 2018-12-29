@@ -783,6 +783,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
             aMap = mapView.getMap();
             setUpMap();
         }
+        aMap.setMapType(AMap.MAP_TYPE_NAVI);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方

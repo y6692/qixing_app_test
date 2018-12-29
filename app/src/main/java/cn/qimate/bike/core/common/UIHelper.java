@@ -369,7 +369,8 @@ public class UIHelper {
 			if (!"#".equals(link) && link != null && !"".equals(link)) {
 				Intent intent2 = new Intent(context, MonthlyCardActivity.class);
 				intent2.putExtra("link", link);
-				intent2.putExtra("title", "拼手气 拿手机");
+				intent2.putExtra("title", "活动详情");
+//				intent2.putExtra("title", "拼手气 拿手机");
 //				intent2.putExtra("isBack",false);
 				context.startActivity(intent2);
 			}
