@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -54,6 +55,7 @@ import com.zxing.lib.scaner.decoding.InactivityTimer;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.List;
@@ -160,7 +162,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
     /**
      * 闪光灯 按钮
      */
-    private ImageView mIvLight;
+    private TextView mIvLight;
 
     /**
      * 扫描结果显示框
@@ -291,7 +293,7 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
 
-        mIvLight = (ImageView) findViewById(R.id.top_mask);
+        mIvLight = (TextView) findViewById(R.id.top_mask);
         mContainer = (RelativeLayout) findViewById(R.id.capture_containter);
         top_mask_bcg = (ImageView)findViewById(R.id.top_mask_bcg);
         mCropLayout = (RelativeLayout) findViewById(R.id.capture_crop_layout);

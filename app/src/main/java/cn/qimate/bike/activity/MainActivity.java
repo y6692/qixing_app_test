@@ -151,8 +151,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	public static boolean isForeground = false;
 
 	private ImageView leftBtn, rightBtn;
-	private ImageView myLocationBtn, scanLock, linkBtn;
-	private LinearLayout myLocationLayout, linkLayout;
+	private ImageView myLocationBtn, linkBtn;
+	private LinearLayout scanLock, myLocationLayout, linkLayout;
 
 	//	private AMap aMap;
 	private MapView mapView;
@@ -243,6 +243,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	private BluetoothAdapter.LeScanCallback mLeScanCallback;
 	private int n=0;
 
+    private Bundle savedIS;
+
 	@Override
 	@TargetApi(23)
 	protected void onCreate(Bundle savedInstanceState) {
@@ -253,6 +255,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 		setContentView(R.layout.ui_main);
 		context = this;
+        savedIS = savedInstanceState;
 
 		isContainsList = new ArrayList<>();
 		macList = new ArrayList<>();
@@ -262,7 +265,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
         mapView = (MapView) findViewById(R.id.mainUI_map);
-        mapView.onCreate(savedInstanceState);// 此方法必须重写
+        mapView.onCreate(savedIS);// 此方法必须重写
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_ON);
@@ -360,21 +363,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                     requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
                 } else {
-//                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-//                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    dialog.cancel();
-//                                }
-//                            }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.cancel();
-//                            MainActivity.this.requestPermissions(
-//                                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-//                        }
-//                    });
-//                    customBuilder.create().show();
-
                     requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
                 }
                 return;
@@ -425,7 +413,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
         linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
         myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
-        scanLock = (ImageView) findViewById(R.id.mainUI_scanCode_lock);
+        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
         linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
         authBtn = (Button)findViewById(R.id.mainUI_authBtn);
         cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
@@ -451,54 +439,62 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         aMap.setOnMapTouchListener(this);
         setUpLocationStyle();
 
-//        leftBtn.setOnClickListener(this);
-//        rightBtn.setOnClickListener(this);
-//        marqueeLayout.setOnClickListener(this);
-//        myLocationBtn.setOnClickListener(this);
-//        myLocationLayout.setOnClickListener(this);
-//        linkLayout.setOnClickListener(this);
-//        scanLock.setOnClickListener(this);
-//        linkBtn.setOnClickListener(this);
-//        authBtn.setOnClickListener(this);
-//        rechargeBtn.setOnClickListener(this);
-//        refreshLayout.setOnClickListener(this);
-//        advImageView.setOnClickListener(this);
-//        advCloseBtn.setOnClickListener(this);
-//        cartBtn.setOnClickListener(this);
-//        slideLayout.setOnClickListener(this);
-//
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-//        titleImage.setLayoutParams(params);
-//
-//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-//        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_1.setLayoutParams(params1);
-//
-//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-//        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_2.setLayoutParams(params2);
-//
-//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-//        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_3.setLayoutParams(params3);
-//
-//        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-//            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-//            WindowManager windowManager = getWindowManager();
-//            Display display = windowManager.getDefaultDisplay();
-//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-//            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//            dialog.getWindow().setAttributes(lp);
-//            dialog.show();
-//        }else {
+        leftBtn.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
+        marqueeLayout.setOnClickListener(this);
+        myLocationBtn.setOnClickListener(this);
+        myLocationLayout.setOnClickListener(this);
+        linkLayout.setOnClickListener(this);
+        scanLock.setOnClickListener(this);
+        linkBtn.setOnClickListener(this);
+        authBtn.setOnClickListener(this);
+        rechargeBtn.setOnClickListener(this);
+        refreshLayout.setOnClickListener(this);
+        advImageView.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
+        cartBtn.setOnClickListener(this);
+        slideLayout.setOnClickListener(this);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+        titleImage.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_1.setLayoutParams(params1);
+
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_2.setLayoutParams(params2);
+
+        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_3.setLayoutParams(params3);
+
+        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+            WindowManager windowManager = getWindowManager();
+            Display display = windowManager.getDefaultDisplay();
+            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+            dialog.getWindow().setAttributes(lp);
+            dialog.show();
+        }
+        else {
 //            initHttp();
-//        }
-//        exImage_1.setOnClickListener(myOnClickLister);
-//        exImage_2.setOnClickListener(myOnClickLister);
-//        closeBtn.setOnClickListener(myOnClickLister);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    m_myHandler.sendEmptyMessage(5);
+                }
+            }).start();
+        }
+        exImage_1.setOnClickListener(myOnClickLister);
+        exImage_2.setOnClickListener(myOnClickLister);
+        closeBtn.setOnClickListener(myOnClickLister);
 
     }
 
@@ -659,6 +655,194 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
             }
         }
     }
+
+    /**
+     * 获取广告
+     * */
+    private void initHttp(){
+        RequestParams params = new RequestParams();
+        params.put("adsid","11");
+        if (SharedPreferencesUrls.getInstance().getString("uid","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("uid",""))){
+            params.put("uid",SharedPreferencesUrls.getInstance().getString("uid",""));
+        }
+        if (SharedPreferencesUrls.getInstance().getString("access_token","") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("access_token",""))){
+            params.put("access_token",SharedPreferencesUrls.getInstance().getString("access_token",""));
+        }
+        HttpHelper.get(context, Urls.getIndexAd, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        JSONArray jsonArray = new JSONArray(result.getData());
+                        for (int i = 0; i < jsonArray.length();i++){
+                            imageUrl = jsonArray.getJSONObject(i).getString("ad_file");
+                            ad_link = jsonArray.getJSONObject(i).getString("ad_link");
+                            app_type = jsonArray.getJSONObject(i).getString("app_type");
+                            app_id = jsonArray.getJSONObject(i).getString("app_id");
+                            ad_link = jsonArray.getJSONObject(i).getString("ad_link");
+
+                        }
+
+//                        m_myHandler.sendEmptyMessage(5);
+
+						if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
+							if (imageUrl != null && !"".equals(imageUrl)){
+								WindowManager windowManager = getWindowManager();
+								Display display = windowManager.getDefaultDisplay();
+								WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+								lp.width = (int) (display.getWidth() * 0.8);
+								lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+								advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+								advDialog.getWindow().setAttributes(lp);
+								advDialog.show();
+								// 加载图片
+								Glide.with(context).load(imageUrl).into(advImageView);
+							}
+						}
+                    }
+                }catch (Exception e){
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    protected Handler m_myHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message mes) {
+            switch (mes.what) {
+                case 0:
+                    if (!BaseApplication.getInstance().getIBLE().isEnable()){
+
+                        break;
+                    }
+                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, MainActivity.this);
+                    break;
+                case 1:
+//                    mapView.onCreate(savedIS);
+                    getNetTime();
+
+                    break;
+                case 2:
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+
+                    stopXB();
+
+                    Log.e("main===", "type==="+type);
+
+                    if("3".equals(type)){
+                        endBtn3();
+                    }else{
+                        endBtn();
+                    }
+
+                    break;
+                case 3:
+                    if (lockLoading != null && lockLoading.isShowing()){
+                        lockLoading.dismiss();
+                    }
+                    stopXB();
+
+                    if(macList.size()>0  || isContainsList.contains(true)){
+                        if (lockLoading != null && !lockLoading.isShowing()){
+                            lockLoading.setTitle("正在连接");
+                            lockLoading.show();
+                        }
+
+                        isConnect = false;
+                        m_myHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (lockLoading != null && lockLoading.isShowing()){
+                                    lockLoading.dismiss();
+                                }
+
+                                if(!isConnect){
+                                    if("3".equals(type)){
+                                        if(first3){
+                                            first3 = false;
+                                            customDialog4.show();
+                                        }else{
+                                            carClose();
+                                        }
+                                    }else{
+                                        if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
+                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+                                            customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
+                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.cancel();
+                                                        }
+                                                    });
+                                            customBuilder.create().show();
+                                        }
+                                    }
+                                }
+
+                            }
+                        }, 10 * 1000);
+
+                        connect();
+                    }else{
+                        if("3".equals(type)){
+                            customDialog4.show();
+                        }else{
+                            customDialog3.show();
+                        }
+                    }
+
+                    break;
+                case 4:
+                    animMarker();
+                    break;
+
+                case 5:
+                    initHttp();
+
+//                    if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
+//                        if (imageUrl != null && !"".equals(imageUrl)){
+//                            WindowManager windowManager = getWindowManager();
+//                            Display display = windowManager.getDefaultDisplay();
+//                            WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
+//                            lp.width = (int) (display.getWidth() * 0.8);
+//                            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//                            advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//                            advDialog.getWindow().setAttributes(lp);
+//                            advDialog.show();
+//                            // 加载图片
+//                            Glide.with(context).load(imageUrl).into(advImageView);
+//                        }
+//                    }
+                    break;
+
+                case 0x99://搜索超时
+                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, MainActivity.this);
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+    });
 
     private void setUpMap() {
         aMap.setLocationSource(this);// 设置定位监听
@@ -979,9 +1163,9 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //		}
 
 		JPushInterface.onPause(this);
-//		if(mapView!=null){
-//            mapView.onPause();
-//        }
+		if(mapView!=null){
+            mapView.onPause();
+        }
 
 //		deactivate();
 //		mFirstFix = false;
@@ -1276,104 +1460,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         }
     }
 
-    protected Handler m_myHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message mes) {
-            switch (mes.what) {
-                case 0:
-                    if (!BaseApplication.getInstance().getIBLE().isEnable()){
 
-                        break;
-                    }
-                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, MainActivity.this);
-                    break;
-                case 1:
-                    getNetTime();
-
-                    break;
-                case 2:
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-
-                    stopXB();
-
-                    Log.e("main===", "type==="+type);
-
-                    if("3".equals(type)){
-                        endBtn3();
-                    }else{
-                        endBtn();
-                    }
-
-                    break;
-                case 3:
-                    if (lockLoading != null && lockLoading.isShowing()){
-                        lockLoading.dismiss();
-                    }
-                    stopXB();
-
-                    if(macList.size()>0  || isContainsList.contains(true)){
-                        if (lockLoading != null && !lockLoading.isShowing()){
-                            lockLoading.setTitle("正在连接");
-                            lockLoading.show();
-                        }
-
-                        isConnect = false;
-                        m_myHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (lockLoading != null && lockLoading.isShowing()){
-                                    lockLoading.dismiss();
-                                }
-
-                                if(!isConnect){
-                                    if("3".equals(type)){
-                                        if(first3){
-                                            first3 = false;
-                                            customDialog4.show();
-                                        }else{
-                                            carClose();
-                                        }
-                                    }else{
-                                        if (!BaseApplication.getInstance().getIBLE().getConnectStatus()){
-                                            CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-                                            customBuilder.setTitle("连接失败").setMessage("关锁后，请离车1米内重试或在右上角提交")
-                                                    .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
-                                            customBuilder.create().show();
-                                        }
-                                    }
-                                }
-
-                            }
-                        }, 10 * 1000);
-
-                        connect();
-                    }else{
-                        if("3".equals(type)){
-                            customDialog4.show();
-                        }else{
-                            customDialog3.show();
-                        }
-                    }
-
-                    break;
-                case 4:
-                    animMarker();
-                    break;
-                case 0x99://搜索超时
-                    BaseApplication.getInstance().getIBLE().connect(m_nowMac, MainActivity.this);
-                    break;
-                default:
-                    break;
-            }
-            return false;
-        }
-    });
 
 
     private boolean checkGPSIsOpen() {
@@ -2625,72 +2712,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         }
     };
 
-	/**
-	 * 获取广告
-	 * */
-	private void initHttp(){
-		RequestParams params = new RequestParams();
-		params.put("adsid","11");
-		if (SharedPreferencesUrls.getInstance().getString("uid","") != null &&
-				!"".equals(SharedPreferencesUrls.getInstance().getString("uid",""))){
-			params.put("uid",SharedPreferencesUrls.getInstance().getString("uid",""));
-		}
-		if (SharedPreferencesUrls.getInstance().getString("access_token","") != null &&
-				!"".equals(SharedPreferencesUrls.getInstance().getString("access_token",""))){
-			params.put("access_token",SharedPreferencesUrls.getInstance().getString("access_token",""));
-		}
-		HttpHelper.get(context, Urls.getIndexAd, params, new TextHttpResponseHandler() {
-			@Override
-			public void onStart() {
-				if (loadingDialog != null && !loadingDialog.isShowing()) {
-					loadingDialog.setTitle("正在加载");
-					loadingDialog.show();
-				}
-			}
-			@Override
-			public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-				UIHelper.ToastError(context, throwable.toString());
-			}
-			@Override
-			public void onSuccess(int statusCode, Header[] headers, String responseString) {
-				try {
-					ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-					if (result.getFlag().equals("Success")) {
-						JSONArray jsonArray = new JSONArray(result.getData());
-						for (int i = 0; i < jsonArray.length();i++){
-							imageUrl = jsonArray.getJSONObject(i).getString("ad_file");
-							ad_link = jsonArray.getJSONObject(i).getString("ad_link");
-							app_type = jsonArray.getJSONObject(i).getString("app_type");
-							app_id = jsonArray.getJSONObject(i).getString("app_id");
-							ad_link = jsonArray.getJSONObject(i).getString("ad_link");
 
-						}
-						if (!SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",false)){
-							if (imageUrl != null && !"".equals(imageUrl)){
-								WindowManager windowManager = getWindowManager();
-								Display display = windowManager.getDefaultDisplay();
-								WindowManager.LayoutParams lp = advDialog.getWindow().getAttributes();
-								lp.width = (int) (display.getWidth() * 0.8);
-								lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-								advDialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-								advDialog.getWindow().setAttributes(lp);
-								advDialog.show();
-								// 加载图片
-								Glide.with(context).load(imageUrl).into(advImageView);
-							}
-						}
-					}
-				}catch (Exception e){
-				}
-				if (loadingDialog != null && loadingDialog.isShowing()){
-					loadingDialog.dismiss();
-				}
-			}
-		});
-	}
 
 	private void addChooseMarker() {
 		// 加入自定义标签

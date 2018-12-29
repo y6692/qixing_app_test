@@ -21,14 +21,15 @@
         android:paddingTop="@dimen/dp15">
 
         <ImageView
-            android:id="@+id/top_mask"
+            android:id="@+id/top_mask2"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:alpha="0.5"
             android:onClick="btn"
             android:src="@drawable/s_light"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/top_openpicture"
@@ -54,7 +55,7 @@
             android:layout_centerVertical="true"/>
 
         <TextView
-            android:id="@+id/loca_show_btnBikeNum"
+            android:id="@+id/loca_show_btnBikeNum2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -65,7 +66,8 @@
             android:textColor="@color/white"
             android:text="输入编号开锁"
             android:gravity="center_vertical"
-            android:onClick="btn"/>
+            android:onClick="btn"
+            android:visibility="gone"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/capture_crop_layout"
@@ -134,6 +136,48 @@
         android:text="将二维码图片对准扫描框即可自动扫描"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp16"/>
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_scan"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/capture_crop_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:onClick="btn"
+        android:weightSum="2">
+        <TextView
+            android:id="@+id/loca_show_btnBikeNum"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/top_hand"
+            android:gravity="center"
+            android:src="@drawable/code_icon"
+            android:text="手动输车号"
+            android:textColor="#DBD5D5"
+            android:onClick="btn"
+            />
+
+        <TextView
+            android:id="@+id/top_mask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/top_light"
+            android:gravity="center"
+            android:src="@drawable/linecode_icon"
+            android:text="手电筒"
+            android:textColor="#DBD5D5"
+            android:onClick="btn"
+            />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_scan_help"

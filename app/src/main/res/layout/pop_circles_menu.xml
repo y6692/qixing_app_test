@@ -46,6 +46,17 @@
             android:textColor="@color/tx_black"
             android:textColorHint="#c0c0c0"
             android:textSize="@dimen/sp14" />
+
+        <TextView
+            android:id="@+id/title2"
+            style="@style/DialogText.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="提示: 车编号在二维码下方或自行车架"
+            android:padding="@dimen/dp10"
+            android:textColor="@color/gray" />
+
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -57,6 +68,26 @@
         android:layout_height="40dp"
         android:background="#ffffff"
         android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/pop_circlesMenu_negativeButton"
+            android:layout_width="0dip"
+            android:layout_height="40dp"
+            android:layout_marginTop="0dip"
+            android:layout_weight="1"
+            android:background="@null"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="取消"
+            android:textSize="@dimen/sp12" />
+
+
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="@drawable/alertborder" />
 
         <Button
             android:id="@+id/pop_circlesMenu_positiveButton"
@@ -72,23 +103,6 @@
 
             android:textSize="@dimen/sp12" />
 
-        <ImageView
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
-            android:background="@drawable/alertborder" />
 
-        <Button
-            android:id="@+id/pop_circlesMenu_negativeButton"
-            android:layout_width="0dip"
-            android:layout_height="40dp"
-            android:layout_marginTop="0dip"
-            android:layout_weight="1"
-            android:background="@null"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="取消"
-            android:textSize="@dimen/sp12" />
     </LinearLayout>
 </LinearLayout>
