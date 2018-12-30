@@ -48,7 +48,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
     private LoadingDialog loadingDialog;
     private ImageView backImg;
     private TextView title;
-    private TextView rightBtn;
+//    private TextView rightBtn;
 
     private EditText nameEdit;
     private TextView phoneNum;
@@ -130,8 +130,8 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
         title.setText("用户信息");
-        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
-        rightBtn.setText("变更手机");
+//        rightBtn = (TextView) findViewById(R.id.mainUI_title_rightBtn);
+//        rightBtn.setText("变更手机");
 
         nameEdit = (EditText)findViewById(R.id.settingUI_name);
         phoneNum = (TextView)findViewById(R.id.settingUI_phoneNum);
@@ -151,7 +151,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
         }
 
         backImg.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
+//        rightBtn.setOnClickListener(this);
         sexLayout.setOnClickListener(this);
         schoolLayout.setOnClickListener(this);
         classLayout.setOnClickListener(this);
@@ -257,9 +257,7 @@ public class SettingActivity extends SwipeBackActivity implements View.OnClickLi
             case R.id.mainUI_title_backBtn:
                 scrollToFinishActivity();
                 break;
-            case R.id.mainUI_title_rightBtn:
-                UIHelper.goToAct(context,ChangePhoneNumActivity.class);
-                break;
+
             case R.id.settingUI_sexLayout:
                 pvOptions1.show();
                 break;

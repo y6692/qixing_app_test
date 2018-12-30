@@ -77,7 +77,7 @@
             android:layout_marginBottom="@dimen/dp5"
             android:background="#eee"/>
         <LinearLayout
-            android:id="@+id/personUI_bottom_billing_myCommissionLayout"
+            android:id="@+id/personUI_bottom_myPurseLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -88,14 +88,14 @@
                 android:layout_width="@dimen/dp45"
                 android:layout_height="@dimen/dp45"
                 android:layout_marginTop="@dimen/dp10"
-                android:src="@drawable/vip_center_icon"
+                android:src="@drawable/purse_icon"
                 android:scaleType="centerInside"
                 android:padding="@dimen/dp10"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="邀请好友"
+                android:text="我的钱包"
                 android:textColor="@color/tx_black"
                 android:textSize="@dimen/sp14"
                 android:layout_marginTop="@dimen/dp5"
@@ -144,63 +144,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/personUI_bottom_myPurseLayout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp40">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/dp5"
-                android:orientation="horizontal"
-                android:layout_alignParentLeft="true">
-
-                <ImageView
-                    android:layout_width="@dimen/dp30"
-                    android:layout_height="@dimen/dp30"
-                    android:src="@drawable/purse_icon"
-                    android:padding="@dimen/dp5"
-                    android:scaleType="centerInside"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="我的钱包"
-                    android:textColor="@color/tx_black"
-                    android:textSize="@dimen/sp14"
-                    android:layout_marginLeft="@dimen/dp5"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingRight="@dimen/dp5"
-                android:orientation="horizontal"
-                android:layout_alignParentRight="true">
-
-                <TextView
-                    android:id="@+id/personUI_bottom_myPurse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp14"
-                    android:textColor="#ff2f2f"
-                    android:text=""/>
-
-                <ImageView
-                    android:layout_width="@dimen/dp25"
-                    android:layout_height="@dimen/dp25"
-                    android:src="@drawable/arrows_right"
-                    android:padding="@dimen/dp5"
-                    android:scaleType="centerInside"/>
-            </LinearLayout>
-        </RelativeLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/line_height"
-            android:background="#F0EFED"
-            android:layout_marginLeft="@dimen/dp10"/>
 
 
         <RelativeLayout
@@ -473,7 +416,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="修改密码"
+                    android:text="修改密码、手机号"
                     android:textColor="@color/tx_black"
                     android:textSize="@dimen/sp14"
                     android:layout_marginLeft="@dimen/dp5"/>
@@ -545,6 +488,11 @@
                     android:layout_marginLeft="@dimen/dp10"/>
             </LinearLayout>
         </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_height"
+            android:background="#F0EFED"
+            android:layout_marginLeft="@dimen/dp10"/>
         <RelativeLayout
             android:id="@+id/personUI_bottom_checkUpdataLayout"
             android:layout_width="match_parent"

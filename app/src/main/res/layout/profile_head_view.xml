@@ -110,7 +110,7 @@
                     android:orientation="horizontal"
                     android:background="@drawable/btn_credit"
                     android:layout_alignParentLeft="true"
->
+                    >
 
 
                     <TextView

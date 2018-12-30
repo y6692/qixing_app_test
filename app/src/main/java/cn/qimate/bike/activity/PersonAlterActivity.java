@@ -95,8 +95,8 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
     private ImageView headerImageView;
     private ImageView authState;
     private TextView userName;
-    private LinearLayout curRouteLayout, hisRouteLayout,myCommissionLayout;
-    private RelativeLayout myPurseLayout, myIntegralLayout, myMsgLayout, changePsdLayout,
+    private LinearLayout curRouteLayout, hisRouteLayout, myPurseLayout;
+    private RelativeLayout myIntegralLayout, myMsgLayout, changePsdLayout,
             helpCenterLayout, aboutUsLayout,billing_ruleLayout,questionLayout,insuranceLayout;
     private RelativeLayout checkUpdataLayout;
     private TextView myPurse, myIntegral;
@@ -190,14 +190,13 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         authState = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_authState);
         userName = scrollView.getPullRootView().findViewById(R.id.personUI_userName);
         superVip = (ImageView)findViewById(R.id.personUI_superVip);
-        myPurse = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myPurse);
+//        myPurse = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myPurse);
         myIntegral = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myIntegral);
 
         curRouteLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_curRouteLayout);
         hisRouteLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_hisRouteLayout);
-        myCommissionLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
-
         myPurseLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myPurseLayout);
+
         myIntegralLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myIntegralLayout);
         myMsgLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_myMsgLayout);
         changePsdLayout = scrollView.getPullRootView().findViewById(R.id.personUI_bottom_changePsdLayout);
@@ -253,7 +252,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
         questionLayout.setOnClickListener(this);
         insuranceLayout.setOnClickListener(this);
         checkUpdataLayout.setOnClickListener(this);
-        myCommissionLayout.setOnClickListener(this);
+//        myCommissionLayout.setOnClickListener(this);
 
         exImage_1.setOnClickListener(myOnClickLister);
         exImage_2.setOnClickListener(myOnClickLister);
@@ -761,7 +760,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                 UIHelper.goToAct(context, MyMessageActivity.class);
                 break;
             case R.id.personUI_bottom_changePsdLayout:
-                UIHelper.goToAct(context, ChangePasswordActivity.class);
+                UIHelper.goToAct(context, ChangePasswordPhoneActivity.class);
                 break;
             case R.id.personUI_bottom_helpCenterLayout:
                 WindowManager windowManager = getWindowManager();
@@ -816,11 +815,6 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
             case R.id.personUI_bottom_checkUpdataLayout:
                 // 版本更新
                 UpdateManager.getUpdateManager().checkAppUpdate(context, true);
-                break;
-            case R.id.personUI_bottom_billing_myCommissionLayout:
-                Intent intent = new Intent(context,InviteCodeActivity.class);
-                intent.putExtra("isBack",true);
-                context.startActivity(intent);
                 break;
             default:
                 break;
@@ -969,7 +963,7 @@ public class PersonAlterActivity extends SwipeBackActivity implements View.OnCli
                         ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
                         if (result.getFlag().equals("Success")) {
                             UserIndexBean bean = JSON.parseObject(result.getData(), UserIndexBean.class);
-                            myPurse.setText(bean.getMoney());
+//                            myPurse.setText(bean.getMoney());
                             myIntegral.setText(bean.getPoints());
                             userName.setText(bean.getTelphone());
                             if (bean.getHeadimg() != null && !"".equals(bean.getHeadimg())) {

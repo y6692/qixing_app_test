@@ -53,7 +53,8 @@
             android:gravity="center"
             android:background="#f57752"
             android:layout_marginTop="@dimen/dp5"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/mainUI_marquee"
@@ -79,6 +80,33 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true">
             </com.amap.api.maps.MapView>
+
+            <LinearLayout
+                android:id="@+id/personUI_bottom_billing_myCommissionLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="300dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@null"
+                    android:src="@drawable/vip_center_icon"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp12"
+                    android:textColor="@color/tx_black"
+                    android:text="邀请有礼"/>
+            </LinearLayout>
+
+
             <LinearLayout
                 android:id="@+id/mainUI_myLocationLayout"
                 android:layout_width="wrap_content"

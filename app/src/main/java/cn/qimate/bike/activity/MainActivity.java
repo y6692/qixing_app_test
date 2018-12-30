@@ -152,7 +152,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	private ImageView leftBtn, rightBtn;
 	private ImageView myLocationBtn, linkBtn;
-	private LinearLayout scanLock, myLocationLayout, linkLayout;
+	private LinearLayout scanLock, myCommissionLayout, myLocationLayout, linkLayout;
 
 	//	private AMap aMap;
 	private MapView mapView;
@@ -265,8 +265,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
         mapView = (MapView) findViewById(R.id.mainUI_map);
-//        mapView.onCreate(savedInstanceState);
-        mapView.onCreate(savedIS);// 此方法必须重写
+        mapView.onCreate(savedInstanceState);
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_ON);
@@ -411,6 +410,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         title = (TextView) findViewById(R.id.mainUI_title);
         leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
         rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
         myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
         linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
         myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
@@ -445,6 +445,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         rightBtn.setOnClickListener(this);
         marqueeLayout.setOnClickListener(this);
         myLocationBtn.setOnClickListener(this);
+        myCommissionLayout.setOnClickListener(this);
         myLocationLayout.setOnClickListener(this);
         linkLayout.setOnClickListener(this);
         scanLock.setOnClickListener(this);
@@ -851,7 +852,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);// 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-        aMap.setLoadOfflineData(true);
+//        aMap.setLoadOfflineData(true);
     }
 
     @Override
@@ -1547,6 +1548,11 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			case R.id.mainUI_marqueeLayout:
 
 				break;
+            case R.id.personUI_bottom_billing_myCommissionLayout:
+                Intent intent = new Intent(context,InviteCodeActivity.class);
+                intent.putExtra("isBack",true);
+                context.startActivity(intent);
+                break;
 			case R.id.mainUI_myLocationLayout:
 			case R.id.mainUI_myLocation:
 				if (myLocation != null) {
@@ -1759,8 +1765,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 
 
-
-	@Override
 	public void onCameraChangeFinish(CameraPosition cameraPosition) {
 		Log.e("main===ChangeFinish", isContainsList.contains(true) + "》》》" + near + "===" + macList.size());
 
@@ -1881,7 +1885,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     }
 
 
-    @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         if (centerMarker != null) {
             setMovingMarker();
@@ -2779,13 +2782,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 	}
 
 
-
-
-
-
-
-
-	@Override
 	public void onTouch(MotionEvent motionEvent) {
 		if (motionEvent.getAction() == MotionEvent.ACTION_UP ||
 				motionEvent.getAction() == MotionEvent.ACTION_CANCEL || motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE
@@ -3243,12 +3239,18 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 	private void setUpLocationStyle() {
 		// 自定义系统定位蓝点
-		MyLocationStyle myLocationStyle = new MyLocationStyle();
-		myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
-		myLocationStyle.strokeWidth(0);
-		myLocationStyle.strokeColor(R.color.main_theme_color);
-		myLocationStyle.radiusFillColor(Color.TRANSPARENT);
-		aMap.setMyLocationStyle(myLocationStyle);
+//		MyLocationStyle myLocationStyle = new MyLocationStyle();
+//		myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
+//		myLocationStyle.strokeWidth(0);
+//		myLocationStyle.strokeColor(R.color.main_theme_color);
+//		myLocationStyle.radiusFillColor(Color.TRANSPARENT);
+//		aMap.setMyLocationStyle(myLocationStyle);
+
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
+        myLocationStyle.radiusFillColor(android.R.color.transparent);
+        myLocationStyle.strokeColor(android.R.color.transparent);
+        aMap.setMyLocationStyle(myLocationStyle);
 	}
 
 
