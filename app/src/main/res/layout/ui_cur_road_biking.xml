@@ -149,7 +149,8 @@
                 android:paddingRight="@dimen/dp15"
                 android:paddingTop="@dimen/dp5"
                 android:paddingBottom="@dimen/dp5"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_stop"

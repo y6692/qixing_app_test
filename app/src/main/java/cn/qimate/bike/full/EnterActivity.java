@@ -11,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import cn.jpush.android.api.JPushInterface;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.Main2Activity;
+import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.base.BaseActivity;
+import cn.qimate.bike.core.common.SharedPreferencesUrls;
 import cn.qimate.bike.core.common.UIHelper;
 import cn.qimate.bike.core.widget.MyScrollLayout;
 import cn.qimate.bike.listener.OnViewChangeListener;
@@ -39,14 +42,12 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 		enter_btn_1 = (Button) this.findViewById(R.id.enter_btn_1);
 		enter_btn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				UIHelper.goToAct(context, MainActivity.class);
-				finishMine();
+				tz();
 			}
 		});
 		enter_btn_1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				UIHelper.goToAct(context, MainActivity.class);
-				finishMine();
+				tz();
 			}
 		});
 	}
@@ -94,10 +95,14 @@ public class EnterActivity extends BaseActivity implements OnViewChangeListener,
 		if (view < 0 || mCurSel == view) {
 			return;
 		} else if (view > mViewCount - 1){
-			UIHelper.goToAct(context, MainActivity.class);
-			finishMine();
+			tz();
 		}
 		setCurPoint(view);
+	}
+
+	private void tz(){
+		UIHelper.goToAct(context, MainActivity.class);
+		finishMine();
 	}
 
 	public void onClick(View v) {

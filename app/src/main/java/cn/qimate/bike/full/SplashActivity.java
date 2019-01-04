@@ -55,6 +55,7 @@ import cn.qimate.bike.R;
 import cn.qimate.bike.activity.CrashHandler;
 import cn.qimate.bike.activity.Main2Activity;
 import cn.qimate.bike.activity.Main3Activity;
+import cn.qimate.bike.activity.Main4Activity;
 import cn.qimate.bike.activity.MainActivity;
 import cn.qimate.bike.activity.WebActivity;
 import cn.qimate.bike.base.BaseActivity;
@@ -79,8 +80,8 @@ public class SplashActivity extends BaseActivity {
 	//	private Context context = this;
 	public static boolean isForeground = false;
 
-	private AMapLocationClient locationClient = null;
-	private AMapLocationClientOption locationOption = new AMapLocationClientOption();
+//	private AMapLocationClient locationClient = null;
+//	private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 	private ImageView loadingImage;
 	private LinearLayout skipLayout;
 	private TextView skipTime;
@@ -96,6 +97,7 @@ public class SplashActivity extends BaseActivity {
 	private WebView myWebView;
 	private WebView webView;
 	private Context context;
+	String ss = "";
 
 	private Runnable runnable;
 
@@ -201,9 +203,9 @@ public class SplashActivity extends BaseActivity {
 			}
 		}
 
-		if (null == locationOption) {
-			locationOption = new AMapLocationClientOption();
-		}
+//		if (null == locationOption) {
+//			locationOption = new AMapLocationClientOption();
+//		}
 		initjpush();
 		registerMessageReceiver();
 //		initLocation();
@@ -213,22 +215,8 @@ public class SplashActivity extends BaseActivity {
 			public void onClick(View v) {
 
 				try{
-					if(!isStop && !isEnd){
-						isStop = true;
-						isEnd = true;
+					tz();
 
-						handler.removeMessages(0);
-
-						if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-							UIHelper.goToAct(context, MainActivity.class);
-						} else {
-							SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-							SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-							UIHelper.goToAct(context, EnterActivity.class);
-						}
-
-						finishMine();
-					}
 				}catch (Exception e){
 
 				}
@@ -270,8 +258,54 @@ public class SplashActivity extends BaseActivity {
 		Log.e("splash===init", "===");
 	}
 
+	private void tz(){
+
+		if(!isStop && !isEnd){
+
+			isStop = true;
+			isEnd = true;
+
+			synchronized(ss){
+				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+					UIHelper.goToAct(context, MainActivity.class);
+				} else {
+					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+					UIHelper.goToAct(context, EnterActivity.class);
+				}
+
+				finishMine();
+			}
+
+		}
 
 
+	}
+
+
+//	private synchronized void tz(){
+//
+//		if(!isStop && !isEnd){
+//
+//			isStop = true;
+//			isEnd = true;
+//
+////			handler.removeMessages(0);
+//
+//			if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//				UIHelper.goToAct(context, MainActivity.class);
+//			} else {
+//				SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//				SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//				UIHelper.goToAct(context, EnterActivity.class);
+//			}
+//
+//			finishMine();
+//
+//		}
+//
+//
+//	}
 
 
 
@@ -300,7 +334,8 @@ public class SplashActivity extends BaseActivity {
 
 		unregisterReceiver(mMessageReceiver);
 
-		destroyLocation();
+//		destroyLocation();
+
 		isStop = true;
 		isEnd = true;
 
@@ -347,22 +382,28 @@ public class SplashActivity extends BaseActivity {
 			skipTime.setText("" + (--num) + "s");
 		} else {
 			skipLayout.setVisibility(View.GONE);
-			if (!isStop) {
-				isStop = true;
-				isEnd = true;
 
-				stopLocation();
-				if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-					UIHelper.goToAct(context, MainActivity.class);
-				} else {
+			tz();
 
-					SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-					SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-					UIHelper.goToAct(context, EnterActivity.class);
-				}
+//			if (!isStop) {
+//
+//				isStop = true;
+//				isEnd = true;
 
-				finishMine();
-			}
+//				synchronized (this) {
+//
+//					if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//						UIHelper.goToAct(context, Main2Activity.class);
+//					} else {
+//						SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//						SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//						UIHelper.goToAct(context, EnterActivity.class);
+//					}
+//
+//					finishMine();
+//				}
+//			}
+
 		}
 		if (!isEnd && !isStop) {
 //			m_myHandler.sendEmptyMessage(0);
@@ -560,15 +601,15 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private void startLocation() {
-		if (null != locationClient) {
-			// 设置定位参数
-			locationClient.setLocationOption(locationOption);
-			// 启动定位
-			locationClient.startLocation();
-		}
-
-	}
+//	private void startLocation() {
+//		if (null != locationClient) {
+//			// 设置定位参数
+//			locationClient.setLocationOption(locationOption);
+//			// 启动定位
+//			locationClient.startLocation();
+//		}
+//
+//	}
 
 	/**
 	 * 停止定位
@@ -577,13 +618,13 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private void stopLocation() {
-		// 停止定位
-		if (null != locationClient) {
-			locationClient.stopLocation();
-		}
-
-	}
+//	private void stopLocation() {
+//		// 停止定位
+//		if (null != locationClient) {
+//			locationClient.stopLocation();
+//		}
+//
+//	}
 
 	/**
 	 * 销毁定位
@@ -592,17 +633,17 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-	private void destroyLocation() {
-		if (null != locationClient) {
-			/**
-			 * 如果AMapLocationClient是在当前Activity实例化的，
-			 * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
-			 */
-			locationClient.onDestroy();
-			locationClient = null;
-			locationOption = null;
-		}
-	}
+//	private void destroyLocation() {
+//		if (null != locationClient) {
+//			/**
+//			 * 如果AMapLocationClient是在当前Activity实例化的，
+//			 * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
+//			 */
+//			locationClient.onDestroy();
+//			locationClient = null;
+//			locationOption = null;
+//		}
+//	}
 
 
 

@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,20 +25,28 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.sunshine.blelibrary.inter.OnConnectionListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cn.jpush.android.api.JPushInterface;
 import cn.qimate.bike.R;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 import cn.qimate.bike.util.ToastUtil;
 
-public class Main2Activity extends BaseFragmentActivity implements  LocationSource, AMapLocationListener {
+public class Main2Activity extends BaseFragmentActivity implements
+        LocationSource,
+        AMapLocationListener,
+        AMap.OnCameraChangeListener,
+        AMap.OnMapTouchListener,
+        OnConnectionListener{
 
     //显示地图需要的变量
     private MapView mapView;//地图控件
@@ -60,11 +70,12 @@ public class Main2Activity extends BaseFragmentActivity implements  LocationSour
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        //显示地图
+        WindowManager.LayoutParams winParams = getWindow().getAttributes();
+        winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+
         mapView = (MapView) findViewById(R.id.map);
-        //必须要写
         mapView.onCreate(savedInstanceState);
-        //获取地图对象
         aMap = mapView.getMap();
 
 
@@ -99,7 +110,28 @@ public class Main2Activity extends BaseFragmentActivity implements  LocationSour
         //开始定位
         initLoc();
 
+    }
 
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mapView.onResume();
+        JPushInterface.onResume(this);
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mapView.onPause();
+        JPushInterface.onPause(this);
     }
 
 
@@ -217,25 +249,6 @@ public class Main2Activity extends BaseFragmentActivity implements  LocationSour
         mListener = null;
     }
 
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
     /**
      * 方法必须重写
      */
@@ -255,4 +268,18 @@ public class Main2Activity extends BaseFragmentActivity implements  LocationSour
     }
 
 
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+
+    }
+
+    @Override
+    public void onCameraChangeFinish(CameraPosition cameraPosition) {
+
+    }
+
+    @Override
+    public void onTouch(MotionEvent motionEvent) {
+
+    }
 }

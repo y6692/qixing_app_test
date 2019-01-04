@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.qimate.bike">
 
-
-
-
     <uses-sdk
         android:minSdkVersion="17"
         android:targetSdkVersion="28" />
@@ -54,7 +51,6 @@
     <!-- 二维码权限 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -69,25 +65,19 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
-
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/round_app_icon"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:largeHeap="true"
-        android:hardwareAccelerated="true"
-        >
-
-
-
+        android:roundIcon="@drawable/round_app_icon"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".full.SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppBlackTheme"
-            >
+            android:theme="@style/AppBlackTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -95,24 +85,20 @@
             </intent-filter>
         </activity>
 
-        <!--<activity-->
-            <!--android:name=".activity.Main2Activity"-->
-            <!--android:label="@string/app_name">-->
-        <!--android:theme="@style/AppBlackTheme"-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
-        <activity
-            android:name=".activity.Main2Activity" ></activity>
-
-        <activity
-            android:name=".activity.Main3Activity" ></activity>
+        <!-- <activity -->
+        <!-- android:name=".activity.Main2Activity" -->
+        <!-- android:label="@string/app_name"> -->
+        <!-- android:theme="@style/AppBlackTheme" -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
 
 
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+
+        <activity android:name=".activity.Main2Activity" />
+        <activity android:name=".activity.Main3Activity" />
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
@@ -348,7 +334,6 @@
             android:name="com.amap.api.v2.apikey"
             android:value="368945fd36e6e4497c27371eb4c5d8df" />
 
-
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService" />
         <!-- Required SDK核心功能 -->
@@ -445,11 +430,8 @@
             android:name="JPUSH_APPKEY"
             android:value="f113c47412dbd4499c9c9a61" /> <!-- </>值来自开发者平台取得的AppKey -->
 
-
-
-
         <activity android:name=".activity.WebActivity" />
-
+        <activity android:name=".activity.Main4Activity"></activity>
     </application>
 
 </manifest>

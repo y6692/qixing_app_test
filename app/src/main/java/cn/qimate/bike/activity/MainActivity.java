@@ -313,45 +313,45 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
         Log.e("main===", "m_nowMac====" + m_nowMac);
 
-        if (!"".equals(m_nowMac)) {
-
-            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                finish();
-            }
-            //蓝牙锁
-            if (mBluetoothAdapter == null) {
-                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-                mBluetoothAdapter = bluetoothManager.getAdapter();
-            }
-
-
-            if (mBluetoothAdapter == null) {
-                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                finish();
-                return;
-            }
-
-            if (!mBluetoothAdapter.isEnabled()) {
-                flag = 1;
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 188);
-            }else{
-                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-                    @Override
-                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                        k++;
-                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-
-                        if (!macList.contains(""+device)){
-                            macList.add(""+device);
-                            m_myHandler.sendEmptyMessage(3);
-                        }
-                    }
-                };
-            }
-
-        }
+//        if (!"".equals(m_nowMac)) {
+//
+//            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                finish();
+//            }
+//            //蓝牙锁
+//            if (mBluetoothAdapter == null) {
+//                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//                mBluetoothAdapter = bluetoothManager.getAdapter();
+//            }
+//
+//
+//            if (mBluetoothAdapter == null) {
+//                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                finish();
+//                return;
+//            }
+//
+//            if (!mBluetoothAdapter.isEnabled()) {
+//                flag = 1;
+//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                startActivityForResult(enableBtIntent, 188);
+//            }else{
+//                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+//                    @Override
+//                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+//                        k++;
+//                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
+//
+//                        if (!macList.contains(""+device)){
+//                            macList.add(""+device);
+//                            m_myHandler.sendEmptyMessage(3);
+//                        }
+//                    }
+//                };
+//            }
+//
+//        }
 	}
 
     private void initView() {
@@ -542,12 +542,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         Log.e("main===", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
 
         closeBroadcast();
-        try {
-            registerReceiver(Config.initFilter());
-            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-        } catch (Exception e) {
-            ToastUtil.showMessage(this, "eee====" + e);
-        }
+//        try {
+//            registerReceiver(Config.initFilter());
+//            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+//        } catch (Exception e) {
+//            ToastUtil.showMessage(this, "eee====" + e);
+//        }
 
         getFeedbackStatus();
 
@@ -571,60 +571,61 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         authBtn.setText("您还未认证，点我快速认证");
                         break;
                     case 2:
-                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
-                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-                                finish();
-                            }
-                            //蓝牙锁
-                            if (mBluetoothAdapter == null) {
-                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-                                mBluetoothAdapter = bluetoothManager.getAdapter();
-                            }
-
-                            if (mBluetoothAdapter == null) {
-                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-                                finish();
-                                return;
-                            }
-
-                            if (!mBluetoothAdapter.isEnabled()) {
-                                flag = 1;
-                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                                startActivityForResult(enableBtIntent, 188);
-                            } else {
-                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-                                    @Override
-                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                                        k++;
-                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-
-                                        if (!macList.contains(""+device)){
-                                            macList.add(""+device);
-                                            m_myHandler.sendEmptyMessage(3);
-                                        }
-
-                                    }
-                                };
-
-                                startXB();
-
-                                if (lockLoading != null && !lockLoading.isShowing()){
-                                    lockLoading.setTitle("还车点确认中");
-                                    lockLoading.show();
-                                }
-
-                                m_myHandler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(macList.size() == 0) {
-                                            m_myHandler.sendEmptyMessage(3);
-                                        }
-                                    }
-                                }, 6 * 1000);
-
-                            }
-                        }
+//                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
+//                        if (!"".equals(m_nowMac)) {
+//                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                                finish();
+//                            }
+//                            //蓝牙锁
+//                            if (mBluetoothAdapter == null) {
+//                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//                                mBluetoothAdapter = bluetoothManager.getAdapter();
+//                            }
+//
+//                            if (mBluetoothAdapter == null) {
+//                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                                finish();
+//                                return;
+//                            }
+//
+//                            if (!mBluetoothAdapter.isEnabled()) {
+//                                flag = 1;
+//                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                                startActivityForResult(enableBtIntent, 188);
+//                            } else {
+////                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+////                                    @Override
+////                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+////                                        k++;
+////                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
+////
+////                                        if (!macList.contains(""+device)){
+////                                            macList.add(""+device);
+////                                            m_myHandler.sendEmptyMessage(3);
+////                                        }
+////
+////                                    }
+////                                };
+////
+////                                startXB();
+////
+////                                if (lockLoading != null && !lockLoading.isShowing()){
+////                                    lockLoading.setTitle("还车点确认中");
+////                                    lockLoading.show();
+////                                }
+////
+////                                m_myHandler.postDelayed(new Runnable() {
+////                                    @Override
+////                                    public void run() {
+////                                        if(macList.size() == 0) {
+////                                            m_myHandler.sendEmptyMessage(3);
+////                                        }
+////                                    }
+////                                }, 6 * 1000);
+//
+//                            }
+//                        }
 
                         getCurrentorder1(uid, access_token);
                         break;
@@ -1329,7 +1330,6 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 macList2 = new ArrayList<> (macList);
 
                 Log.e("main===", "main===BATTERY_ACTION==="+macList2+"==="+type);
-
                 BaseApplication.getInstance().getIBLE().getLockStatus();
 
                 break;
@@ -1427,37 +1427,37 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                 ToastUtil.showMessageApp(context, "恭喜您，您已成功上锁");
                 Log.e("main===", "main===恭喜您，您已成功上锁");
 
-
-                if(SharedPreferencesUrls.getInstance().getBoolean("switcher", false)) break;
-
-                startXB();
-
-                if (lockLoading != null && !lockLoading.isShowing()){
-                    lockLoading.setTitle("还车点确认中");
-                    lockLoading.show();
-                }
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            int n=0;
-                            while(macList.size() == 0){
-
-                                Thread.sleep(1000);
-                                n++;
-
-                                if(n>=6) break;
-
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        m_myHandler.sendEmptyMessage(2);
-
-                    }
-                }).start();
+//                //自动还车
+//                if(SharedPreferencesUrls.getInstance().getBoolean("switcher", false)) break;
+//
+//                startXB();
+//
+//                if (lockLoading != null && !lockLoading.isShowing()){
+//                    lockLoading.setTitle("还车点确认中");
+//                    lockLoading.show();
+//                }
+//
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            int n=0;
+//                            while(macList.size() == 0){
+//
+//                                Thread.sleep(1000);
+//                                n++;
+//
+//                                if(n>=6) break;
+//
+//                            }
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        m_myHandler.sendEmptyMessage(2);
+//
+//                    }
+//                }).start();
 
                 break;
         }
@@ -2476,35 +2476,35 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 							startActivityForResult(enableBtIntent, 188);
 						}else{
-                            startXB();
-
-                            if (lockLoading != null && !lockLoading.isShowing()){
-                                lockLoading.setTitle("还车点确认中");
-                                lockLoading.show();
-                            }
-
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        int n=0;
-                                        while(macList.size() == 0){
-
-                                            Thread.sleep(1000);
-                                            n++;
-
-                                            Log.e("main===", "n====" + n);
-
-                                            if(n>=6) break;
-
-                                        }
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    m_myHandler.sendEmptyMessage(3);
-                                }
-                            }).start();
+//                            startXB();
+//
+//                            if (lockLoading != null && !lockLoading.isShowing()){
+//                                lockLoading.setTitle("还车点确认中");
+//                                lockLoading.show();
+//                            }
+//
+//                            new Thread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    try {
+//                                        int n=0;
+//                                        while(macList.size() == 0){
+//
+//                                            Thread.sleep(1000);
+//                                            n++;
+//
+//                                            Log.e("main===", "n====" + n);
+//
+//                                            if(n>=6) break;
+//
+//                                        }
+//                                    } catch (InterruptedException e) {
+//                                        e.printStackTrace();
+//                                    }
+//
+//                                    m_myHandler.sendEmptyMessage(3);
+//                                }
+//                            }).start();
 
 						}
 					}
@@ -2605,18 +2605,18 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 			switch (requestCode) {
 				case 188:
 
-                    mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-                        @Override
-                        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                            k++;
-                            Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-
-                            if (!macList.contains(""+device)){
-                                macList.add(""+device);
-                            }
-
-                        }
-                    };
+//                    mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+//                        @Override
+//                        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+//                            k++;
+//                            Log.e("main===LeScan", device + "====" + rssi + "====" + k);
+//
+//                            if (!macList.contains(""+device)){
+//                                macList.add(""+device);
+//                            }
+//
+//                        }
+//                    };
 
                     BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
                     mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -2630,36 +2630,36 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(enableBtIntent, 188);
                     }else{
-                        startXB();
-
-                        if (lockLoading != null && !lockLoading.isShowing()){
-                            lockLoading.setTitle("还车点确认中");
-                            lockLoading.show();
-                        }
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    int n=0;
-                                    while(macList.size() == 0){
-
-                                        Thread.sleep(1000);
-                                        n++;
-
-                                        Log.e("main===", "n====" + n);
-
-                                        if(n>=6) break;
-
-                                    }
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-
-                                m_myHandler.sendEmptyMessage(3);
-
-                            }
-                        }).start();
+//                        startXB();
+//
+//                        if (lockLoading != null && !lockLoading.isShowing()){
+//                            lockLoading.setTitle("还车点确认中");
+//                            lockLoading.show();
+//                        }
+//
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    int n=0;
+//                                    while(macList.size() == 0){
+//
+//                                        Thread.sleep(1000);
+//                                        n++;
+//
+//                                        Log.e("main===", "n====" + n);
+//
+//                                        if(n>=6) break;
+//
+//                                    }
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                                m_myHandler.sendEmptyMessage(3);
+//
+//                            }
+//                        }).start();
                     }
 
 
@@ -2731,7 +2731,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				aMap.animateCamera(update, 1000, new AMap.CancelableCallback() {
 					@Override
 					public void onFinish() {
-					    aMap.setOnCameraChangeListener(MainActivity.this);
+//					    aMap.setOnCameraChangeListener(MainActivity.this);
 					}
 
 					@Override
