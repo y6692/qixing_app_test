@@ -267,51 +267,51 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         mapView = (MapView) findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(Intent.ACTION_SCREEN_ON);
-		filter.addAction(Intent.ACTION_SCREEN_OFF);
-		filter.addAction(Intent.ACTION_USER_PRESENT);
-		registerReceiver(mScreenReceiver, filter);
-
-		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
-		filter = new IntentFilter("data.broadcast.action");
-		registerReceiver(broadcastReceiver, filter);
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-                m_myHandler.sendEmptyMessage(1);
-			}
-		}).start();
+//		IntentFilter filter = new IntentFilter();
+//		filter.addAction(Intent.ACTION_SCREEN_ON);
+//		filter.addAction(Intent.ACTION_SCREEN_OFF);
+//		filter.addAction(Intent.ACTION_USER_PRESENT);
+//		registerReceiver(mScreenReceiver, filter);
+//
+//		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
+//		filter = new IntentFilter("data.broadcast.action");
+//		registerReceiver(broadcastReceiver, filter);
+//
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//                m_myHandler.sendEmptyMessage(1);
+//			}
+//		}).start();
 
 		initView();
 
-		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
-
-		customBuilder = new CustomDialog.Builder(this);
-		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-		customDialog = customBuilder.create();
-
-		CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-		customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
-				.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-		customDialog3 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog4 = customBuilder.create();
-
-        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-        Log.e("main===", "m_nowMac====" + m_nowMac);
+//		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
+//
+//		customBuilder = new CustomDialog.Builder(this);
+//		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+//		customDialog = customBuilder.create();
+//
+//		CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//		customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+//				.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.cancel();
+//					}
+//				});
+//		customDialog3 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog4 = customBuilder.create();
+//
+//        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//        Log.e("main===", "m_nowMac====" + m_nowMac);
 
 //        if (!"".equals(m_nowMac)) {
 //
