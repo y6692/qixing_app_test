@@ -114,10 +114,10 @@ public class SplashActivity2 extends BaseActivity {
 //		initLocation();
 
 
-        String app_id = "2597";
+//        String app_id = "2597";
         String splashAdUnitId = "7502";
 
-        AdHub.initialize(this, app_id);
+//        AdHub.initialize(this, app_id);
         // adUnitContainer
         FrameLayout adsParent = (FrameLayout) this.findViewById(R.id.adsFl);
 

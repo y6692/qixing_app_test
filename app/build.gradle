@@ -54,13 +54,11 @@ android {
             }
         }
 
-
         debug {
             debuggable true
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
         }
     }
 
@@ -121,9 +119,21 @@ dependencies {
     implementation 'com.android.support:cardview-v7:26+'
     implementation files('libs/AMap_Location_V4.2.0_20180809.jar')
 
-    compile(name: 'adhub_sdk_3.0.1', ext: 'aar')
-    compile(name: 'open_ad_sdk1.9.72', ext: 'aar')
-    compile(name: 'adpoymer-3.5.10', ext: 'aar')
+    //压缩与加密
+//    implementation files('libs/zip4j_1.3.2.jar')
+    //Zxing核心包
+    implementation 'com.google.zxing:core:3.3.0'
+
+//    compile (name: 'adhub_sdk_3.0.1', ext: 'aar')
+//    compile (name: 'open_ad_sdk1.9.72', ext: 'aar')
+//    compile (name: 'adpoymer-3.5.10', ext: 'aar')
+//    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+
+    implementation (name: 'adhub_sdk_3.0.1', ext: 'aar')
+    implementation (name: 'open_ad_sdk1.9.72', ext: 'aar')
+    implementation (name: 'adpoymer-3.5.10', ext: 'aar')
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+    implementation 'com.android.support:support-v4:26.1.0'
 }
 
 afterEvaluate {

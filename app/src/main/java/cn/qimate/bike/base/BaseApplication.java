@@ -15,6 +15,7 @@ import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.hubcloud.adhubsdk.AdHub;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.impl.AndroidBle;
@@ -80,6 +81,8 @@ public class BaseApplication extends Application {
 
 //		registerReceiver(broadcastReceiver2, Config.initFilter());
 //		GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+
+		AdHub.initialize(this, "2597");
 
 		bleManager = new AndroidBle(this);
 		RxTool.init(getApplicationContext());

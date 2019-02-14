@@ -28,15 +28,15 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    //design包
+//    design包
     implementation 'com.android.support:design:26.0.0-alpha1'
     //压缩与加密
     implementation files('libs/zip4j_1.3.2.jar')
     //Zxing核心包
-    compile 'com.google.zxing:core:3.3.0'
+    implementation 'com.google.zxing:core:3.3.0'
     //沉浸式
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     //Log日志格式美化包
     implementation 'com.orhanobut:logger:2.2.0'
-    androidTestImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
