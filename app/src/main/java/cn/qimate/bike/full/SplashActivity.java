@@ -37,6 +37,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
+import com.ly.adpoymer.model.ServerParam;
 import com.sunshine.blelibrary.config.Config;
 import com.sunshine.blelibrary.config.LockType;
 import com.sunshine.blelibrary.utils.GlobalParameterUtils;
@@ -52,7 +53,9 @@ import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.BannerActivity;
 import cn.qimate.bike.activity.CrashHandler;
+import cn.qimate.bike.activity.InterstitialActivity;
 import cn.qimate.bike.activity.Main2Activity;
 import cn.qimate.bike.activity.Main3Activity;
 import cn.qimate.bike.activity.Main4Activity;
@@ -221,8 +224,6 @@ public class SplashActivity extends BaseActivity {
 
 				}
 
-
-
 			}
 		});
 		loadingImage.setOnClickListener(new View.OnClickListener() {
@@ -252,9 +253,7 @@ public class SplashActivity extends BaseActivity {
 //		mThread.start();
 		handler.sendEmptyMessageDelayed(0, 900);
 
-
 //		Countdown();
-
 		Log.e("splash===init", "===");
 	}
 
@@ -274,6 +273,7 @@ public class SplashActivity extends BaseActivity {
 					UIHelper.goToAct(context, EnterActivity.class);
 				}
 
+//				UIHelper.goToAct(context, InterstitialActivity.class);
 				finishMine();
 			}
 

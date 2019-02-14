@@ -499,6 +499,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         exImage_2.setOnClickListener(myOnClickLister);
         closeBtn.setOnClickListener(myOnClickLister);
 
+
+
     }
 
     @Override

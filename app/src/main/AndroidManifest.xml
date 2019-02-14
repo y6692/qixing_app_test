@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="cn.qimate.bike">
 
     <uses-sdk
         android:minSdkVersion="17"
-        android:targetSdkVersion="28" />
+        android:targetSdkVersion="28"
+        tools:overrideLibrary="com.hubcloud.adhubsdk,com.ly.adpoymer"/>
+
+
+    <!-- AAR should transform uses-permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--lance-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!-- targetSdkVersion >= 26 时需要配置此权限，否则无法进行安装app的动作 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
 
     <!-- Required 自定义用来收发消息的相关权限 -->
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
@@ -65,6 +86,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
+
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
@@ -75,7 +97,7 @@
         android:roundIcon="@drawable/round_app_icon"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".full.SplashActivity"
+            android:name=".full.SplashActivity2"
             android:label="@string/app_name"
             android:theme="@style/AppBlackTheme">
             <intent-filter>
@@ -96,6 +118,11 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
+
+        <activity android:name=".activity.BannerActivity" />
+        <activity android:name=".activity.InterstitialActivity" />
+
+        <activity android:name=".full.SplashActivity" />
 
         <activity android:name=".activity.Main2Activity" />
         <activity android:name=".activity.Main3Activity" />
