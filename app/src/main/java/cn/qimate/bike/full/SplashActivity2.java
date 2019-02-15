@@ -126,19 +126,19 @@ public class SplashActivity2 extends BaseActivity {
             @Override
             public void onAdLoaded() {
                 Log.i("SplashActivity", "onAdLoaded");
-                Toast.makeText(SplashActivity2.this, "onAdLoaded", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SplashActivity2.this, "onAdLoaded", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdShown() {
                 Log.i("SplashActivity", "onAdShown");
-                Toast.makeText(SplashActivity2.this, "onAdShown", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SplashActivity2.this, "onAdShown", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 Log.i("SplashActivity", "onAdFailedToLoad");
-                Toast.makeText(SplashActivity2.this, "onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SplashActivity2.this, "onAdFailedToLoad", Toast.LENGTH_SHORT).show();
                 jump();
             }
 
@@ -146,7 +146,7 @@ public class SplashActivity2 extends BaseActivity {
             public void onAdClosed() {
                 Log.i("SplashActivity", "onAdClosed");
                 jumpWhenCanClick(); // 跳转至您的应用主界面
-                Toast.makeText(SplashActivity2.this, "onAdClosed", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SplashActivity2.this, "onAdClosed", Toast.LENGTH_SHORT).show();
             }
 
             @Override
