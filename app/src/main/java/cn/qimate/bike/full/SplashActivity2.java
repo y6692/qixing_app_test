@@ -109,7 +109,7 @@ public class SplashActivity2 extends BaseActivity {
 //		if (null == locationOption) {
 //			locationOption = new AMapLocationClientOption();
 //		}
-        initjpush();
+//        initjpush();
         registerMessageReceiver();
 //		initLocation();
 
@@ -162,6 +162,7 @@ public class SplashActivity2 extends BaseActivity {
 
     // 初始化极光
     private void initjpush() {
+
         JPushInterface.init(getApplicationContext()); // 初始化 JPush
     }
 
@@ -219,10 +220,17 @@ public class SplashActivity2 extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        JPushInterface.onPause(this);
+//        JPushInterface.onPause(this);
 
         Log.d("SplashActivity", "onPause:" + canJumpImmediately);
         canJumpImmediately = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(mMessageReceiver);
     }
 
     /**
@@ -259,7 +267,7 @@ public class SplashActivity2 extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        JPushInterface.onResume(this);
+//        JPushInterface.onResume(this);
 
         Log.d("SplashActivity", "onPause:" + canJumpImmediately);
         if (canJumpImmediately) {
