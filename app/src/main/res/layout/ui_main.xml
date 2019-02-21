@@ -92,8 +92,8 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:background="@null"
                     android:src="@drawable/vip_center_icon"
                     android:layout_alignParentLeft="true"/>
@@ -102,8 +102,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp12"
-                    android:textColor="@color/tx_black"
-                    android:text="邀请有礼"/>
+                    android:textColor="@color/red"
+                    android:text="限时优惠"/>
             </LinearLayout>
 
 

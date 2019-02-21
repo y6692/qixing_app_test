@@ -55,6 +55,7 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
     private EditText codeEdit;
     private Button positiveButton,negativeButton;
     private TextView dialogTitle;
+    private TextView dialogTitle2;
     private Button monthCard;
 
     @Override
@@ -97,6 +98,10 @@ public class MyPurseActivity extends SwipeBackActivity implements View.OnClickLi
 
         dialogTitle = (TextView) dialogView.findViewById(R.id.title);
         dialogTitle.setText("输入兑换码");
+
+        dialogTitle2 = (TextView) dialogView.findViewById(R.id.title2);
+        dialogTitle2.setVisibility(View.GONE);
+
         codeEdit = (EditText)dialogView.findViewById(R.id.pop_circlesMenu_bikeNumEdit);
         positiveButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_positiveButton);
         negativeButton = (Button)dialogView.findViewById(R.id.pop_circlesMenu_negativeButton);

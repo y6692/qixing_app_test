@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+
+
     <color name="ui_backgroud">#f7f7f7</color>
     <color name="half_color">#30000000</color>
     <color name="blue">#00c1f8</color>
@@ -23,7 +28,8 @@
     <color name="ui_search_work_background">#e6ecee</color>
 	<color name="line_color">#F0EFED</color>
 	<color name="msgBtnBck">#01D396</color>
-    <color name="ui_main">#f57752</color>
+    <color name="ui_main2">#f57752</color>
+    <color name="ui_main">#ff0000</color>
 
     <color name="personitem_normal">#ffffff</color>
     <color name="personitem_pressed">#e3e3e3</color>

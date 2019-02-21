@@ -565,9 +565,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 }
                             }
 
-                            if (loadingDialog != null && loadingDialog.isShowing()){
-                                loadingDialog.dismiss();
-                            }
+//                            if (loadingDialog != null && loadingDialog.isShowing()){
+//                                loadingDialog.dismiss();
+//                            }
 
                         } else {
                             Toast.makeText(context,result.getMsg(),10 * 1000).show();
@@ -1143,7 +1143,8 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                                 if (loadingDialog != null && loadingDialog.isShowing()) {
                                     loadingDialog.dismiss();
                                 }
-                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
+//                                Toast.makeText(context,"请重启软件，开启定位服务,输编号用车",5 * 1000).show();
+                                Toast.makeText(context,"扫码唤醒失败，换辆车试试吧！",5 * 1000).show();
                                 BaseApplication.getInstance().getIBLE().refreshCache();
                                 BaseApplication.getInstance().getIBLE().close();
                                 BaseApplication.getInstance().getIBLE().disconnect();

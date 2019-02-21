@@ -147,4 +147,7 @@ public class Urls {
 	public static String openAgain = host + "/index.php?g=App&m=User&a=open_again";
 	/**判断当前锁是否为关闭*/
 	public static String carClose = host + "/index.php?g=App&m=User&a=car_close";
+
+	/**坏车列表*/
+	public static String badcarList = host + "/index.php?g=App&m=UserManage&a=badcar_list";
 }

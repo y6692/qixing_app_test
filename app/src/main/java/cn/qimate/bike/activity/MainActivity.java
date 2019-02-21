@@ -267,22 +267,22 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         mapView = (MapView) findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
-//		IntentFilter filter = new IntentFilter();
-//		filter.addAction(Intent.ACTION_SCREEN_ON);
-//		filter.addAction(Intent.ACTION_SCREEN_OFF);
-//		filter.addAction(Intent.ACTION_USER_PRESENT);
-//		registerReceiver(mScreenReceiver, filter);
-//
-//		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
-//		filter = new IntentFilter("data.broadcast.action");
-//		registerReceiver(broadcastReceiver, filter);
-//
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//                m_myHandler.sendEmptyMessage(1);
-//			}
-//		}).start();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		filter.addAction(Intent.ACTION_USER_PRESENT);
+		registerReceiver(mScreenReceiver, filter);
+
+		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
+		filter = new IntentFilter("data.broadcast.action");
+		registerReceiver(broadcastReceiver, filter);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+                m_myHandler.sendEmptyMessage(1);
+			}
+		}).start();
 
 		initView();
 
@@ -422,82 +422,82 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
         slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
 
-//        if(aMap==null){
-//            aMap = mapView.getMap();
-//            setUpMap();
-//        }
-//
-//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
-//        aMap.getUiSettings().setZoomControlsEnabled(false);
-//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-//        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-//        aMap.getUiSettings().setLogoBottomMargin(-50);
-//
-//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-//        aMap.moveCamera(cameraUpdate);
-//        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-//        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
-//
-//        aMap.setOnMapTouchListener(this);
-//        setUpLocationStyle();
-//
-//        leftBtn.setOnClickListener(this);
-//        rightBtn.setOnClickListener(this);
-//        marqueeLayout.setOnClickListener(this);
-//        myLocationBtn.setOnClickListener(this);
-//        myCommissionLayout.setOnClickListener(this);
-//        myLocationLayout.setOnClickListener(this);
-//        linkLayout.setOnClickListener(this);
-//        scanLock.setOnClickListener(this);
-//        linkBtn.setOnClickListener(this);
-//        authBtn.setOnClickListener(this);
-//        rechargeBtn.setOnClickListener(this);
-//        refreshLayout.setOnClickListener(this);
-//        advImageView.setOnClickListener(this);
-//        advCloseBtn.setOnClickListener(this);
-//        cartBtn.setOnClickListener(this);
-//        slideLayout.setOnClickListener(this);
-//
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-//        titleImage.setLayoutParams(params);
-//
-//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-//        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_1.setLayoutParams(params1);
-//
-//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-//        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_2.setLayoutParams(params2);
-//
-//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-//        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_3.setLayoutParams(params3);
-//
-//        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-//            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-//            WindowManager windowManager = getWindowManager();
-//            Display display = windowManager.getDefaultDisplay();
-//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-//            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//            dialog.getWindow().setAttributes(lp);
-//            dialog.show();
-//        }
-//        else {
-////            initHttp();
-//
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    m_myHandler.sendEmptyMessage(5);
-//                }
-//            }).start();
-//        }
-//        exImage_1.setOnClickListener(myOnClickLister);
-//        exImage_2.setOnClickListener(myOnClickLister);
-//        closeBtn.setOnClickListener(myOnClickLister);
+        if(aMap==null){
+            aMap = mapView.getMap();
+            setUpMap();
+        }
+
+        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+        aMap.getUiSettings().setLogoBottomMargin(-50);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+        aMap.moveCamera(cameraUpdate);
+        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+
+        aMap.setOnMapTouchListener(this);
+        setUpLocationStyle();
+
+        leftBtn.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
+        marqueeLayout.setOnClickListener(this);
+        myLocationBtn.setOnClickListener(this);
+        myCommissionLayout.setOnClickListener(this);
+        myLocationLayout.setOnClickListener(this);
+        linkLayout.setOnClickListener(this);
+        scanLock.setOnClickListener(this);
+        linkBtn.setOnClickListener(this);
+        authBtn.setOnClickListener(this);
+        rechargeBtn.setOnClickListener(this);
+        refreshLayout.setOnClickListener(this);
+        advImageView.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
+        cartBtn.setOnClickListener(this);
+        slideLayout.setOnClickListener(this);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+        titleImage.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_1.setLayoutParams(params1);
+
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_2.setLayoutParams(params2);
+
+        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_3.setLayoutParams(params3);
+
+        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+            WindowManager windowManager = getWindowManager();
+            Display display = windowManager.getDefaultDisplay();
+            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+            dialog.getWindow().setAttributes(lp);
+            dialog.show();
+        }
+        else {
+//            initHttp();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    m_myHandler.sendEmptyMessage(5);
+                }
+            }).start();
+        }
+        exImage_1.setOnClickListener(myOnClickLister);
+        exImage_2.setOnClickListener(myOnClickLister);
+        closeBtn.setOnClickListener(myOnClickLister);
 
 
 
@@ -1551,7 +1551,8 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
 				break;
             case R.id.personUI_bottom_billing_myCommissionLayout:
-                Intent intent = new Intent(context,InviteCodeActivity.class);
+//                Intent intent = new Intent(context,InviteCodeActivity.class);
+                Intent intent = new Intent(context, CouponActivity.class);
                 intent.putExtra("isBack",true);
                 context.startActivity(intent);
                 break;
