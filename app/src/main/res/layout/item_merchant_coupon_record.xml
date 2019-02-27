@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f5f5f5"
+    android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:id="@+id/mainUI_scanCode_lock"
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="@dimen/dp10"
+        android:orientation="horizontal"
+        android:background="@drawable/btn_bcg_coupon"
+        android:gravity="center_vertical"
+        >
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="center_vertical"-->
+            <!--&gt;-->
+
+            <ImageView
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:layout_marginLeft="12dp"
+                android:src="@drawable/merchant_coupon"
+                android:scaleType="centerInside"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="21dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                >
+
+                <TextView
+                    android:id="@+id/item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="25sp"
+                    android:textColor="#E60012"
+                    android:text="肯德基"/>
+
+                <TextView
+                    android:id="@+id/item_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="@dimen/sp13"
+                    android:textColor="#A2A2A2"
+                    android:text="有效日期：2019-3-15"/>
+
+            </LinearLayout>
+
+        <!--</LinearLayout>-->
+
+
+
+
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:layout_width="66dp"
+        android:layout_height="92dp"
+        android:layout_marginRight="27dp"
+        android:layout_marginTop="@dimen/dp10"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/merchant_coupon2"/>
+
+
+    <ImageView
+        android:layout_width="12dp"
+        android:layout_height="21dp"
+        android:layout_marginRight="52dp"
+        android:layout_marginTop="48dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/yjt"/>
+
+
+</RelativeLayout>

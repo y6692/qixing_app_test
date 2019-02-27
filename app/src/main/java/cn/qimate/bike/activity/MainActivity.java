@@ -510,7 +510,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 
         tz = 0;
 
-//        JPushInterface.onResume(this);
+        JPushInterface.onResume(this);
         if(mapView!=null){
             mapView.onResume();
         }
@@ -1168,7 +1168,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 //			mlocationClient.stopLocation();//停止定位
 //		}
 
-//		JPushInterface.onPause(this);
+		JPushInterface.onPause(this);
 //		if(mapView!=null){
 //            mapView.onPause();
 //        }

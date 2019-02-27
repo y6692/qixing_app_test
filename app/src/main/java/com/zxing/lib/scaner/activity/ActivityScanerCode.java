@@ -338,6 +338,9 @@ public class ActivityScanerCode extends SwipeBackActivity implements View.OnClic
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
+
+                scrollToFinishActivity();
+
                 break;
         }
     }

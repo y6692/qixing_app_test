@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:background="@color/white"
+    >
+
+
+  <include
+      layout="@layout/ui_main_title"/>
+
+
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:fitsSystemWindows="true"
+      android:clipToPadding="true"
+      android:layout_marginTop="24dp"
+      android:layout_marginLeft="19dp"
+      android:layout_marginRight="19dp"
+      >
+
+    <TextView
+        android:id="@+id/tv_coupon_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:textSize="@dimen/sp16"
+        android:textColor="#292929"
+        android:text="优惠券详情"
+        android:gravity="center"
+        />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="338dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="7dp"
+        android:layout_below="@id/tv_coupon_detail"
+        android:background="#DDDDDD"/>
+
+    <LinearLayout
+        android:id="@+id/ll_coupon_"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider"
+        android:orientation="horizontal"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="4dp"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#A2A2A2"
+          android:text="优惠说明："
+          android:gravity="center"
+          />
+
+      <TextView
+          android:id="@+id/tv_coupon_"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#2D2D2D"
+          android:text="领券后到本店点餐即享优惠不可与其他优惠共享"
+          android:gravity="left"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_coupon_"
+        android:orientation="horizontal"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="4dp"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#A2A2A2"
+          android:text="有效日期："
+          android:gravity="center"
+          />
+
+      <TextView
+          android:id="@+id/tv_date"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#2D2D2D"
+          android:text="2019-2-15至2019-3-15"
+          android:gravity="center"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_date"
+        android:orientation="horizontal"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="4dp"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#A2A2A2"
+          android:text="可用时段："
+          android:gravity="center"
+          />
+
+      <TextView
+          android:id="@+id/tv_time"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#2D2D2D"
+          android:text="周一至周日 全体"
+          android:gravity="center"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_tel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_time"
+        android:orientation="horizontal"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="4dp"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#A2A2A2"
+          android:text="电         话："
+          android:gravity="center"
+          />
+
+      <TextView
+          android:id="@+id/tv_tel"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#2D2D2D"
+          android:text="0519-88889999"
+          android:gravity="center"
+          />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_tel"
+        android:orientation="horizontal"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="4dp"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#A2A2A2"
+          android:text="商户服务："
+          android:gravity="center"
+          />
+
+      <TextView
+          android:id="@+id/tv_service"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#2D2D2D"
+          android:text="免费WIFI"
+          android:gravity="center"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_use"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_service"
+        android:orientation="horizontal"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="4dp"
+        >
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#A2A2A2"
+          android:text="使用须知："
+          android:gravity="center"
+          />
+
+      <TextView
+          android:id="@+id/tv_use"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="@dimen/sp15"
+          android:textColor="#2D2D2D"
+          android:text="每人限领1张"
+          android:gravity="center"
+          />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_use"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="4dp"
+        android:textSize="@dimen/sp16"
+        android:textColor="#292929"
+        android:text="图文介绍"
+        android:gravity="center"
+        />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="338dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="7dp"
+        android:layout_below="@id/tv_pic"
+        android:background="#DDDDDD"/>
+
+    <ImageView
+        android:layout_width="320dp"
+        android:layout_height="215dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/divider2"
+        android:background="@null"
+        android:src="@drawable/merchant_coupon"
+        android:scaleType="centerInside"/>
+
+  </RelativeLayout>
+
+
+</LinearLayout>

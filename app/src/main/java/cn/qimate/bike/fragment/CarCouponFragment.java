@@ -37,6 +37,7 @@ import butterknife.Unbinder;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.activity.PayMontCartActivity;
 import cn.qimate.bike.base.BaseFragment;
 import cn.qimate.bike.base.BaseViewAdapter;
 import cn.qimate.bike.base.BaseViewHolder;
@@ -53,7 +54,7 @@ import cn.qimate.bike.model.ResultConsel;
 import static android.app.Activity.RESULT_OK;
 
 @SuppressLint("NewApi")
-public class MissionFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+public class CarCouponFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener{
 
     Unbinder unbinder;
@@ -110,7 +111,7 @@ public class MissionFragment extends BaseFragment implements View.OnClickListene
 
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_mission, null);
+        v = inflater.inflate(R.layout.fragment_car_coupon, null);
         unbinder = ButterKnife.bind(this, v);
 
         return v;
@@ -236,9 +237,8 @@ public class MissionFragment extends BaseFragment implements View.OnClickListene
 //                dialog.getWindow().setAttributes(params1);
 //                dialog.show();
 
-//                Intent intent = new Intent(context, MissionDetailActivity.class);
-//                intent.putExtra("codenum", myAdapter.getDatas().get(position).getCodenum());
-//                startActivity(intent);
+                Intent intent = new Intent(context, PayMontCartActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -276,7 +276,7 @@ public class MissionFragment extends BaseFragment implements View.OnClickListene
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (null == convertView) {
-                convertView = inflater.inflate(R.layout.item_mission_record, null);
+                convertView = inflater.inflate(R.layout.item_car_coupon_record, null);
             }
             TextView num = BaseViewHolder.get(convertView,R.id.item_num);
             TextView status = BaseViewHolder.get(convertView,R.id.item_status);
@@ -285,7 +285,7 @@ public class MissionFragment extends BaseFragment implements View.OnClickListene
 
             num.setText(bean.getCodenum());
             status.setText(bean.getStatus_name());
-            time.setText(bean.getBadtime());
+//            time.setText(bean.getBadtime());
 
             if("即将超时".equals(bean.getStatus_name())){
                 num.setTextColor(getResources().getColor(R.color.red));

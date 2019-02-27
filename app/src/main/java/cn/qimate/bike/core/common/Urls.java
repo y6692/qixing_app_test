@@ -150,4 +150,6 @@ public class Urls {
 
 	/**坏车列表*/
 	public static String badcarList = host + "/index.php?g=App&m=UserManage&a=badcar_list";
+	/**坏车详情*/
+	public static String badcarShow = host + "/index.php?g=App&m=UserManage&a=badcar_show";
 }

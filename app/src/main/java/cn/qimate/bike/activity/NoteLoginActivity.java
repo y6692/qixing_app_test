@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -180,6 +182,7 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
      * 发送验证码
      *
      * */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendCode(String telphone) {
 
         RequestParams params = new RequestParams();
@@ -191,7 +194,67 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
         params.add("UUID", tm.getDeviceId());
+
+//        if (tm.getDeviceId() != null) {
+//            params.add("UUID", tm.getDeviceId());
+//        } else {
+////            params.add("UUID", Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID));
+//            params.add("UUID", tm.getImei());
+//        }
+//
+//        params.add("UUID", tm.getImei());
+
+
+//        try {
+////            final TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//            if(tm.getDeviceId() == null || tm.getDeviceId().equals("")) {
+//                if (Build.VERSION.SDK_INT >= 23) {
+//                    params.add("UUID", tm.getDeviceId(0));
+//                }
+//            }else{
+//                params.add("UUID", tm.getDeviceId());
+//            }
+//        }catch (Exception e){
+//
+//        }
+
+//        Log.e("UUID", tm.getDeviceId(0) + "====" + tm.getDeviceId(1) + "====" + tm.getImei(0) + "====" + tm.getImei(1));
+
+//        params.add("UUID", tm.getImei(0));
+
+
+//        params.add("UUID", getDeviceId());
+
+//        final String tmDevice, tmSerial, tmPhone, androidId;
+//        tmDevice = "" + tm.getDeviceId();
+//        tmSerial = "" + tm.getSimSerialNumber();
+//        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+//
+//        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+//        String uniqueId = deviceUuid.toString();
+
+//        String m_szDevIDShort = "86" + //we make this look like a valid IMEI
+//
+//                Build.BOARD.length()%10 +
+//                Build.BRAND.length()%10 +
+//                Build.CPU_ABI.length()%10 +
+//                Build.DEVICE.length()%10 +
+//                Build.DISPLAY.length()%10 +
+//                Build.HOST.length()%10 +
+//                Build.ID.length()%10 +
+//                Build.MANUFACTURER.length()%10 +
+//                Build.MODEL.length()%10 +
+//                Build.PRODUCT.length()%10 +
+//                Build.TAGS.length()%10 +
+//                Build.TYPE.length()%10 +
+//                Build.USER.length()%10 ;
+
+//        params.add("UUID", tm.getImei());
+//
+//        Log.e("UUID", tm.getDeviceId() + "====" + m_szDevIDShort + "====" + UUID.randomUUID().toString());
+
         params.add("type", "2");
         HttpHelper.post(context, Urls.sendcode, params, new TextHttpResponseHandler() {
             @Override
@@ -307,6 +370,37 @@ public class NoteLoginActivity extends SwipeBackActivity implements View.OnClick
                 }
             }
         });
+    }
+
+    public static String getUniqueID() {
+        //获得独一无二的Psuedo ID
+        String serial = null;
+
+        String m_szDevIDShort = "35" +
+                Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
+
+                Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
+
+                Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
+
+                Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
+
+                Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
+
+                Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
+
+                Build.USER.length() % 10; //13 位
+
+        try {
+            serial = android.os.Build.class.getField("SERIAL").get(null).toString();
+            //API>=9 使用serial号
+            return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString();
+        } catch (Exception exception) {
+            //serial需要一个初始化
+            serial = "serial"; // 随便一个初始化
+        }
+        //使用硬件信息拼凑出来的15位号码
+        return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString();
     }
 
     public String getDeviceId() {

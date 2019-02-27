@@ -47,6 +47,7 @@ import cn.qimate.bike.model.ResultConsel;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
 /**
+ * 购买月卡
  * Created by Administrator on 2017/9/9 0009.
  */
 
@@ -67,7 +68,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
     private ImageView alipayTypeImage,WeChatTypeImage,balanceTypeImage;
     private LinearLayout type1Layout,type2Layout,type3Layout;
     private TextView type1Text,type2Text,type3Text;
-    private TextView type1Text2,type2Text2;
+    private TextView type1Text2,type1Text3,type2Text2,type2Text3;
     private TextView days1Text,days2Text,days3Text;
     private Button submitBtn;
     private String paytype = "1";
@@ -136,7 +137,9 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         type3Text = (TextView)findViewById(R.id.ui_payMonth_cart_type3Text);
 
         type1Text2 = (TextView)findViewById(R.id.ui_payMonth_cart_type1Text2);
+        type1Text3 = (TextView)findViewById(R.id.ui_payMonth_cart_type1Text3);
         type2Text2 = (TextView)findViewById(R.id.ui_payMonth_cart_type2Text2);
+        type2Text3 = (TextView)findViewById(R.id.ui_payMonth_cart_type2Text3);
 
         type1Text2.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         type2Text2.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
@@ -195,7 +198,11 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 type2Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
                 type3Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
                 type1Text.setTextColor(getResources().getColor(R.color.white));
+                type1Text2.setTextColor(getResources().getColor(R.color.white));
+                type1Text3.setTextColor(getResources().getColor(R.color.white));
                 type2Text.setTextColor(getResources().getColor(R.color.black));
+                type2Text2.setTextColor(getResources().getColor(R.color.black));
+                type2Text3.setTextColor(getResources().getColor(R.color.black));
                 type3Text.setTextColor(getResources().getColor(R.color.black));
                 days1Text.setTextColor(getResources().getColor(R.color.white));
                 days2Text.setTextColor(getResources().getColor(R.color.black));
@@ -209,7 +216,11 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 type2Layout.setBackgroundResource(R.drawable.shape_cart_secleced);
                 type3Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
                 type1Text.setTextColor(getResources().getColor(R.color.black));
+                type1Text2.setTextColor(getResources().getColor(R.color.black));
+                type1Text3.setTextColor(getResources().getColor(R.color.black));
                 type2Text.setTextColor(getResources().getColor(R.color.white));
+                type2Text2.setTextColor(getResources().getColor(R.color.white));
+                type2Text3.setTextColor(getResources().getColor(R.color.white));
                 type3Text.setTextColor(getResources().getColor(R.color.black));
                 days1Text.setTextColor(getResources().getColor(R.color.black));
                 days2Text.setTextColor(getResources().getColor(R.color.white));
@@ -223,7 +234,11 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 type2Layout.setBackgroundResource(R.drawable.shape_feedback_edit);
                 type3Layout.setBackgroundResource(R.drawable.shape_cart_secleced);
                 type1Text.setTextColor(getResources().getColor(R.color.black));
+                type1Text2.setTextColor(getResources().getColor(R.color.black));
+                type1Text3.setTextColor(getResources().getColor(R.color.black));
                 type2Text.setTextColor(getResources().getColor(R.color.black));
+                type2Text2.setTextColor(getResources().getColor(R.color.black));
+                type2Text3.setTextColor(getResources().getColor(R.color.black));
                 type3Text.setTextColor(getResources().getColor(R.color.white));
                 days1Text.setTextColor(getResources().getColor(R.color.black));
                 days2Text.setTextColor(getResources().getColor(R.color.black));
@@ -516,6 +531,8 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                         days2Text.setText("("+bean.getQuarter_day()+"天不限次)");
                         type3Text.setText(bean.getWeek_money()+"元");
                         days3Text.setText("("+bean.getWeek_day()+"天不限次)");
+
+                        moneyText.setText(type2Text.getText().toString().trim());
 
                         gamestatus = bean.getGamestatus();
 

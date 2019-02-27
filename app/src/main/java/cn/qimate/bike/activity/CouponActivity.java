@@ -5,27 +5,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.qimate.bike.R;
-import cn.qimate.bike.base.BaseActivity;
-import cn.qimate.bike.core.widget.LoadingDialog;
-import cn.qimate.bike.fragment.MissionFragment;
-import cn.qimate.bike.fragment.MyCommissionFragment;
+import cn.qimate.bike.fragment.CarCouponFragment;
+import cn.qimate.bike.fragment.MerchantCouponFragment;
 import cn.qimate.bike.fragment.MyIntegralRuleFragment;
 import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
 
@@ -99,12 +88,13 @@ public class CouponActivity extends SwipeBackActivity {
     public MyPagerAdapter(FragmentManager fm) {
       super(fm);
 
-      MissionFragment privateLockFragment = new MissionFragment();
-      MyIntegralRuleFragment myIntegralRuleFragment = new MyIntegralRuleFragment();
+      CarCouponFragment carCouponFragment = new CarCouponFragment();
+      MerchantCouponFragment merchantCouponFragment = new MerchantCouponFragment();
+//      MyIntegralRuleFragment merchantCouponFragment = new MyIntegralRuleFragment();
 
       fragmentList = new ArrayList<>();
-      fragmentList.add(privateLockFragment);
-      fragmentList.add(myIntegralRuleFragment);
+      fragmentList.add(carCouponFragment);
+      fragmentList.add(merchantCouponFragment);
     }
 
     @Override

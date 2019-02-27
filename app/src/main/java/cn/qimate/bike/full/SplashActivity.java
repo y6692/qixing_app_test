@@ -83,8 +83,8 @@ public class SplashActivity extends BaseActivity {
 	//	private Context context = this;
 	public static boolean isForeground = false;
 
-//	private AMapLocationClient locationClient = null;
-//	private AMapLocationClientOption locationOption = new AMapLocationClientOption();
+	private AMapLocationClient locationClient = null;
+	private AMapLocationClientOption locationOption = new AMapLocationClientOption();
 	private ImageView loadingImage;
 	private LinearLayout skipLayout;
 	private TextView skipTime;
@@ -206,12 +206,12 @@ public class SplashActivity extends BaseActivity {
 			}
 		}
 
-//		if (null == locationOption) {
-//			locationOption = new AMapLocationClientOption();
-//		}
+		if (null == locationOption) {
+			locationOption = new AMapLocationClientOption();
+		}
 		initjpush();
 		registerMessageReceiver();
-//		initLocation();
+		initLocation();
 
 		skipLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -517,20 +517,20 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-//	private void initLocation() {
-//		if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
-//			//初始化client
-//			locationClient = new AMapLocationClient(this.getApplicationContext());
-//			//设置定位参数
-//			locationClient.setLocationOption(getDefaultOption());
-//			// 设置定位监听
-//			locationClient.setLocationListener(locationListener);
-//			startLocation();
-//		} else {
-//			Toast.makeText(context, "暂无网络连接，请连接网络", Toast.LENGTH_SHORT).show();
-//			return;
-//		}
-//	}
+	private void initLocation() {
+		if (NetworkUtils.getNetWorkType(context) != NetworkUtils.NONETWORK) {
+			//初始化client
+			locationClient = new AMapLocationClient(this.getApplicationContext());
+			//设置定位参数
+			locationClient.setLocationOption(getDefaultOption());
+			// 设置定位监听
+			locationClient.setLocationListener(locationListener);
+			startLocation();
+		} else {
+			Toast.makeText(context, "暂无网络连接，请连接网络", Toast.LENGTH_SHORT).show();
+			return;
+		}
+	}
 
 	/**
 	 * 默认的定位参数
@@ -557,42 +557,42 @@ public class SplashActivity extends BaseActivity {
 	/**
 	 * 定位监听
 	 */
-//	AMapLocationListener locationListener = new AMapLocationListener() {
-//		@Override
-//		public void onLocationChanged(AMapLocation loc) {
-//			if (null != loc) {
-////				Toast.makeText(context,"===="+loc.getLongitude(),Toast.LENGTH_SHORT).show();
-//
-//				if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
-//					PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
-//				} else {
-//					CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity.this);
-//					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
-//							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//								public void onClick(DialogInterface dialog, int which) {
-//									dialog.cancel();
-//									finishMine();
-//								}
-//							}).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-//						public void onClick(DialogInterface dialog, int which) {
-//							dialog.cancel();
-//							Intent localIntent = new Intent();
-//							localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-//							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
-//							startActivity(localIntent);
-//							finishMine();
-//						}
-//					});
-//					customBuilder.create().show();
-//					return;
-//				}
-//			} else {
-//				Toast.makeText(context, "定位失败", Toast.LENGTH_SHORT).show();
-//				finishMine();
-//			}
-//		}
-//	};
+	AMapLocationListener locationListener = new AMapLocationListener() {
+		@Override
+		public void onLocationChanged(AMapLocation loc) {
+			if (null != loc) {
+//				Toast.makeText(context,"===="+loc.getLongitude(),Toast.LENGTH_SHORT).show();
+
+				if (0.0 != loc.getLongitude() && 0.0 != loc.getLongitude()) {
+					PostDeviceInfo(loc.getLatitude(), loc.getLongitude());
+				} else {
+					CustomDialog.Builder customBuilder = new CustomDialog.Builder(SplashActivity.this);
+					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开定位权限！")
+							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+									finishMine();
+								}
+							}).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							Intent localIntent = new Intent();
+							localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+							startActivity(localIntent);
+							finishMine();
+						}
+					});
+					customBuilder.create().show();
+					return;
+				}
+			} else {
+				Toast.makeText(context, "定位失败", Toast.LENGTH_SHORT).show();
+				finishMine();
+			}
+		}
+	};
 
 	/**
 	 * 开始定位
@@ -601,15 +601,15 @@ public class SplashActivity extends BaseActivity {
 	 * @author hongming.wang
 	 *
 	 */
-//	private void startLocation() {
-//		if (null != locationClient) {
-//			// 设置定位参数
-//			locationClient.setLocationOption(locationOption);
-//			// 启动定位
-//			locationClient.startLocation();
-//		}
-//
-//	}
+	private void startLocation() {
+		if (null != locationClient) {
+			// 设置定位参数
+			locationClient.setLocationOption(locationOption);
+			// 启动定位
+			locationClient.startLocation();
+		}
+
+	}
 
 	/**
 	 * 停止定位
