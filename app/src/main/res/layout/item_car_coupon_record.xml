@@ -13,92 +13,79 @@
         android:layout_marginLeft="@dimen/dp20"
         android:layout_marginRight="@dimen/dp20"
         android:layout_marginTop="@dimen/dp10"
+        android:orientation="horizontal"
         android:background="@color/white"
         android:gravity="center_vertical">
 
-        <!--<ImageView-->
-            <!--android:layout_width="89dp"-->
-            <!--android:layout_height="75dp"-->
-            <!--android:background="@null"-->
-            <!--android:src="@drawable/car_coupon"-->
-            <!--android:scaleType="centerInside"/>-->
-
-        <TextView
-            android:layout_width="89dp"
-            android:layout_height="75dp"
-            android:textSize="@dimen/sp15"
-            android:textColor="@color/white"
-            android:background="@drawable/car_coupon"
-            android:text="九折\n优惠券"
-            android:gravity="center"
-            />
 
 
-        <TextView
-            android:id="@+id/item_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/sp14"
-            android:textColor="@color/tx_black"
-            android:text=""/>
-
-        <TextView
-            android:id="@+id/item_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp5"
-            android:textSize="@dimen/sp14"
-            android:textColor="@color/tx_black"
-            android:text=""/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp5"
-            android:gravity="right|center_vertical"
-            android:layout_weight="1">
+            android:layout_marginRight="9dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            >
 
             <TextView
-                android:id="@+id/item_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/tx_black"
-                android:textSize="@dimen/sp14"
-                android:minHeight="@dimen/dp45"
-                android:gravity="center_vertical"/>
-
-            <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@null"-->
-                <!--android:src="@drawable/arrows_right"-->
-                <!--android:layout_marginLeft="@dimen/dp10"-->
-                <!--android:scaleType="centerInside"/>-->
+                android:layout_width="89dp"
+                android:layout_height="75dp"
+                android:textSize="@dimen/sp15"
+                android:textColor="@color/white"
+                android:background="@drawable/car_coupon"
+                android:text="九折\n优惠券"
+                android:gravity="center"
+                />
 
             <LinearLayout
-                android:id="@+id/mainUI_scanCode_lock"
-                android:layout_width="66dp"
-                android:layout_height="24dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="13dp"
-                android:orientation="horizontal"
-                android:background="@drawable/btn_bcg_use"
-                android:gravity="center"
-                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
                 >
+
                 <TextView
-                    android:id="@+id/tv"
+                    android:id="@+id/item_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="立即使用"
-                    android:textSize="13sp"
-                    android:textColor="#E60012"
-                    android:layout_centerInParent="true"
-                    />
+                    android:textSize="@dimen/sp13"
+                    android:textColor="#333333"
+                    android:text="2019-1-21到期	剩余1天"/>
+
+                <TextView
+                    android:id="@+id/item_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textSize="@dimen/sp13"
+                    android:textColor="#333333"
+                    android:text="限用于购买骑行套餐"/>
+
             </LinearLayout>
 
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/mainUI_scanCode_lock"
+            android:layout_width="66dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="13dp"
+            android:orientation="horizontal"
+            android:background="@drawable/btn_bcg_use"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="立即使用"
+                android:textSize="13sp"
+                android:textColor="#E60012"
+                />
         </LinearLayout>
 
 

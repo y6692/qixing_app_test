@@ -280,7 +280,7 @@ public class CarCouponFragment extends BaseFragment implements View.OnClickListe
             }
             TextView num = BaseViewHolder.get(convertView,R.id.item_num);
             TextView status = BaseViewHolder.get(convertView,R.id.item_status);
-            TextView time = BaseViewHolder.get(convertView,R.id.item_time);
+//            TextView time = BaseViewHolder.get(convertView,R.id.item_time);
             final BadCarBean bean = getDatas().get(position);
 
             num.setText(bean.getCodenum());
@@ -290,11 +290,11 @@ public class CarCouponFragment extends BaseFragment implements View.OnClickListe
             if("即将超时".equals(bean.getStatus_name())){
                 num.setTextColor(getResources().getColor(R.color.red));
                 status.setTextColor(getResources().getColor(R.color.red));
-                time.setTextColor(getResources().getColor(R.color.red));
+//                time.setTextColor(getResources().getColor(R.color.red));
             }else{
                 num.setTextColor(getResources().getColor(R.color.tx_black));
                 status.setTextColor(getResources().getColor(R.color.tx_black));
-                time.setTextColor(getResources().getColor(R.color.tx_black));
+//                time.setTextColor(getResources().getColor(R.color.tx_black));
             }
 
             return convertView;
