@@ -75,7 +75,7 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/sp14"
                             android:textStyle="bold"
-                            android:text="天内无限次免费骑行"/>
+                            android:text="免费骑行"/>
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>

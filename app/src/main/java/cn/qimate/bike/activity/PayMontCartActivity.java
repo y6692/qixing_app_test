@@ -1,6 +1,7 @@
 package cn.qimate.bike.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -104,6 +106,31 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
         loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.setCanceledOnTouchOutside(false);
+
+//        dialog2 = new Dialog(context, R.style.main_publishdialog_style);
+//        View tagView = LayoutInflater.from(context).inflate(R.layout.dialog_maintenance, null);
+//        dialog2.setContentView(tagView);
+//        dialog2.setCanceledOnTouchOutside(false);
+//
+//        tagMainLayout = tagView.findViewById(R.id.dialog_maintenance_mainLayout);
+//        tagFlowLayout = tagView.findViewById(R.id.dialog_maintenance_flowlayout);
+//        closeLayout = tagView.findViewById(R.id.dialog_maintenance_closeLayout);
+//        affirmLayout = tagView.findViewById(R.id.dialog_maintenance_affirmLayout);
+//
+//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams)tagMainLayout.getLayoutParams();
+//        params4.width = DisplayUtil.getWindowWidth(activity) * 3 / 5;
+//        tagMainLayout.setLayoutParams(params4);
+//
+//        tagAdapter = new TagAdapter<TagBean>(tagDatas) {
+//            @Override
+//            public View getView(FlowLayout parent, int position, TagBean bean) {
+//                TextView tag = (TextView) LayoutInflater.from(context).inflate(R.layout.ui_tag, tagFlowLayout, false);
+//                tag.setText(bean.getName());
+//                return tag;
+//            }
+//        };
+//        tagFlowLayout.setAdapter(tagAdapter);
+
 
         backImg = (ImageView) findViewById(R.id.mainUI_title_backBtn);
         title = (TextView) findViewById(R.id.mainUI_title_titleText);
@@ -246,6 +273,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                 break;
             case R.id.ui_payMonth_cart_submitBtn:
                 CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+//                customBuilder.setTitle("温馨提示").setMessage("使用优惠券，省X元           实付款：X元")
                 customBuilder.setTitle("温馨提示").setMessage("是否确定支付?")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -258,6 +286,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                     }
                 });
                 customBuilder.create().show();
+
                 break;
             default:
                 break;
@@ -533,6 +562,7 @@ public class PayMontCartActivity extends SwipeBackActivity implements View.OnCli
                         days3Text.setText("("+bean.getWeek_day()+"天不限次)");
 
                         moneyText.setText(type2Text.getText().toString().trim());
+                        daysText.setText(days2Text.getText().toString().trim());
 
                         gamestatus = bean.getGamestatus();
 

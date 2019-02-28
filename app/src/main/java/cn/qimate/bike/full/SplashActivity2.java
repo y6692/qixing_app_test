@@ -399,6 +399,7 @@ public class SplashActivity2 extends BaseActivity {
             UIHelper.goToAct(this, EnterActivity.class);
         }
 
+//        UIHelper.goToAct(this, EnterActivity.class);
 //        UIHelper.goToAct(this, Main4Activity.class);
         finishMine();
     }

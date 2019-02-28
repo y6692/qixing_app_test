@@ -203,7 +203,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
     boolean stopScan = false;
     private CustomDialog customDialog;
     private CustomDialog customDialog3;
-    private CustomDialog customDialog4;
+//    private CustomDialog customDialog4;
 
     int near = 1;
     protected InternalReceiver internalReceiver = null;
@@ -252,7 +252,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         customDialog = customBuilder.create();
 
         customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
                 .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -260,14 +260,14 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 });
         customDialog3 = customBuilder.create();
 
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog4 = customBuilder.create();
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("不在还车点，请至校内地图红色区域停车")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog4 = customBuilder.create();
 
 
     }
@@ -436,9 +436,9 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                 if (customDialog3 != null && customDialog3.isShowing()){
                     customDialog3.dismiss();
                 }
-                if (customDialog4 != null && customDialog4.isShowing()){
-                    customDialog4.dismiss();
-                }
+//                if (customDialog4 != null && customDialog4.isShowing()){
+//                    customDialog4.dismiss();
+//                }
 
                 m_myHandler.postDelayed(new Runnable() {
                     @Override
@@ -535,18 +535,20 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                         if(!isEndBtn) break;
 
-                        if("3".equals(type)){
-                            if (!isContainsList.contains(true) && macList2.size() <= 0) {
-                                customDialog4.show();
-                            } else {
-                                submit(uid, access_token);
-                            }
-                        }else{
-                            if (!isContainsList.contains(true) && macList2.size() <= 0) {
-                                customDialog3.show();
-                            } else {
-                                submit(uid, access_token);
-                            }
+//                        if("3".equals(type)){
+//                            if (!isContainsList.contains(true) && macList2.size() <= 0) {
+//                                customDialog4.show();
+//                            } else {
+//                                submit(uid, access_token);
+//                            }
+//                        }else{
+//
+//                        }
+
+                        if (!isContainsList.contains(true) && macList2.size() <= 0) {
+                            customDialog3.show();
+                        } else {
+                            submit(uid, access_token);
                         }
 
                         Log.e("biking===", "biking2===锁已关闭"+macList2.size());
@@ -555,7 +557,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                 } else {
                     //锁已开启
-                    ToastUtil.showMessageApp(context,"您还未上锁，请给车上锁后还车");
+                    ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
                 }
                 break;
             case Config.LOCK_RESULT:
@@ -1529,7 +1531,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                         if ("0".equals(result.getData())){
                             submit(uid, access_token);
                         } else {
-                            ToastUtil.showMessageApp(context,"您还未上锁，请给车上锁后还车");
+                            ToastUtil.showMessageApp(context,"车锁未关，请手动关锁");
                         }
                     } else {
                         ToastUtil.showMessageApp(context,result.getMsg());
@@ -1817,7 +1819,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                 if(first3){
                                     first3 = false;
-                                    customDialog4.show();
+                                    customDialog3.show();
                                 }else{
                                     carClose();
                                 }
@@ -1902,7 +1904,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
                                     if(first3){
                                         first3 = false;
-                                        customDialog4.show();
+                                        customDialog3.show();
                                     }else{
                                         carClose();
                                     }
@@ -1915,7 +1917,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
 
                 }else {
-                    customDialog4.show();
+                    customDialog3.show();
                 }
             }
 
@@ -2157,7 +2159,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                                     if("3".equals(type)){
                                         if(first3){
                                             first3 = false;
-                                            customDialog4.show();
+                                            customDialog3.show();
                                         }else{
                                             carClose();
                                         }
@@ -2172,11 +2174,12 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
                     }
 
                 }else{
-                    if("3".equals(type)){
-                        customDialog4.show();
-                    }else{
-                        customDialog3.show();
-                    }
+//                    if("3".equals(type)){
+//                        customDialog4.show();
+//                    }else{
+//                        customDialog3.show();
+//                    }
+                    customDialog3.show();
                 }
 
                 break;
