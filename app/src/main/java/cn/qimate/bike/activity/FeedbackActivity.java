@@ -1253,26 +1253,73 @@ public class FeedbackActivity
                 }
                break;
             case 101:
+//                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    // Permission Granted
+//                    if (permissions[0].equals(Manifest.permission.CAMERA)) {
+//
+//                        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+//                            Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(FeedbackActivity.this,
+//                                        BuildConfig.APPLICATION_ID + ".provider",
+//                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                            }else {
+//                                // 下面这句指定调用相机拍照后的照片存储的路径
+//                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                                        Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+//                            }
+//                            startActivityForResult(takeIntent, REQUESTCODE_TAKE);
+//                        }else {
+//                            ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
+//                        }
+//                    }
+//                } else {
+//                    CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+//                    customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开相机权限！")
+//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//                                    finishMine();
+//                                }
+//                            }).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                            Intent localIntent = new Intent();
+//                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+//                            startActivity(localIntent);
+//                            finishMine();
+//                        }
+//                    });
+//                    customBuilder.create().show();
+//                }
+
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     if (permissions[0].equals(Manifest.permission.CAMERA)) {
 
                         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
                             Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            File file = new File(Environment.getExternalStorageDirectory()+"/images/", IMAGE_FILE_NAME);
+                            if(!file.getParentFile().exists()){
+                                file.getParentFile().mkdirs();
+                            }
+
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(FeedbackActivity.this,
-                                        BuildConfig.APPLICATION_ID + ".provider",
-                                        new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
-                                takeIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                takeIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this,
+                                        BuildConfig.APPLICATION_ID + ".fileprovider",
+                                        file));
+
                             }else {
-                                // 下面这句指定调用相机拍照后的照片存储的路径
-                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                        Uri.fromFile(new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+                                takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                             }
                             startActivityForResult(takeIntent, REQUESTCODE_TAKE);
                         }else {
-                            ToastUtil.showMessageApp(context,"未找到存储卡，无法存储照片！");
+                            Toast.makeText(context,"未找到存储卡，无法存储照片！",Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
@@ -1296,6 +1343,8 @@ public class FeedbackActivity
                     });
                     customBuilder.create().show();
                 }
+
+
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
