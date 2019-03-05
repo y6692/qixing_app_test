@@ -264,15 +264,15 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         bikeMarkerList = new ArrayList<>();
         imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
-//        mapView = (MapView) findViewById(R.id.mainUI_map);
-//        mapView.onCreate(savedInstanceState);
-//
-//		IntentFilter filter = new IntentFilter();
-//		filter.addAction(Intent.ACTION_SCREEN_ON);
-//		filter.addAction(Intent.ACTION_SCREEN_OFF);
-//		filter.addAction(Intent.ACTION_USER_PRESENT);
-//		registerReceiver(mScreenReceiver, filter);
-//
+        mapView = (MapView) findViewById(R.id.mainUI_map);
+        mapView.onCreate(savedInstanceState);
+
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		filter.addAction(Intent.ACTION_USER_PRESENT);
+		registerReceiver(mScreenReceiver, filter);
+
 //		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
 //		filter = new IntentFilter("data.broadcast.action");
 //		registerReceiver(broadcastReceiver, filter);
