@@ -265,7 +265,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
         mapView = (MapView) findViewById(R.id.mainUI_map);
-        mapView.onCreate(savedInstanceState);
+//        mapView.onCreate(savedInstanceState);
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_ON);
