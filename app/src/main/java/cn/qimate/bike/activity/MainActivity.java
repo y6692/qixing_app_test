@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.PendingIntent;
@@ -98,12 +99,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
 import cn.qimate.bike.R;
+import cn.qimate.bike.base.BaseActivity;
 import cn.qimate.bike.base.BaseApplication;
 import cn.qimate.bike.base.BaseFragmentActivity;
 import cn.qimate.bike.ble.utils.ParseLeAdvData;
@@ -135,13 +138,34 @@ import static cn.qimate.bike.activity.CurRoadBikingActivity.bytes2hex03;
 import static cn.qimate.bike.core.common.Urls.schoolrangeList;
 import static com.umeng.analytics.AnalyticsConfig.getLocation;
 
+
+
 @SuppressLint("NewApi")
-public class MainActivity extends BaseFragmentActivity implements OnClickListener,
+public class MainActivity extends Activity implements OnClickListener,
         LocationSource,
 		AMapLocationListener,
         AMap.OnCameraChangeListener,
         AMap.OnMapTouchListener,
         OnConnectionListener {
+
+    private static final int MSG_SET_ALIAS = 1001;
+    private static final int MSG_SET_TAGS = 1002;
+
+    public static String m_nowMac = "";  //"A8:1B:6A:B4:E7:C9"
+    public static String oid = "";
+    public static String osn = "";
+    public static String type = "";
+
+    public static double referLatitude = 0.0;
+    public static double referLongitude = 0.0;
+
+    protected String uid = "";
+    protected String access_token = "";
+
+//    protected AMapLocationClient mlocationClient;
+//    protected AMapLocationClientOption mLocationOption;
+    protected AMap aMap;
+    protected BitmapDescriptor successDescripter;
 
 	static private final int REQUEST_CODE_ASK_PERMISSIONS = 101;
 	private final static int SCANNIN_GREQUEST_CODE = 1;
@@ -265,7 +289,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
         imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
         mapView = (MapView) findViewById(R.id.mainUI_map);
-//        mapView.onCreate(savedInstanceState);
+        mapView.onCreate(savedInstanceState);
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_ON);
@@ -1512,7 +1536,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-                            finishMine();
+                            finish();
                         }
                     })
                     .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
@@ -1633,7 +1657,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 				UIHelper.goToAct(context,MyPurseActivity.class);
 				break;
 			case R.id.mainUI_refreshLayout:
-				RefreshLogin();
+//				RefreshLogin();
 				if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)){
 					UIHelper.goToAct(context,LoginActivity.class);
 				}else {
@@ -3385,7 +3409,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
 							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
 							startActivity(localIntent);
-							finishMine();
+							finish();
 						}
 					});
 					customBuilder.create().show();
@@ -3430,7 +3454,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
 							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
 							startActivity(localIntent);
-							finishMine();
+							finish();
 						}
 					});
 					customBuilder.create().show();
@@ -3460,7 +3484,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.cancel();
-									finishMine();
+									finish();
 								}
 							}).setPositiveButton("去设置", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
@@ -3470,7 +3494,7 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 							localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
 							localIntent.setData(Uri.fromParts("package", getPackageName(), null));
 							startActivity(localIntent);
-							finishMine();
+							finish();
 						}
 					});
 					customBuilder.create().show();
@@ -3531,8 +3555,45 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
 		}
 	}
 
+    @Override
+    public void onDisconnect(int state) {
+        mHandler.sendEmptyMessageDelayed(0, 1000);
+    }
+    @Override
+    public void onServicesDiscovered(String name, String address) {
+        getToken();
+    }
+    @Override
+    public void onTimeOut() {
 
+    }
 
+    private void getToken() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                BaseApplication.getInstance().getIBLE().getToken();
+            }
+        }, 500);
+    }
+
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_SET_ALIAS:
+                    JPushInterface.setAliasAndTags(getApplicationContext(), (String) msg.obj, null, null);
+                    break;
+
+                case MSG_SET_TAGS:
+                    JPushInterface.setAliasAndTags(getApplicationContext(), null, (Set<String>) msg.obj, null);
+                    break;
+
+                default:
+            }
+        }
+    };
 
 
 
