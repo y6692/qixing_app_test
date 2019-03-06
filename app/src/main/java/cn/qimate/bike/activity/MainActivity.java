@@ -246,12 +246,12 @@ public class MainActivity extends BaseFragmentActivity implements OnClickListene
     private Bundle savedIS;
 
 	@Override
-	@TargetApi(23)
+//	@TargetApi(23)
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		WindowManager.LayoutParams winParams = getWindow().getAttributes();
-		winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+//		WindowManager.LayoutParams winParams = getWindow().getAttributes();
+//		winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 		setContentView(R.layout.ui_main);
 		context = this;
