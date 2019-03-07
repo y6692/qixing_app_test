@@ -291,6 +291,15 @@ public class MainActivity extends Activity implements OnClickListener,
         mapView = (MapView) findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
+        if (aMap == null) {
+            aMap = mapView.getMap();
+            aMap.setLocationSource(this);// 设置定位监听
+            aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+            aMap.setMyLocationEnabled(true);
+            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        }
+
+
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
