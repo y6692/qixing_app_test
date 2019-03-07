@@ -554,7 +554,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
         tz = 0;
 
-        JPushInterface.onResume(this);
+//        JPushInterface.onResume(this);
         if(mapView!=null){
             mapView.onResume();
         }
@@ -1212,10 +1212,10 @@ public class MainActivity extends Activity implements OnClickListener,
 //			mlocationClient.stopLocation();//停止定位
 //		}
 
-		JPushInterface.onPause(this);
-//		if(mapView!=null){
-//            mapView.onPause();
-//        }
+//		JPushInterface.onPause(this);
+		if(mapView!=null){
+            mapView.onPause();
+        }
 
 //		deactivate();
 //		mFirstFix = false;
@@ -1261,22 +1261,17 @@ public class MainActivity extends Activity implements OnClickListener,
 
 
 
-        deactivate();
-
-        if (null != mlocationClient) {
-            mlocationClient.onDestroy();
-        }
-        if (broadcastReceiver != null) {
-            unregisterReceiver(broadcastReceiver);
-            broadcastReceiver = null;
-        }
-
-//		if (broadcastReceiver2 != null) {
-//			unregisterReceiver(broadcastReceiver2);
-//			broadcastReceiver2 = null;
-//		}
-
-        closeBroadcast();
+//        deactivate();
+//
+//        if (null != mlocationClient) {
+//            mlocationClient.onDestroy();
+//        }
+//        if (broadcastReceiver != null) {
+//            unregisterReceiver(broadcastReceiver);
+//            broadcastReceiver = null;
+//        }
+//
+//        closeBroadcast();
 
     }
 
