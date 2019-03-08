@@ -391,18 +391,18 @@ public class SplashActivity2 extends BaseActivity {
 //        this.startActivity(new Intent(SplashActivity2.this, MainActivity.class));
 //        this.finish();
 
-        if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
-            UIHelper.goToAct(this, MainActivity.class);
-        } else {
-            SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
-            SharedPreferencesUrls.getInstance().putInt("version", getVersion());
-            UIHelper.goToAct(this, EnterActivity.class);
-        }
+//        if ((!SharedPreferencesUrls.getInstance().getBoolean("isFirst", true) && getVersion() == SharedPreferencesUrls.getInstance().getInt("version", 0))) {
+//            UIHelper.goToAct(this, MainActivity.class);
+//        } else {
+//            SharedPreferencesUrls.getInstance().putBoolean("isFirst", false);
+//            SharedPreferencesUrls.getInstance().putInt("version", getVersion());
+//            UIHelper.goToAct(this, EnterActivity.class);
+//        }
 
 //        UIHelper.goToAct(this, EnterActivity.class);
 //        UIHelper.goToAct(this, Main4Activity.class);
 
-//        UIHelper.goToAct(this, MainActivity.class);
+        UIHelper.goToAct(this, MainActivity.class);
 
         finishMine();
     }
