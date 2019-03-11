@@ -280,6 +280,7 @@ public class MainActivity extends Activity implements OnClickListener
 //		winParams.flags |= (WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 		setContentView(R.layout.ui_main);
+
 		context = this;
         savedIS = savedInstanceState;
 
@@ -401,19 +402,19 @@ public class MainActivity extends Activity implements OnClickListener
     }
 
     private void initView() {
-        openGPSSettings();
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                } else {
-                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-                }
-                return;
-            }
-        }
+//        openGPSSettings();
+//
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+//            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+//                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+//                } else {
+//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+//                }
+//                return;
+//            }
+//        }
 
         loadingDialog = new LoadingDialog(this);
         loadingDialog.setCancelable(false);
