@@ -1168,84 +1168,84 @@ public class MainActivity extends Activity implements OnClickListener
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        screen = true;
-        start = true;
-
-        Log.e("main===", "main====onStart");
-
-//        if (mlocationClient != null) {
-//            mlocationClient.setLocationListener(this);
-//            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-//            mLocationOption.setInterval(5 * 1000);
-//            mlocationClient.setLocationOption(mLocationOption);
-//            mlocationClient.startLocation();
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        screen = true;
+//        start = true;
+//
+//        Log.e("main===", "main====onStart");
+//
+////        if (mlocationClient != null) {
+////            mlocationClient.setLocationListener(this);
+////            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+////            mLocationOption.setInterval(5 * 1000);
+////            mlocationClient.setLocationOption(mLocationOption);
+////            mlocationClient.startLocation();
+////        }
+//
+////        if (!"".equals(m_nowMac)) {
+////            mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+////                @Override
+////                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+////                    k++;
+////                    Log.e("main===LeScan", device + "====" + rssi + "====" + k);
+////
+////                    if (!macList.contains(""+device)){
+////                        macList.add(""+device);
+////                    }
+////
+////                }
+////            };
+////        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        isForeground = false;
+//        if (loadingDialog != null && loadingDialog.isShowing()) {
+//            loadingDialog.dismiss();
 //        }
-
-//        if (!"".equals(m_nowMac)) {
-//            mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-//                @Override
-//                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-//                    k++;
-//                    Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-//
-//                    if (!macList.contains(""+device)){
-//                        macList.add(""+device);
-//                    }
-//
-//                }
-//            };
+//        if (lockLoading != null && lockLoading.isShowing()) {
+//            lockLoading.dismiss();
 //        }
-    }
-
-    @Override
-    protected void onPause() {
-        isForeground = false;
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
-        if (lockLoading != null && lockLoading.isShowing()) {
-            lockLoading.dismiss();
-        }
-        super.onPause();
-
-//		if(mlocationClient!=null) {
-//			mlocationClient.stopLocation();//停止定位
-//		}
-
-//		JPushInterface.onPause(this);
-		if(mapView!=null){
-            mapView.onPause();
-        }
-
-//		deactivate();
-//		mFirstFix = false;
-        tz = 0;
-
-        ToastUtil.showMessage(this, "main====onPause");
-        Log.e("main===", "main====onPause");
-
-//		closeBroadcast();
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        screen = false;
-        change = false;
-
-        Log.e("main===", "main====onStop");
-
-//		closeBroadcast();
+//        super.onPause();
 //
-//		if(mlocationClient!=null) {
-//			mlocationClient.stopLocation(); // 停止定位
-//		}
-
-    }
+////		if(mlocationClient!=null) {
+////			mlocationClient.stopLocation();//停止定位
+////		}
+//
+////		JPushInterface.onPause(this);
+////		if(mapView!=null){
+////            mapView.onPause();
+////        }
+//
+////		deactivate();
+////		mFirstFix = false;
+//        tz = 0;
+//
+//        ToastUtil.showMessage(this, "main====onPause");
+//        Log.e("main===", "main====onPause");
+//
+////		closeBroadcast();
+//
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        screen = false;
+//        change = false;
+//
+//        Log.e("main===", "main====onStop");
+//
+////		closeBroadcast();
+////
+////		if(mlocationClient!=null) {
+////			mlocationClient.stopLocation(); // 停止定位
+////		}
+//
+//    }
 
     @Override
     protected void onDestroy() {
