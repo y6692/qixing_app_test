@@ -291,7 +291,7 @@ public class MainActivity extends Activity implements OnClickListener
         bikeMarkerList = new ArrayList<>();
         imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
-        mapView = (MapView) findViewById(R.id.mainUI_map);
+        mapView = findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
 
 //        if (aMap == null) {
@@ -322,32 +322,32 @@ public class MainActivity extends Activity implements OnClickListener
 //
 		initView();
 
-		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
-
-		customBuilder = new CustomDialog.Builder(this);
-		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-		customDialog = customBuilder.create();
-
-		CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-		customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
-				.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-		customDialog3 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog4 = customBuilder.create();
-
-        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-        Log.e("main===", "m_nowMac====" + m_nowMac);
+//		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
+//
+//		customBuilder = new CustomDialog.Builder(this);
+//		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+//		customDialog = customBuilder.create();
+//
+//		CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//		customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+//				.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.cancel();
+//					}
+//				});
+//		customDialog3 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog4 = customBuilder.create();
+//
+//        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//        Log.e("main===", "m_nowMac====" + m_nowMac);
 
 //        if (!"".equals(m_nowMac)) {
 //
@@ -1256,13 +1256,11 @@ public class MainActivity extends Activity implements OnClickListener
             mapView.onDestroy();
         }
 
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
+//        if (loadingDialog != null && loadingDialog.isShowing()) {
+//            loadingDialog.dismiss();
+//        }
 
         ToastUtil.showMessage(context, "main===onDestroy");
-
-
 
 //        deactivate();
 //
@@ -3247,24 +3245,24 @@ public class MainActivity extends Activity implements OnClickListener
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			try{
-				CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
-				customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
-						.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								dialog.cancel();
-							}
-						}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-						AppManager.getAppManager().AppExit(context);
-					}
-				});
-				customBuilder.create().show();
-				return true;
-			}catch (Exception e){
-
-			}
+//			try{
+//				CustomDialog.Builder customBuilder = new CustomDialog.Builder(this);
+//				customBuilder.setTitle("温馨提示").setMessage("确认退出吗?")
+//						.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//							public void onClick(DialogInterface dialog, int which) {
+//								dialog.cancel();
+//							}
+//						}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.cancel();
+//						AppManager.getAppManager().AppExit(context);
+//					}
+//				});
+//				customBuilder.create().show();
+//				return true;
+//			}catch (Exception e){
+//
+//			}
 		}
 		return super.onKeyDown(keyCode, event);
 	}
