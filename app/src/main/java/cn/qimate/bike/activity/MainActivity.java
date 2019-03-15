@@ -289,7 +289,7 @@ public class MainActivity extends Activity implements OnClickListener
         macList2 = new ArrayList<>();
 		pOptions = new ArrayList<>();
         bikeMarkerList = new ArrayList<>();
-        imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+//        imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
         mapView = findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
@@ -416,58 +416,58 @@ public class MainActivity extends Activity implements OnClickListener
 //            }
 //        }
 
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.setCancelable(false);
-        loadingDialog.setCanceledOnTouchOutside(false);
-
-        lockLoading = new LoadingDialog(this);
-        lockLoading.setCancelable(false);
-        lockLoading.setCanceledOnTouchOutside(false);
-
-        loadingDialog1 = new LoadingDialog(this);
-        loadingDialog1.setCancelable(false);
-        loadingDialog1.setCanceledOnTouchOutside(false);
-
-        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
-
-        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
-        advDialog.setContentView(advDialogView);
-        advDialog.setCanceledOnTouchOutside(false);
-
-        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
-
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-        advImageView.setLayoutParams(params4);
-
-        marquee = (TextView) findViewById(R.id.mainUI_marquee);
-        title = (TextView) findViewById(R.id.mainUI_title);
-        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
-        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
-        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
-        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
-        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
-        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
-        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
-        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
-        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
-        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
-        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
-        slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
+//        loadingDialog = new LoadingDialog(this);
+//        loadingDialog.setCancelable(false);
+//        loadingDialog.setCanceledOnTouchOutside(false);
+//
+//        lockLoading = new LoadingDialog(this);
+//        lockLoading.setCancelable(false);
+//        lockLoading.setCanceledOnTouchOutside(false);
+//
+//        loadingDialog1 = new LoadingDialog(this);
+//        loadingDialog1.setCancelable(false);
+//        loadingDialog1.setCanceledOnTouchOutside(false);
+//
+//        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
+//        dialog.setContentView(dialogView);
+//        dialog.setCanceledOnTouchOutside(false);
+//
+//        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
+//        advDialog.setContentView(advDialogView);
+//        advDialog.setCanceledOnTouchOutside(false);
+//
+//        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
+//
+//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+//        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+//
+//        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+//        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+//
+//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+//        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+//        advImageView.setLayoutParams(params4);
+//
+//        marquee = (TextView) findViewById(R.id.mainUI_marquee);
+//        title = (TextView) findViewById(R.id.mainUI_title);
+//        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
+//        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+//        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
+//        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
+//        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
+//        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
+//        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
+//        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
+//        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
+//        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
+//        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
+//        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
+//        slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
 
 //        if(aMap==null){
 //            aMap = mapView.getMap();
