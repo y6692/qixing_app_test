@@ -1262,6 +1262,11 @@ public class MainActivity extends Activity implements OnClickListener
 
         ToastUtil.showMessage(context, "main===onDestroy");
 
+        if (mScreenReceiver != null) {
+            unregisterReceiver(mScreenReceiver);
+            mScreenReceiver = null;
+        }
+
 //        deactivate();
 //
 //        if (null != mlocationClient) {
