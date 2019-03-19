@@ -289,7 +289,7 @@ public class MainActivity extends Activity implements OnClickListener
         macList2 = new ArrayList<>();
 		pOptions = new ArrayList<>();
         bikeMarkerList = new ArrayList<>();
-//        imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+        imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
         mapView = findViewById(R.id.mainUI_map);
         mapView.onCreate(savedInstanceState);
@@ -303,12 +303,12 @@ public class MainActivity extends Activity implements OnClickListener
 //        }
 
 
-//		IntentFilter        filter = new IntentFilter();
-//		filter.addAction(Intent.ACTION_SCREEN_ON);
-//		filter.addAction(Intent.ACTION_SCREEN_OFF);
-//		filter.addAction(Intent.ACTION_USER_PRESENT);
-//		registerReceiver(mScreenReceiver, filter);
-//
+		IntentFilter        filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		filter.addAction(Intent.ACTION_USER_PRESENT);
+		registerReceiver(mScreenReceiver, filter);
+
 //		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
 //		filter = new IntentFilter("data.broadcast.action");
 //		registerReceiver(broadcastReceiver, filter);
@@ -322,32 +322,32 @@ public class MainActivity extends Activity implements OnClickListener
 //
 		initView();
 
-//		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
-//
-//		customBuilder = new CustomDialog.Builder(this);
-//		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-//		customDialog = customBuilder.create();
-//
-//		CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-//		customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
-//				.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.cancel();
-//					}
-//				});
-//		customDialog3 = customBuilder.create();
-//
-//        customBuilder = new CustomDialog.Builder(context);
-//        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
-//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//        customDialog4 = customBuilder.create();
-//
-//        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-//        Log.e("main===", "m_nowMac====" + m_nowMac);
+		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
+
+		customBuilder = new CustomDialog.Builder(this);
+		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+		customDialog = customBuilder.create();
+
+		CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+		customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+				.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+		customDialog3 = customBuilder.create();
+
+        customBuilder = new CustomDialog.Builder(context);
+        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
+                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        customDialog4 = customBuilder.create();
+
+        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+        Log.e("main===", "m_nowMac====" + m_nowMac);
 
 //        if (!"".equals(m_nowMac)) {
 //
@@ -402,72 +402,72 @@ public class MainActivity extends Activity implements OnClickListener
     }
 
     private void initView() {
-//        openGPSSettings();
-//
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-//            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
-//                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-//                } else {
-//                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
-//                }
-//                return;
-//            }
-//        }
+        openGPSSettings();
 
-//        loadingDialog = new LoadingDialog(this);
-//        loadingDialog.setCancelable(false);
-//        loadingDialog.setCanceledOnTouchOutside(false);
-//
-//        lockLoading = new LoadingDialog(this);
-//        lockLoading.setCancelable(false);
-//        lockLoading.setCanceledOnTouchOutside(false);
-//
-//        loadingDialog1 = new LoadingDialog(this);
-//        loadingDialog1.setCancelable(false);
-//        loadingDialog1.setCanceledOnTouchOutside(false);
-//
-//        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-//        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
-//        dialog.setContentView(dialogView);
-//        dialog.setCanceledOnTouchOutside(false);
-//
-//        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-//        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
-//        advDialog.setContentView(advDialogView);
-//        advDialog.setCanceledOnTouchOutside(false);
-//
-//        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
-//
-//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-//        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-//
-//        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-//        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-//
-//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-//        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-//        advImageView.setLayoutParams(params4);
-//
-//        marquee = (TextView) findViewById(R.id.mainUI_marquee);
-//        title = (TextView) findViewById(R.id.mainUI_title);
-//        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-//        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
-//        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
-//        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
-//        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
-//        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
-//        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
-//        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
-//        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
-//        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
-//        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
-//        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
-//        slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkPermission = this.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (checkPermission != PackageManager.PERMISSION_GRANTED) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+                } else {
+                    requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, REQUEST_CODE_ASK_PERMISSIONS);
+                }
+                return;
+            }
+        }
+
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.setCancelable(false);
+        loadingDialog.setCanceledOnTouchOutside(false);
+
+        lockLoading = new LoadingDialog(this);
+        lockLoading.setCancelable(false);
+        lockLoading.setCanceledOnTouchOutside(false);
+
+        loadingDialog1 = new LoadingDialog(this);
+        loadingDialog1.setCancelable(false);
+        loadingDialog1.setCanceledOnTouchOutside(false);
+
+        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
+        dialog.setContentView(dialogView);
+        dialog.setCanceledOnTouchOutside(false);
+
+        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
+
+        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+
+        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
+        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+        advImageView.setLayoutParams(params4);
+
+        marquee = (TextView) findViewById(R.id.mainUI_marquee);
+        title = (TextView) findViewById(R.id.mainUI_title);
+        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
+        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
+        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
+        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
+        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
+        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
+        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
+        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
+        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
+        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
+        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
+        slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
 
 //        if(aMap==null){
 //            aMap = mapView.getMap();
