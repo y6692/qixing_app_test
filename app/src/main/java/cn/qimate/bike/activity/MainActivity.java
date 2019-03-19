@@ -141,10 +141,9 @@ import static com.umeng.analytics.AnalyticsConfig.getLocation;
 
 
 @SuppressLint("NewApi")
-public class MainActivity extends Activity implements OnClickListener
-//        ,
-//        LocationSource,
-//		AMapLocationListener,
+public class MainActivity extends Activity implements OnClickListener, LocationSource
+        ,AMapLocationListener
+// ,
 //        AMap.OnCameraChangeListener,
 //        AMap.OnMapTouchListener,
 //        OnConnectionListener
@@ -469,41 +468,41 @@ public class MainActivity extends Activity implements OnClickListener
         refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
         slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
 
-//        if(aMap==null){
-//            aMap = mapView.getMap();
-//            setUpMap();
-//        }
-//
-//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
-//        aMap.getUiSettings().setZoomControlsEnabled(false);
-//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-//        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-//        aMap.getUiSettings().setLogoBottomMargin(-50);
-//
-//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-//        aMap.moveCamera(cameraUpdate);
-//        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-//        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
-//
+        if(aMap==null){
+            aMap = mapView.getMap();
+            setUpMap();
+        }
+
+        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+        aMap.getUiSettings().setLogoBottomMargin(-50);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+        aMap.moveCamera(cameraUpdate);
+        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+
 //        aMap.setOnMapTouchListener(this);
 //        setUpLocationStyle();
-//
-        leftBtn.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
-        marqueeLayout.setOnClickListener(this);
-        myLocationBtn.setOnClickListener(this);
-        myCommissionLayout.setOnClickListener(this);
-        myLocationLayout.setOnClickListener(this);
-        linkLayout.setOnClickListener(this);
-        scanLock.setOnClickListener(this);
-        linkBtn.setOnClickListener(this);
-        authBtn.setOnClickListener(this);
-        rechargeBtn.setOnClickListener(this);
-        refreshLayout.setOnClickListener(this);
-        advImageView.setOnClickListener(this);
-        advCloseBtn.setOnClickListener(this);
-        cartBtn.setOnClickListener(this);
-        slideLayout.setOnClickListener(this);
+
+//        leftBtn.setOnClickListener(this);
+//        rightBtn.setOnClickListener(this);
+//        marqueeLayout.setOnClickListener(this);
+//        myLocationBtn.setOnClickListener(this);
+//        myCommissionLayout.setOnClickListener(this);
+//        myLocationLayout.setOnClickListener(this);
+//        linkLayout.setOnClickListener(this);
+//        scanLock.setOnClickListener(this);
+//        linkBtn.setOnClickListener(this);
+//        authBtn.setOnClickListener(this);
+//        rechargeBtn.setOnClickListener(this);
+//        refreshLayout.setOnClickListener(this);
+//        advImageView.setOnClickListener(this);
+//        advCloseBtn.setOnClickListener(this);
+//        cartBtn.setOnClickListener(this);
+//        slideLayout.setOnClickListener(this);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
         params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
@@ -898,190 +897,190 @@ public class MainActivity extends Activity implements OnClickListener
     });
 
     private void setUpMap() {
-//        aMap.setLocationSource(this);// 设置定位监听
+        aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);// 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
 //        aMap.setLoadOfflineData(true);
     }
 
-//    @Override
-//    public void activate(OnLocationChangedListener listener) {
-////	    super.activate(listener);
-//
-//        mListener = listener;
-//
-//        Log.e("main===1", isContainsList.contains(true) + "===listener===" + listener);
-//
-//
-//        if (mlocationClient != null) {
-//
-//            mlocationClient.setLocationListener(this);
-//            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-//            mLocationOption.setInterval(2 * 1000);
-//            mlocationClient.setLocationOption(mLocationOption);
-//            mlocationClient.startLocation();
-//
-////			mListener.onLocationChanged(amapLocation);
-//        }
-//
-////		if (mListener != null) {
-////			mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-////		}
-//
-//        if (mlocationClient == null) {
-//            mlocationClient = new AMapLocationClient(this);
-//            mLocationOption = new AMapLocationClientOption();
-//            //设置定位监听
-//            mlocationClient.setLocationListener(this);
-//            //设置为高精度定位模式
-//            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-//
-//            //设置是否只定位一次,默认为false
-//            mLocationOption.setOnceLocation(false);
-//            //设置是否强制刷新WIFI，默认为强制刷新
-//            mLocationOption.setWifiActiveScan(true);
-//            //设置是否允许模拟位置,默认为false，不允许模拟位置
-//            mLocationOption.setMockEnable(false);
-//
-//            mLocationOption.setInterval(2 * 1000);
-//            //设置定位参数
-//            mlocationClient.setLocationOption(mLocationOption);
-//            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-//            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-//            // 在定位结束后，在合适的生命周期调用onDestroy()方法
-//            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-//            mlocationClient.startLocation();
-//        }
-//    }
-//
-//    @Override
-//    public void deactivate() {
-//        mListener = null;
-//        if (mlocationClient != null) {
-//            mlocationClient.stopLocation();
-//            mlocationClient.onDestroy();
-//        }
-//        mlocationClient = null;
-//    }
+    @Override
+    public void activate(OnLocationChangedListener listener) {
+//	    super.activate(listener);
 
-//    @Override
-//    public void onLocationChanged(AMapLocation amapLocation) {
-//        change = true;
-//
-//        if (mListener != null && amapLocation != null) {
-//
-//			if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
-//
-//			Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + type);
-//			ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
-//
-//			if (amapLocation != null && amapLocation.getErrorCode() == 0) {
-//
-//				if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()) {
-//					String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude", "");
-//					String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude", "");
-//					if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
-//						if (AMapUtils.calculateLineDistance(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)
-//						), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
-//							SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
-//							SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
-//							addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
-//						}
-//					}
-//					if (mListener != null) {
-//						mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-//					}
-//
-//					referLatitude = amapLocation.getLatitude();
-//					referLongitude = amapLocation.getLongitude();
-//					myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
-//
-//					if (mFirstFix) {
-//						mFirstFix = false;
-//						schoolrangeList();
-//						initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
-//						aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
-//					} else {
-//						centerMarker.remove();
-//						mCircle.remove();
-//
-//						if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
-//							isContainsList.clear();
-//						}
-//						for (int i = 0; i < pOptions.size(); i++) {
-//							isContainsList.add(pOptions.get(i).contains(myLocation));
-//						}
-//					}
-//
-//					ToastUtil.showMessage(context, isContainsList.contains(true) + "======" + near);
-//
-//					addChooseMarker();
-//					addCircle(myLocation, amapLocation.getAccuracy());
-//
-//                    if(!SharedPreferencesUrls.getInstance().getBoolean("switcher",false)){
-//                        if (start) {
-//                            start = false;
-//
-//                            if (mlocationClient != null) {
-//                                mlocationClient.setLocationListener(MainActivity.this);
-//                                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-//                                mLocationOption.setInterval(2 * 1000);
-//                                mlocationClient.setLocationOption(mLocationOption);
-//                                mlocationClient.startLocation();
-//                            }
-//
-//                            macList2 = new ArrayList<> (macList);
-//                            BaseApplication.getInstance().getIBLE().getLockStatus();
-//                        } else {
-//
-//                            if (isContainsList.contains(true) && near==1){
-//                                macList2 = new ArrayList<> (macList);
-//
-//                                ToastUtil.showMessage(context,"biking---》》》里");
-//                                BaseApplication.getInstance().getIBLE().getLockStatus();
-//                            }else if (!isContainsList.contains(true) && near==0){
-//                                macList2 = new ArrayList<> (macList);
-//
-//                                ToastUtil.showMessage(context,"biking---》》》外");
-//                                BaseApplication.getInstance().getIBLE().getLockStatus();
-//                            }
-//
-//                        }
-//                    }
-//
-//
-//					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
-//						near = 0;
-//					} else {
-//						near = 1;
-//					}
-//
-//				} else {
-//					CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-//					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
-//							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//								public void onClick(DialogInterface dialog, int which) {
-//									dialog.cancel();
-//									finish();
-//								}
-//							}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//						public void onClick(DialogInterface dialog, int which) {
-//							dialog.cancel();
-//							MainActivity.this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
-//						}
-//					});
-//					customBuilder.create().show();
-//				}
-//
-//				//保存经纬度到本地
-//				SharedPreferencesUrls.getInstance().putString("latitude", "" + amapLocation.getLatitude());
-//				SharedPreferencesUrls.getInstance().putString("longitude", "" + amapLocation.getLongitude());
-//			}
-//
-//
-//        }
-//    }
+        mListener = listener;
+
+        Log.e("main===1", isContainsList.contains(true) + "===listener===" + listener);
+
+
+        if (mlocationClient != null) {
+
+            mlocationClient.setLocationListener(this);
+            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+            mLocationOption.setInterval(2 * 1000);
+            mlocationClient.setLocationOption(mLocationOption);
+            mlocationClient.startLocation();
+
+//			mListener.onLocationChanged(amapLocation);
+        }
+
+//		if (mListener != null) {
+//			mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+//		}
+
+        if (mlocationClient == null) {
+            mlocationClient = new AMapLocationClient(this);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位监听
+            mlocationClient.setLocationListener(this);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+
+            //设置是否只定位一次,默认为false
+            mLocationOption.setOnceLocation(false);
+            //设置是否强制刷新WIFI，默认为强制刷新
+            mLocationOption.setWifiActiveScan(true);
+            //设置是否允许模拟位置,默认为false，不允许模拟位置
+            mLocationOption.setMockEnable(false);
+
+            mLocationOption.setInterval(2 * 1000);
+            //设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+            mlocationClient.startLocation();
+        }
+    }
+
+    @Override
+    public void deactivate() {
+        mListener = null;
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation amapLocation) {
+        change = true;
+
+        if (mListener != null && amapLocation != null) {
+
+			if ((referLatitude == amapLocation.getLatitude()) && (referLongitude == amapLocation.getLongitude())) return;
+
+			Log.e("main===Changed", isContainsList.contains(true) + "》》》" + near + "===" + macList.size() + "===" + type);
+			ToastUtil.showMessage(context, isContainsList.contains(true) + "》》》" + near + "===" + amapLocation.getLatitude() + "===" + amapLocation.getLongitude());
+
+			if (amapLocation != null && amapLocation.getErrorCode() == 0) {
+
+				if (0.0 != amapLocation.getLatitude() && 0.0 != amapLocation.getLongitude()) {
+					String latitude = SharedPreferencesUrls.getInstance().getString("biking_latitude", "");
+					String longitude = SharedPreferencesUrls.getInstance().getString("biking_longitude", "");
+					if (latitude != null && !"".equals(latitude) && longitude != null && !"".equals(longitude)) {
+						if (AMapUtils.calculateLineDistance(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)
+						), new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude())) > 10) {
+							SharedPreferencesUrls.getInstance().putString("biking_latitude", "" + amapLocation.getLatitude());
+							SharedPreferencesUrls.getInstance().putString("biking_longitude", "" + amapLocation.getLongitude());
+							addMaplocation(amapLocation.getLatitude(), amapLocation.getLongitude());
+						}
+					}
+					if (mListener != null) {
+						mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+					}
+
+					referLatitude = amapLocation.getLatitude();
+					referLongitude = amapLocation.getLongitude();
+					myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
+
+					if (mFirstFix) {
+						mFirstFix = false;
+						schoolrangeList();
+						initNearby(amapLocation.getLatitude(), amapLocation.getLongitude());
+						aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 16));
+					} else {
+						centerMarker.remove();
+						mCircle.remove();
+
+						if (!isContainsList.isEmpty() || 0 != isContainsList.size()) {
+							isContainsList.clear();
+						}
+						for (int i = 0; i < pOptions.size(); i++) {
+							isContainsList.add(pOptions.get(i).contains(myLocation));
+						}
+					}
+
+					ToastUtil.showMessage(context, isContainsList.contains(true) + "======" + near);
+
+					addChooseMarker();
+					addCircle(myLocation, amapLocation.getAccuracy());
+
+                    if(!SharedPreferencesUrls.getInstance().getBoolean("switcher",false)){
+                        if (start) {
+                            start = false;
+
+                            if (mlocationClient != null) {
+                                mlocationClient.setLocationListener(MainActivity.this);
+                                mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+                                mLocationOption.setInterval(2 * 1000);
+                                mlocationClient.setLocationOption(mLocationOption);
+                                mlocationClient.startLocation();
+                            }
+
+                            macList2 = new ArrayList<> (macList);
+                            BaseApplication.getInstance().getIBLE().getLockStatus();
+                        } else {
+
+                            if (isContainsList.contains(true) && near==1){
+                                macList2 = new ArrayList<> (macList);
+
+                                ToastUtil.showMessage(context,"biking---》》》里");
+                                BaseApplication.getInstance().getIBLE().getLockStatus();
+                            }else if (!isContainsList.contains(true) && near==0){
+                                macList2 = new ArrayList<> (macList);
+
+                                ToastUtil.showMessage(context,"biking---》》》外");
+                                BaseApplication.getInstance().getIBLE().getLockStatus();
+                            }
+
+                        }
+                    }
+
+
+					if ((isContainsList.contains(true) || macList.size() > 0) && !"1".equals(type)) {
+						near = 0;
+					} else {
+						near = 1;
+					}
+
+				} else {
+					CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+					customBuilder.setTitle("温馨提示").setMessage("您需要在设置里打开位置权限！")
+							.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.cancel();
+									finish();
+								}
+							}).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+							MainActivity.this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
+						}
+					});
+					customBuilder.create().show();
+				}
+
+				//保存经纬度到本地
+				SharedPreferencesUrls.getInstance().putString("latitude", "" + amapLocation.getLatitude());
+				SharedPreferencesUrls.getInstance().putString("longitude", "" + amapLocation.getLongitude());
+			}
+
+
+        }
+    }
 
 
     private void getCurrentorder1(String uid, String access_token) {
