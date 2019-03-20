@@ -302,11 +302,11 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //        }
 
 
-		IntentFilter        filter = new IntentFilter();
-		filter.addAction(Intent.ACTION_SCREEN_ON);
-		filter.addAction(Intent.ACTION_SCREEN_OFF);
-		filter.addAction(Intent.ACTION_USER_PRESENT);
-		registerReceiver(mScreenReceiver, filter);
+//		IntentFilter        filter = new IntentFilter();
+//		filter.addAction(Intent.ACTION_SCREEN_ON);
+//		filter.addAction(Intent.ACTION_SCREEN_OFF);
+//		filter.addAction(Intent.ACTION_USER_PRESENT);
+//		registerReceiver(mScreenReceiver, filter);
 
 //		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
 //		filter = new IntentFilter("data.broadcast.action");
@@ -1261,10 +1261,10 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 
         ToastUtil.showMessage(context, "main===onDestroy");
 
-        if (mScreenReceiver != null) {
-            unregisterReceiver(mScreenReceiver);
-            mScreenReceiver = null;
-        }
+//        if (mScreenReceiver != null) {
+//            unregisterReceiver(mScreenReceiver);
+//            mScreenReceiver = null;
+//        }
 
 //        deactivate();
 //
