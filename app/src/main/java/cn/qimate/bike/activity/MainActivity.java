@@ -321,32 +321,32 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //
 		initView();
 
-		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
-
-		customBuilder = new CustomDialog.Builder(this);
-		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
-		customDialog = customBuilder.create();
-
-		CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
-		customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
-				.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-		customDialog3 = customBuilder.create();
-
-        customBuilder = new CustomDialog.Builder(context);
-        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
-                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        customDialog4 = customBuilder.create();
-
-        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-        Log.e("main===", "m_nowMac====" + m_nowMac);
+//		ToastUtil.showMessage(this, SharedPreferencesUrls.getInstance().getString("userName", "") + "===" + SharedPreferencesUrls.getInstance().getString("uid", "") + "<==>" + SharedPreferencesUrls.getInstance().getString("access_token", ""));
+//
+//		customBuilder = new CustomDialog.Builder(this);
+//		customBuilder.setType(1).setTitle("温馨提示").setMessage("当前行程已停止计费，客服正在加紧处理，请稍等\n客服电话：0519—86999222");
+//		customDialog = customBuilder.create();
+//
+//		CustomDialog.Builder customBuilder = new CustomDialog.Builder(context);
+//		customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域，或打开手机GPS并重启软件再试")
+//				.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.cancel();
+//					}
+//				});
+//		customDialog3 = customBuilder.create();
+//
+//        customBuilder = new CustomDialog.Builder(context);
+//        customBuilder.setTitle("温馨提示").setMessage("还车须至校内地图红色区域")
+//                .setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//        customDialog4 = customBuilder.create();
+//
+//        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+//        Log.e("main===", "m_nowMac====" + m_nowMac);
 
 //        if (!"".equals(m_nowMac)) {
 //
@@ -415,43 +415,42 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //            }
 //        }
 
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.setCancelable(false);
-        loadingDialog.setCanceledOnTouchOutside(false);
-
-        lockLoading = new LoadingDialog(this);
-        lockLoading.setCancelable(false);
-        lockLoading.setCanceledOnTouchOutside(false);
-
-        loadingDialog1 = new LoadingDialog(this);
-        loadingDialog1.setCancelable(false);
-        loadingDialog1.setCanceledOnTouchOutside(false);
-
-        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
-
-        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
-        advDialog.setContentView(advDialogView);
-        advDialog.setCanceledOnTouchOutside(false);
+//        loadingDialog = new LoadingDialog(this);
+//        loadingDialog.setCancelable(false);
+//        loadingDialog.setCanceledOnTouchOutside(false);
+//
+//        lockLoading = new LoadingDialog(this);
+//        lockLoading.setCancelable(false);
+//        lockLoading.setCanceledOnTouchOutside(false);
+//
+//        loadingDialog1 = new LoadingDialog(this);
+//        loadingDialog1.setCancelable(false);
+//        loadingDialog1.setCanceledOnTouchOutside(false);
+//
+//        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
+//        dialog.setContentView(dialogView);
+//        dialog.setCanceledOnTouchOutside(false);
+//
+//        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
+//        advDialog.setContentView(advDialogView);
+//        advDialog.setCanceledOnTouchOutside(false);
+//
+//        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+//        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+//
+//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+//        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+//        advImageView.setLayoutParams(params4);
+//
+//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+//        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
-
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-        advImageView.setLayoutParams(params4);
-
         marquee = (TextView) findViewById(R.id.mainUI_marquee);
         title = (TextView) findViewById(R.id.mainUI_title);
         leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
