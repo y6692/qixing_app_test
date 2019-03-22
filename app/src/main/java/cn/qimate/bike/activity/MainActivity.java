@@ -482,7 +482,7 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
         bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
 
-        aMap.setOnMapTouchListener(this);
+//        aMap.setOnMapTouchListener(this);
         setUpLocationStyle();
 
 //        leftBtn.setOnClickListener(this);
