@@ -782,6 +782,33 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
 
     }
 
+    private void startXB() {
+        if (mBluetoothAdapter == null) {
+            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            mBluetoothAdapter = bluetoothManager.getAdapter();
+        }
+
+        if (mBluetoothAdapter == null) {
+            ToastUtil.showMessageApp(context, "获取蓝牙失败");
+            scrollToFinishActivity();
+            return;
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            flagm = 1;
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 188);
+        }else{
+            if (macList.size() != 0) {
+                macList.clear();
+            }
+
+            Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
+            UUID[] uuids = {Config.xinbiaoUUID};
+            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+        }
+
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -1924,32 +1951,7 @@ public class CurRoadBikingActivity extends SwipeBackActivity implements View.OnC
         }
     }
 
-    private void startXB() {
-        if (mBluetoothAdapter == null) {
-            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            mBluetoothAdapter = bluetoothManager.getAdapter();
-        }
 
-        if (mBluetoothAdapter == null) {
-            ToastUtil.showMessageApp(context, "获取蓝牙失败");
-            scrollToFinishActivity();
-            return;
-        }
-        if (!mBluetoothAdapter.isEnabled()) {
-            flagm = 1;
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, 188);
-        }else{
-            if (macList.size() != 0) {
-                macList.clear();
-            }
-
-            Log.e("biking===startXB",mBluetoothAdapter+"==="+mLeScanCallback);
-            UUID[] uuids = {Config.xinbiaoUUID};
-            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
-        }
-
-    }
 
     private void stopXB() {
         if (!"1".equals(type)) {
