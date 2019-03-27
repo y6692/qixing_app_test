@@ -1257,9 +1257,13 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
             mapView.onDestroy();
         }
 
-        if (dialog != null && dialog.isShowing()) {
+        if (dialog != null) {
             dialog.dismiss();
         }
+
+//        if (dialog != null && dialog.isShowing()) {
+//            dialog.dismiss();
+//        }
 
 //        if (loadingDialog != null && loadingDialog.isShowing()) {
 //            loadingDialog.dismiss();
