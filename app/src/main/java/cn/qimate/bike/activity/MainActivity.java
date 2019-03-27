@@ -1257,6 +1257,10 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
             mapView.onDestroy();
         }
 
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+
 //        if (loadingDialog != null && loadingDialog.isShowing()) {
 //            loadingDialog.dismiss();
 //        }
@@ -2739,32 +2743,32 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 
 
 
-	private OnClickListener myOnClickLister = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.ui_fristView_exImage_1:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-                    break;
-                case R.id.ui_fristView_exImage_2:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-                    break;
-                case R.id.ui_fristView_closeBtn:
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
+//	private OnClickListener myOnClickLister = new OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            switch (v.getId()) {
+//                case R.id.ui_fristView_exImage_1:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+//                    break;
+//                case R.id.ui_fristView_exImage_2:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+//                    break;
+//                case R.id.ui_fristView_closeBtn:
+//                    if (dialog != null && dialog.isShowing()) {
+//                        dialog.dismiss();
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    };
 
 
 
