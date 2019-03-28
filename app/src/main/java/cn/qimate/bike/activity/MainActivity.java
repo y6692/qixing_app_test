@@ -431,23 +431,23 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         dialog.setContentView(dialogView);
         dialog.setCanceledOnTouchOutside(false);
 
-//        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-//        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
-//        advDialog.setContentView(advDialogView);
-//        advDialog.setCanceledOnTouchOutside(false);
-//
-//        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-//        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-//
-//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-//        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-//        advImageView.setLayoutParams(params4);
-//
-//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-//        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
+        advDialog.setContentView(advDialogView);
+        advDialog.setCanceledOnTouchOutside(false);
+
+        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+
+        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+        advImageView.setLayoutParams(params4);
+
+        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
 
         marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
         marquee = (TextView) findViewById(R.id.mainUI_marquee);
@@ -542,8 +542,51 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //        exImage_1.setOnClickListener(myOnClickLister);
 //        exImage_2.setOnClickListener(myOnClickLister);
 //        closeBtn.setOnClickListener(myOnClickLister);
+    }
 
+    @Override
+    protected void onDestroy() {
 
+        super.onDestroy();
+
+        if(mapView!=null){
+            mapView.onDestroy();
+        }
+
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+
+        if (advDialog != null) {
+            advDialog.dismiss();
+        }
+
+//        if (dialog != null && dialog.isShowing()) {
+//            dialog.dismiss();
+//        }
+
+//        if (loadingDialog != null && loadingDialog.isShowing()) {
+//            loadingDialog.dismiss();
+//        }
+
+        ToastUtil.showMessage(context, "main===onDestroy");
+
+//        if (mScreenReceiver != null) {
+//            unregisterReceiver(mScreenReceiver);
+//            mScreenReceiver = null;
+//        }
+
+//        deactivate();
+//
+//        if (null != mlocationClient) {
+//            mlocationClient.onDestroy();
+//        }
+//        if (broadcastReceiver != null) {
+//            unregisterReceiver(broadcastReceiver);
+//            broadcastReceiver = null;
+//        }
+//
+//        closeBroadcast();
 
     }
 
@@ -1248,47 +1291,7 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //
 //    }
 
-    @Override
-    protected void onDestroy() {
 
-        super.onDestroy();
-
-        if(mapView!=null){
-            mapView.onDestroy();
-        }
-
-        if (dialog != null) {
-            dialog.dismiss();
-        }
-
-//        if (dialog != null && dialog.isShowing()) {
-//            dialog.dismiss();
-//        }
-
-//        if (loadingDialog != null && loadingDialog.isShowing()) {
-//            loadingDialog.dismiss();
-//        }
-
-        ToastUtil.showMessage(context, "main===onDestroy");
-
-//        if (mScreenReceiver != null) {
-//            unregisterReceiver(mScreenReceiver);
-//            mScreenReceiver = null;
-//        }
-
-//        deactivate();
-//
-//        if (null != mlocationClient) {
-//            mlocationClient.onDestroy();
-//        }
-//        if (broadcastReceiver != null) {
-//            unregisterReceiver(broadcastReceiver);
-//            broadcastReceiver = null;
-//        }
-//
-//        closeBroadcast();
-
-    }
 
     private void startXB() {
         if (mBluetoothAdapter == null) {
