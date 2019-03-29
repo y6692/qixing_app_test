@@ -1764,7 +1764,7 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 				UIHelper.bannerGoAct(context,app_type,app_id,ad_link);
 				break;
 			case R.id.ui_adv_closeBtn:
-				if (advDialog != null && advDialog.isShowing()) {
+				if (advDialog != null) {
 					advDialog.dismiss();
 				}
 				break;
