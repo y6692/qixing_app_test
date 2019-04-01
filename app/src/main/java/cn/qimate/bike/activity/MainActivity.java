@@ -545,6 +545,47 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
     }
 
     @Override
+    protected void onPause() {
+        isForeground = false;
+//        if (loadingDialog != null && loadingDialog.isShowing()) {
+//            loadingDialog.dismiss();
+//        }
+//        if (lockLoading != null && lockLoading.isShowing()) {
+//            lockLoading.dismiss();
+//        }
+        super.onPause();
+
+//		if(mlocationClient!=null) {
+//			mlocationClient.stopLocation();//停止定位
+//		}
+
+//		JPushInterface.onPause(this);
+
+		if(mapView!=null){
+            mapView.onPause();
+        }
+
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+
+        if (advDialog != null) {
+            advDialog.dismiss();
+        }
+
+
+//		deactivate();
+//		mFirstFix = false;
+        tz = 0;
+
+        ToastUtil.showMessage(this, "main====onPause");
+        Log.e("main===", "main====onPause");
+
+//		closeBroadcast();
+
+    }
+
+    @Override
     protected void onDestroy() {
 
         super.onDestroy();
@@ -1244,36 +1285,7 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 ////        }
 //    }
 //
-//    @Override
-//    protected void onPause() {
-//        isForeground = false;
-//        if (loadingDialog != null && loadingDialog.isShowing()) {
-//            loadingDialog.dismiss();
-//        }
-//        if (lockLoading != null && lockLoading.isShowing()) {
-//            lockLoading.dismiss();
-//        }
-//        super.onPause();
-//
-////		if(mlocationClient!=null) {
-////			mlocationClient.stopLocation();//停止定位
-////		}
-//
-////		JPushInterface.onPause(this);
-////		if(mapView!=null){
-////            mapView.onPause();
-////        }
-//
-////		deactivate();
-////		mFirstFix = false;
-//        tz = 0;
-//
-//        ToastUtil.showMessage(this, "main====onPause");
-//        Log.e("main===", "main====onPause");
-//
-////		closeBroadcast();
-//
-//    }
+
 //
 //    @Override
 //    protected void onStop() {
