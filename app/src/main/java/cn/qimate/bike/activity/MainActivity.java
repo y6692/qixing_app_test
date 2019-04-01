@@ -561,10 +561,6 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 
 //		JPushInterface.onPause(this);
 
-		if(mapView!=null){
-            mapView.onPause();
-        }
-
         if (dialog != null) {
             dialog.dismiss();
         }
@@ -572,6 +568,12 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         if (advDialog != null) {
             advDialog.dismiss();
         }
+
+		if(mapView!=null){
+            mapView.onPause();
+        }
+
+
 
 
 //		deactivate();
@@ -587,12 +589,7 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
-
-        if(mapView!=null){
-            mapView.onDestroy();
-        }
 
         if (dialog != null) {
             dialog.dismiss();
@@ -601,6 +598,12 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         if (advDialog != null) {
             advDialog.dismiss();
         }
+
+        if(mapView!=null){
+            mapView.onDestroy();
+        }
+
+
 
 //        if (dialog != null && dialog.isShowing()) {
 //            dialog.dismiss();
