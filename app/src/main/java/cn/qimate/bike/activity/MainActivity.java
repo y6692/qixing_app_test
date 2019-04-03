@@ -502,46 +502,46 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //        cartBtn.setOnClickListener(this);
 //        slideLayout.setOnClickListener(this);
 
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-//        titleImage.setLayoutParams(params);
-//
-//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-//        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_1.setLayoutParams(params1);
-//
-//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-//        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_2.setLayoutParams(params2);
-//
-//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-//        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-//        exImage_3.setLayoutParams(params3);
-//
-//        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-//            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-//            WindowManager windowManager = getWindowManager();
-//            Display display = windowManager.getDefaultDisplay();
-//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-//            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-//            dialog.getWindow().setAttributes(lp);
-//            dialog.show();
-//        }
-//        else {
-////            initHttp();
-//
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    m_myHandler.sendEmptyMessage(5);
-//                }
-//            }).start();
-//        }
-//        exImage_1.setOnClickListener(myOnClickLister);
-//        exImage_2.setOnClickListener(myOnClickLister);
-//        closeBtn.setOnClickListener(myOnClickLister);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+        titleImage.setLayoutParams(params);
+
+        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_1.setLayoutParams(params1);
+
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_2.setLayoutParams(params2);
+
+        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+        exImage_3.setLayoutParams(params3);
+
+        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+            WindowManager windowManager = getWindowManager();
+            Display display = windowManager.getDefaultDisplay();
+            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+            dialog.getWindow().setAttributes(lp);
+            dialog.show();
+        }
+        else {
+//            initHttp();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    m_myHandler.sendEmptyMessage(5);
+                }
+            }).start();
+        }
+        exImage_1.setOnClickListener(myOnClickLister);
+        exImage_2.setOnClickListener(myOnClickLister);
+        closeBtn.setOnClickListener(myOnClickLister);
     }
 
     @Override
@@ -2763,32 +2763,32 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 
 
 
-//	private OnClickListener myOnClickLister = new OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()) {
-//                case R.id.ui_fristView_exImage_1:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
-//                    break;
-//                case R.id.ui_fristView_exImage_2:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
-//                    break;
-//                case R.id.ui_fristView_closeBtn:
-//                    if (dialog != null && dialog.isShowing()) {
-//                        dialog.dismiss();
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    };
+	private OnClickListener myOnClickLister = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ui_fristView_exImage_1:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
+                    break;
+                case R.id.ui_fristView_exImage_2:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
+                    break;
+                case R.id.ui_fristView_closeBtn:
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
 
 
