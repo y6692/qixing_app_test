@@ -519,15 +519,15 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         exImage_3.setLayoutParams(params3);
 
         if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
-            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
-            WindowManager windowManager = getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
-            dialog.getWindow().setAttributes(lp);
-            dialog.show();
+//            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
+//            WindowManager windowManager = getWindowManager();
+//            Display display = windowManager.getDefaultDisplay();
+//            WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+//            lp.width = (int) (display.getWidth() * 0.8); // 设置宽度0.6
+//            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
+//            dialog.getWindow().setAttributes(lp);
+//            dialog.show();
         }
         else {
 //            initHttp();
