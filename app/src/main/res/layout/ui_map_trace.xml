@@ -106,7 +106,7 @@
                     android:background="@drawable/circle_white"
                     android:padding="@dimen/line_height">
 
-                    <cn.qimate.bike.core.widget.CircularImage
+                    <cn.qimate.test.core.widget.CircularImage
                         android:id="@+id/ui_mapTrace_heading"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

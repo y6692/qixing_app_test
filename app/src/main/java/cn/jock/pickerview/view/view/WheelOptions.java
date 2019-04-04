@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import cn.jock.pickerview.view.adapter.ArrayWheelAdapter;
 import cn.jock.pickerview.view.lib.WheelView;
 import cn.jock.pickerview.view.listener.OnItemSelectedListener;
-import cn.qimate.bike.R;
+import cn.qimate.test.R;
 
 public class WheelOptions<T> {
 	private View view;

@@ -47,7 +47,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp">
 
-                <cn.qimate.bike.core.widget.MLImageView
+                <cn.qimate.test.core.widget.MLImageView
                     android:id="@+id/personUI_bottom_header"
                     android:layout_width="@dimen/dp60"
                     android:layout_height="@dimen/dp60"

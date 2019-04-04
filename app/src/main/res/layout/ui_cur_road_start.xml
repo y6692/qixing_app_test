@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:background="@color/ui_backgroud">
 
-        <cn.qimate.bike.core.widget.MyScrollView
+        <cn.qimate.test.core.widget.MyScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -32,7 +32,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <cn.qimate.bike.core.widget.CircleProgressView
+                    <cn.qimate.test.core.widget.CircleProgressView
                         android:id="@+id/curRoadUI_start_circleProgressbar"
                         android:layout_width="@dimen/dp160"
                         android:layout_height="@dimen/dp160"
@@ -205,6 +205,6 @@
                         android:textSize="@dimen/sp14" />
                 </LinearLayout>
             </LinearLayout>
-        </cn.qimate.bike.core.widget.MyScrollView>
+        </cn.qimate.test.core.widget.MyScrollView>
     </RelativeLayout>
 </LinearLayout>

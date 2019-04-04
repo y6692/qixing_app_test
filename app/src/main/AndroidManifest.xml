@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="cn.qimate.bike">
+    package="cn.qimate.test">
 
     <!--lance-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -45,10 +45,10 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- 极光使用开始 -->
     <permission
-        android:name="cn.qimate.bike.permission.JPUSH_MESSAGE"
+        android:name="cn.qimate.test.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="cn.qimate.bike.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="cn.qimate.test.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -144,7 +144,7 @@
         <!--&lt;!&ndash;targetSDKVersion >= 24时才需要添加这个provider。请开发者根据自己的包名来替换${applicationId}这个值&ndash;&gt;-->
         <!--<provider-->
             <!--android:name="android.support.v4.content.FileProvider"-->
-            <!--android:authorities="cn.qimate.bike.fileprovider"-->
+            <!--android:authorities="cn.qimate.test.fileprovider"-->
             <!--android:exported="false"-->
             <!--android:grantUriPermissions="true">-->
             <!--<meta-data-->
@@ -154,7 +154,7 @@
         <!--&lt;!&ndash;如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现效率&ndash;&gt;-->
         <!--<provider-->
             <!--android:name="com.baidu.mobads.openad.FileProvider"-->
-            <!--android:authorities="cn.qimate.bike.bd.provider"-->
+            <!--android:authorities="cn.qimate.test.bd.provider"-->
             <!--android:exported="false"-->
             <!--android:grantUriPermissions="true">-->
             <!--<meta-data-->
@@ -163,7 +163,7 @@
         <!--</provider>-->
         <provider
             android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
-            android:authorities="cn.qimate.bike.TTFileProvider"
+            android:authorities="cn.qimate.test.TTFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -433,7 +433,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="cn.qimate.bike" />
+                <category android:name="cn.qimate.test" />
             </intent-filter>
         </activity>
         <!-- Required  SDK核心功能 -->
@@ -461,7 +461,7 @@
             android:exported="false">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!-- Required  显示通知栏 -->
-                <category android:name="cn.qimate.bike" />
+                <category android:name="cn.qimate.test" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -485,7 +485,7 @@
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
 
-                <category android:name="cn.qimate.bike" />
+                <category android:name="cn.qimate.test" />
             </intent-filter>
         </service>
 
@@ -506,7 +506,7 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
                 <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="cn.qimate.bike" />
+                <category android:name="cn.qimate.test" />
             </intent-filter>
         </receiver>
         <!-- Required  . Enable it you can get statistics data with channel -->

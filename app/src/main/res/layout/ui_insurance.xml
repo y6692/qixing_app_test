@@ -26,7 +26,7 @@
                 android:orientation="vertical"
                 android:background="@color/white">
 
-                <cn.qimate.bike.core.widget.MyScrollView
+                <cn.qimate.test.core.widget.MyScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="none"
@@ -83,7 +83,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent">
 
-                                <cn.qimate.bike.core.widget.ClearEditText
+                                <cn.qimate.test.core.widget.ClearEditText
                                     android:id="@+id/ui_insurance_certificateNumEdit"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -212,7 +212,7 @@
                             android:text="*请上传本人完整身份证/护照(含四边框)正面照片*"
                             android:visibility="invisible"/>
                     </LinearLayout>
-                </cn.qimate.bike.core.widget.MyScrollView>
+                </cn.qimate.test.core.widget.MyScrollView>
             </LinearLayout>
         </LinearLayout>
         <include

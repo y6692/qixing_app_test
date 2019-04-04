@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.jock.pickerview.view.adapter.WheelAdapter;
 import cn.jock.pickerview.view.listener.OnItemSelectedListener;
-import cn.qimate.bike.R;
+import cn.qimate.test.R;
 
 /**
  * 3d滚轮控件

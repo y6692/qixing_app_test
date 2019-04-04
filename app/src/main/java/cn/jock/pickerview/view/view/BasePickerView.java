@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 
 import cn.jock.pickerview.view.listener.OnDismissListener;
 import cn.jock.pickerview.view.utils.PickerViewAnimateUtil;
-import cn.qimate.bike.R;
+import cn.qimate.test.R;
 
 public class BasePickerView {
 	private final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

@@ -34,7 +34,7 @@
         android:orientation="horizontal"
         android:visibility="gone" >
 
-        <cn.qimate.bike.core.widget.ProgressWheel
+        <cn.qimate.test.core.widget.ProgressWheel
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerHorizontal="true"

@@ -9,7 +9,7 @@
 
     <include
         layout="@layout/ui_main_title"/>
-    <cn.qimate.bike.core.widget.MyScrollView
+    <cn.qimate.test.core.widget.MyScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/ui_backgroud">
@@ -424,5 +424,5 @@
                     android:layout_alignParentBottom="true"/>
             </LinearLayout>
         </LinearLayout>
-    </cn.qimate.bike.core.widget.MyScrollView>
+    </cn.qimate.test.core.widget.MyScrollView>
 </LinearLayout>

@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import cn.qimate.bike.R;
+import cn.qimate.test.R;
 
 public class DBManager {
 	private final int BUFFER_SIZE = 400000;

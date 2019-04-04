@@ -1,4 +1,4 @@
-package cn.qimate.bike;
+package cn.qimate.test;
 
 import org.junit.Test;
 

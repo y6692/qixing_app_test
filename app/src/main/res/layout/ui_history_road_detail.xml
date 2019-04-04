@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:background="@color/ui_backgroud">
 
-        <cn.qimate.bike.core.widget.MyScrollView
+        <cn.qimate.test.core.widget.MyScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -219,7 +219,7 @@
                     android:layout_marginTop="@dimen/dp15"
                     android:layout_marginBottom="@dimen/dp25">
 
-                    <cn.qimate.bike.core.widget.MyPagerGalleryView
+                    <cn.qimate.test.core.widget.MyPagerGalleryView
                         android:id="@+id/history_roadDetailUI_gallery"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -239,7 +239,7 @@
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
-        </cn.qimate.bike.core.widget.MyScrollView>
+        </cn.qimate.test.core.widget.MyScrollView>
 
         <View
             android:layout_width="match_parent"

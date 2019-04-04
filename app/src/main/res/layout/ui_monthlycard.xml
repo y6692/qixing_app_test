@@ -20,7 +20,7 @@
 
         android:background="@color/ui_backgroud">
 
-        <cn.qimate.bike.core.widget.WebViewWithProgress
+        <cn.qimate.test.core.widget.WebViewWithProgress
             android:id="@+id/webViewUI_webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

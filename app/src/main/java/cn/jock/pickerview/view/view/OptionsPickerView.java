@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import cn.qimate.bike.R;
+import cn.qimate.test.R;
 
 public class OptionsPickerView<T> extends BasePickerView implements View.OnClickListener {
 	WheelOptions wheelOptions;

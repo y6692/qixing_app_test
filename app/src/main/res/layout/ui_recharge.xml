@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:background="@color/ui_backgroud">
 
-        <cn.qimate.bike.core.widget.MyScrollView
+        <cn.qimate.test.core.widget.MyScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -26,7 +26,7 @@
                 android:orientation="vertical"
                 android:paddingTop="@dimen/dp5">
 
-                <cn.qimate.bike.core.widget.MyListView
+                <cn.qimate.test.core.widget.MyListView
                     android:id="@+id/rechargeUI_moneyList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -170,6 +170,6 @@
                         android:gravity="center_vertical"/>
                 </LinearLayout>
             </LinearLayout>
-        </cn.qimate.bike.core.widget.MyScrollView>
+        </cn.qimate.test.core.widget.MyScrollView>
     </LinearLayout>
 </LinearLayout>

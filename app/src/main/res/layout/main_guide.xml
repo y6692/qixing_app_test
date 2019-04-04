@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-   <cn.qimate.bike.core.widget.MyScrollLayout
+   <cn.qimate.test.core.widget.MyScrollLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ScrollLayout"
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                 android:paddingLeft="@dimen/dp20"
                 android:paddingRight="@dimen/dp20"/>
         </RelativeLayout>
-    </cn.qimate.bike.core.widget.MyScrollLayout>
+    </cn.qimate.test.core.widget.MyScrollLayout>
 
     <LinearLayout
         android:id="@+id/llayout"

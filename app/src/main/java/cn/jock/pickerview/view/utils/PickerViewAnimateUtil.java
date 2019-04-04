@@ -2,7 +2,7 @@ package cn.jock.pickerview.view.utils;
 
 import android.view.Gravity;
 
-import cn.qimate.bike.R;
+import cn.qimate.test.R;
 
 /**
  * Created by Sai on 15/8/9.

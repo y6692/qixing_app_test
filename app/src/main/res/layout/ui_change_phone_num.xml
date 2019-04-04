@@ -40,7 +40,7 @@
                     android:textColor="@color/tx_black"
                     android:textSize="@dimen/sp16"/>
 
-                <cn.qimate.bike.core.widget.ClearEditText
+                <cn.qimate.test.core.widget.ClearEditText
                     android:id="@+id/change_phoneNumUI_phoneNum"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -76,7 +76,7 @@
                     android:textColor="@color/tx_black"
                     android:textSize="@dimen/sp16"/>
 
-                <cn.qimate.bike.core.widget.ClearEditText
+                <cn.qimate.test.core.widget.ClearEditText
                     android:id="@+id/change_phoneNumUI_code"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

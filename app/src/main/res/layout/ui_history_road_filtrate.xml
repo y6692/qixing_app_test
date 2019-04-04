@@ -73,11 +73,11 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <cn.qimate.bike.datepicker.WeekDayView
+            <cn.qimate.test.datepicker.WeekDayView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp40"/>
 
-            <cn.qimate.bike.datepicker.MonthDateView
+            <cn.qimate.test.datepicker.MonthDateView
                 android:id="@+id/historyRoad_filtrate_monthView"
                 android:layout_width="fill_parent"
                 android:layout_height="260dp"/>

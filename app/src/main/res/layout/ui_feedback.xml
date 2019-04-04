@@ -23,7 +23,7 @@
                 android:layout_height="@dimen/line_height"
                 android:background="@color/line_color"/>
 
-            <cn.qimate.bike.core.widget.MyScrollView
+            <cn.qimate.test.core.widget.MyScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -39,7 +39,7 @@
                         android:paddingLeft="@dimen/dp15"
                         android:paddingTop="@dimen/dp10">
 
-                        <cn.qimate.bike.core.widget.ClearEditText
+                        <cn.qimate.test.core.widget.ClearEditText
                             android:id="@+id/feedbackUI_bikeCode"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp45"
@@ -197,7 +197,7 @@
                                 android:visibility="gone"/>
 
                         </LinearLayout>
-                        <cn.qimate.bike.core.widget.ClearEditText
+                        <cn.qimate.test.core.widget.ClearEditText
                             android:id="@+id/feedbackUI_restCause"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp80"
@@ -213,7 +213,7 @@
                             android:gravity="top|left"
                             android:lineSpacingExtra="2dp"/>
 
-                        <cn.qimate.bike.core.widget.ClearEditText
+                        <cn.qimate.test.core.widget.ClearEditText
                             android:id="@+id/feedbackUI_address"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/dp45"
@@ -246,7 +246,7 @@
                         android:paddingRight="@dimen/dp15"
                         android:orientation="horizontal">
 
-                        <cn.qimate.bike.core.widget.MyGridView
+                        <cn.qimate.test.core.widget.MyGridView
                             android:id="@+id/feedbackUI_photoGridView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -276,7 +276,7 @@
                         android:gravity="center"
                         android:enabled="false"/>
                 </LinearLayout>
-            </cn.qimate.bike.core.widget.MyScrollView>
+            </cn.qimate.test.core.widget.MyScrollView>
         </LinearLayout>
     </RelativeLayout>
 

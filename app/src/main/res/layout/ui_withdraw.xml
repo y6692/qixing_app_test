@@ -24,7 +24,7 @@
                 android:background="@color/ui_backgroud"
                 android:orientation="vertical" >
 
-                <cn.qimate.bike.core.widget.ReboundScrollView
+                <cn.qimate.test.core.widget.ReboundScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
 
@@ -127,7 +127,7 @@
                                     android:src="@drawable/money"
                                     android:padding="@dimen/dp5"/>
 
-                                <cn.qimate.bike.core.widget.ClearEditText
+                                <cn.qimate.test.core.widget.ClearEditText
                                     android:id="@+id/ui_withdraw_moneyEdit"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/dp45"
@@ -210,7 +210,7 @@
                                android:text="提示：佣金单笔提现需大于20元" />
                        </LinearLayout>
                     </LinearLayout>
-                </cn.qimate.bike.core.widget.ReboundScrollView>
+                </cn.qimate.test.core.widget.ReboundScrollView>
             </LinearLayout>
         </LinearLayout>
         <!-- 弹窗背景 -->
@@ -269,7 +269,7 @@
                         android:background="@drawable/shape_withdraw_dialog_tag"
                         android:orientation="vertical">
 
-                        <cn.qimate.bike.core.widget.ClearEditText
+                        <cn.qimate.test.core.widget.ClearEditText
                             android:id="@+id/dialog_withdraw_dialogName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -291,7 +291,7 @@
                         android:layout_marginTop="@dimen/dp10"
                         android:orientation="vertical">
 
-                        <cn.qimate.bike.core.widget.ClearEditText
+                        <cn.qimate.test.core.widget.ClearEditText
                             android:id="@+id/dialog_withdraw_dialogAccount"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

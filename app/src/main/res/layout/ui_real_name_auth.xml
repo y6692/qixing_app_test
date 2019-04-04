@@ -13,7 +13,7 @@
         <include
             layout="@layout/ui_main_title"/>
 
-        <cn.qimate.bike.core.widget.MyScrollView
+        <cn.qimate.test.core.widget.MyScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -23,7 +23,7 @@
                 android:orientation="vertical"
                 android:layout_alignParentTop="true"
                 android:background="@color/ui_backgroud">
-                <cn.qimate.bike.core.widget.MyScrollView
+                <cn.qimate.test.core.widget.MyScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <LinearLayout
@@ -194,7 +194,7 @@
                                     android:layout_centerVertical="true"
                                     android:orientation="horizontal">
 
-                                    <cn.qimate.bike.core.widget.ClearEditText
+                                    <cn.qimate.test.core.widget.ClearEditText
                                         android:id="@+id/ui_realNameAuth_realName"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
@@ -236,7 +236,7 @@
                                     android:layout_centerVertical="true"
                                     android:orientation="horizontal">
 
-                                    <cn.qimate.bike.core.widget.ClearEditText
+                                    <cn.qimate.test.core.widget.ClearEditText
                                         android:id="@+id/ui_realNameAuth_stuNum"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
@@ -380,9 +380,9 @@
                             android:textSize="@dimen/sp16"
                             android:layout_marginBottom="@dimen/dp100"/>
                     </LinearLayout>
-                </cn.qimate.bike.core.widget.MyScrollView>
+                </cn.qimate.test.core.widget.MyScrollView>
             </LinearLayout>
-        </cn.qimate.bike.core.widget.MyScrollView>
+        </cn.qimate.test.core.widget.MyScrollView>
     </LinearLayout>
     <include
         layout="@layout/ui_main_task"/>

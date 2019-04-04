@@ -67,20 +67,20 @@ import java.lang.reflect.Field;
 
 import cn.loopj.android.http.RequestParams;
 import cn.loopj.android.http.TextHttpResponseHandler;
-import cn.qimate.bike.R;
-import cn.qimate.bike.activity.CurRoadStartActivity;
-import cn.qimate.bike.activity.LoginActivity;
-import cn.qimate.bike.base.BaseApplication;
-import cn.qimate.bike.core.common.HttpHelper;
-import cn.qimate.bike.core.common.SharedPreferencesUrls;
-import cn.qimate.bike.core.common.UIHelper;
-import cn.qimate.bike.core.common.Urls;
-import cn.qimate.bike.core.widget.CustomDialog;
-import cn.qimate.bike.core.widget.LoadingDialog;
-import cn.qimate.bike.model.ResultConsel;
-import cn.qimate.bike.swipebacklayout.app.SwipeBackActivity;
-import cn.qimate.bike.util.PublicWay;
-import cn.qimate.bike.util.SystemUtil;
+import cn.qimate.test.R;
+import cn.qimate.test.activity.CurRoadStartActivity;
+import cn.qimate.test.activity.LoginActivity;
+import cn.qimate.test.base.BaseApplication;
+import cn.qimate.test.core.common.HttpHelper;
+import cn.qimate.test.core.common.SharedPreferencesUrls;
+import cn.qimate.test.core.common.UIHelper;
+import cn.qimate.test.core.common.Urls;
+import cn.qimate.test.core.widget.CustomDialog;
+import cn.qimate.test.core.widget.LoadingDialog;
+import cn.qimate.test.model.ResultConsel;
+import cn.qimate.test.swipebacklayout.app.SwipeBackActivity;
+import cn.qimate.test.util.PublicWay;
+import cn.qimate.test.util.SystemUtil;
 
 /**
  * 二维码扫描

@@ -1,0 +1,67 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+	package
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:3:11-44
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:1-19:12
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.BLUETOOTH
+ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:5:5-67
+	android:name
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:5:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:6:5-73
+	android:name
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:6:22-71
+uses-feature#android.hardware.bluetooth_le
+ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:7:5-89
+	android:required
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:7:64-87
+	android:name
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:7:19-63
+application
+ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:8:5-17:19
+	android:supportsRtl
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:11:9-35
+	android:label
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:10:9-41
+	android:allowBackup
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:9:9-35
+service#com.sunshine.blelibrary.service.BLEService
+ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:12:9-16:19
+	android:enabled
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:14:13-35
+	android:exported
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:15:13-36
+	android:name
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml:13:13-47
+uses-sdk
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+		ADDED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml
+		INJECTED from D:\AndroidStudioProjects\qixing_app\library2\src\main\AndroidManifest.xml

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.qimate.bike.model.RegionInfo;
+import cn.qimate.test.model.RegionInfo;
 
 public class RegionDAO {
 

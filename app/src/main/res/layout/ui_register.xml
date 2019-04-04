@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:background="#f7f7f7">
 
-        <cn.qimate.bike.core.widget.MyScrollView
+        <cn.qimate.test.core.widget.MyScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -70,7 +70,7 @@
                             android:textSize="@dimen/sp14"
                             android:textColor="@color/tx_black"/>
 
-                        <cn.qimate.bike.core.widget.ClearEditText
+                        <cn.qimate.test.core.widget.ClearEditText
                             android:id="@+id/registerUI_userName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -103,7 +103,7 @@
                             android:textSize="@dimen/sp14"
                             android:textColor="@color/tx_black"/>
 
-                        <cn.qimate.bike.core.widget.ClearEditText
+                        <cn.qimate.test.core.widget.ClearEditText
                             android:id="@+id/registernUI_password"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -137,7 +137,7 @@
                             android:textSize="@dimen/sp14"
                             android:textColor="@color/tx_black"/>
 
-                        <cn.qimate.bike.core.widget.ClearEditText
+                        <cn.qimate.test.core.widget.ClearEditText
                             android:id="@+id/registerUI_againpassword"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -172,7 +172,7 @@
                         android:textSize="@dimen/sp14"
                         android:paddingLeft="@dimen/dp15"/>
 
-                    <cn.qimate.bike.core.widget.ClearEditText
+                    <cn.qimate.test.core.widget.ClearEditText
                         android:id="@+id/registerUI_phoneNum_code"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -244,6 +244,6 @@
                         android:gravity="center_vertical"/>
                 </LinearLayout>
             </LinearLayout>
-        </cn.qimate.bike.core.widget.MyScrollView>
+        </cn.qimate.test.core.widget.MyScrollView>
     </LinearLayout>
 </LinearLayout>
