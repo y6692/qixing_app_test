@@ -2768,19 +2768,20 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ui_fristView_exImage_1:
-                    if (dialog != null && dialog.isShowing()) {
+//                    if (dialog != null && dialog.isShowing()) {
+                    if (dialog != null) {
                         dialog.dismiss();
                     }
                     UIHelper.goWebViewAct(context,"使用说明",Urls.bluecarisee);
                     break;
                 case R.id.ui_fristView_exImage_2:
-                    if (dialog != null && dialog.isShowing()) {
+                    if (dialog != null) {
                         dialog.dismiss();
                     }
                     UIHelper.goWebViewAct(context,"使用说明",Urls.useHelp);
                     break;
                 case R.id.ui_fristView_closeBtn:
-                    if (dialog != null && dialog.isShowing()) {
+                    if (dialog != null) {
                         dialog.dismiss();
                     }
                     break;
