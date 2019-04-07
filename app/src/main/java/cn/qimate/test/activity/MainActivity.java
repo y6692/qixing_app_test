@@ -426,22 +426,22 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         loadingDialog1.setCancelable(false);
         loadingDialog1.setCanceledOnTouchOutside(false);
 
-        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
-        dialog.setContentView(dialogView);
-        dialog.setCanceledOnTouchOutside(false);
-
-        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
-        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
-        advDialog.setContentView(advDialogView);
-        advDialog.setCanceledOnTouchOutside(false);
-
-        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
-        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
-
-        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
-        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
-        advImageView.setLayoutParams(params4);
+//        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
+//        dialog.setContentView(dialogView);
+//        dialog.setCanceledOnTouchOutside(false);
+//
+//        advDialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
+//        View advDialogView = LayoutInflater.from(this).inflate(R.layout.ui_adv_view, null);
+//        advDialog.setContentView(advDialogView);
+//        advDialog.setCanceledOnTouchOutside(false);
+//
+//        advImageView = (ImageView)advDialogView.findViewById(R.id.ui_adv_image);
+//        advCloseBtn = (ImageView)advDialogView.findViewById(R.id.ui_adv_closeBtn);
+//
+//        LinearLayout.LayoutParams params4 = (LinearLayout.LayoutParams) advImageView.getLayoutParams();
+//        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
+//        advImageView.setLayoutParams(params4);
 
         titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
         exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
@@ -466,24 +466,24 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
         slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
 
-        if(aMap==null){
-            aMap = mapView.getMap();
-            setUpMap();
-        }
-
-        aMap.setMapType(AMap.MAP_TYPE_NAVI);
-        aMap.getUiSettings().setZoomControlsEnabled(false);
-        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
-        aMap.getUiSettings().setLogoBottomMargin(-50);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
-        aMap.moveCamera(cameraUpdate);
-        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
-        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
-
-        aMap.setOnMapTouchListener(this);
-        setUpLocationStyle();
+//        if(aMap==null){
+//            aMap = mapView.getMap();
+//            setUpMap();
+//        }
+//
+//        aMap.setMapType(AMap.MAP_TYPE_NAVI);
+//        aMap.getUiSettings().setZoomControlsEnabled(false);
+//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+//        aMap.getUiSettings().setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_RIGHT);// 设置地图logo显示在右下方
+//        aMap.getUiSettings().setLogoBottomMargin(-50);
+//
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.zoomTo(18);// 设置缩放监听
+//        aMap.moveCamera(cameraUpdate);
+//        successDescripter = BitmapDescriptorFactory.fromResource(R.drawable.icon_usecarnow_position_succeed);
+//        bikeDescripter = BitmapDescriptorFactory.fromResource(R.drawable.bike_icon);
+//
+//        aMap.setOnMapTouchListener(this);
+//        setUpLocationStyle();
 
 //        leftBtn.setOnClickListener(this);
 //        rightBtn.setOnClickListener(this);
@@ -532,12 +532,12 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         else {
 //            initHttp();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    m_myHandler.sendEmptyMessage(5);
-                }
-            }).start();
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    m_myHandler.sendEmptyMessage(5);
+//                }
+//            }).start();
         }
         exImage_1.setOnClickListener(myOnClickLister);
         exImage_2.setOnClickListener(myOnClickLister);
