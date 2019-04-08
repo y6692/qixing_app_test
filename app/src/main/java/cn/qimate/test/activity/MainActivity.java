@@ -443,28 +443,28 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //        params4.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 //        advImageView.setLayoutParams(params4);
 
-        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
-        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
-        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
-        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
-        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
-
-        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
-        marquee = (TextView) findViewById(R.id.mainUI_marquee);
-        title = (TextView) findViewById(R.id.mainUI_title);
-        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
-        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
-        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
-        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
-        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
-        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
-        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
-        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
-        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
-        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
-        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
-        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
-        slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
+//        titleImage = (ImageView)dialogView.findViewById(R.id.ui_fristView_title);
+//        exImage_1 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_1);
+//        exImage_2 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_2);
+//        exImage_3 = (ImageView)dialogView.findViewById(R.id.ui_fristView_exImage_3);
+//        closeBtn = (ImageView)dialogView.findViewById(R.id.ui_fristView_closeBtn);
+//
+//        marqueeLayout = findViewById(R.id.mainUI_marqueeLayout);
+//        marquee = (TextView) findViewById(R.id.mainUI_marquee);
+//        title = (TextView) findViewById(R.id.mainUI_title);
+//        leftBtn = (ImageView) findViewById(R.id.mainUI_leftBtn);
+//        rightBtn = (ImageView) findViewById(R.id.mainUI_rightBtn);
+//        myCommissionLayout =  (LinearLayout) findViewById(R.id.personUI_bottom_billing_myCommissionLayout);
+//        myLocationLayout =  (LinearLayout) findViewById(R.id.mainUI_myLocationLayout);
+//        linkLayout = (LinearLayout) findViewById(R.id.mainUI_linkServiceLayout);
+//        myLocationBtn = (ImageView) findViewById(R.id.mainUI_myLocation);
+//        scanLock = (LinearLayout) findViewById(R.id.mainUI_scanCode_lock);
+//        linkBtn = (ImageView) findViewById(R.id.mainUI_linkService_btn);
+//        authBtn = (Button)findViewById(R.id.mainUI_authBtn);
+//        cartBtn = (Button)findViewById(R.id.mainUI_cartBtn);
+//        rechargeBtn = (Button)findViewById(R.id.mainUI_rechargeBtn);
+//        refreshLayout = (LinearLayout) findViewById(R.id.mainUI_refreshLayout);
+//        slideLayout = (LinearLayout)findViewById(R.id.mainUI_slideLayout);
 
 //        if(aMap==null){
 //            aMap = mapView.getMap();
@@ -502,23 +502,23 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //        cartBtn.setOnClickListener(this);
 //        slideLayout.setOnClickListener(this);
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
-        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
-        titleImage.setLayoutParams(params);
-
-        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
-        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_1.setLayoutParams(params1);
-
-        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
-        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_2.setLayoutParams(params2);
-
-        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
-        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
-        exImage_3.setLayoutParams(params3);
-
-        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
+//        params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
+//        titleImage.setLayoutParams(params);
+//
+//        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) exImage_1.getLayoutParams();
+//        params1.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_1.setLayoutParams(params1);
+//
+//        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) exImage_2.getLayoutParams();
+//        params2.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_2.setLayoutParams(params2);
+//
+//        LinearLayout.LayoutParams params3 = (LinearLayout.LayoutParams) exImage_3.getLayoutParams();
+//        params3.height = (imageWith - DisplayUtil.dip2px(context,20)) * 2 / 5;
+//        exImage_3.setLayoutParams(params3);
+//
+//        if (SharedPreferencesUrls.getInstance().getBoolean("ISFRIST",true)){
 //            SharedPreferencesUrls.getInstance().putBoolean("ISFRIST",false);
 //            WindowManager windowManager = getWindowManager();
 //            Display display = windowManager.getDefaultDisplay();
@@ -528,20 +528,20 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //            dialog.getWindow().setBackgroundDrawableResource(R.color.transparent);
 //            dialog.getWindow().setAttributes(lp);
 //            dialog.show();
-        }
-        else {
+//        }
+//        else {
 //            initHttp();
-
+//
 //            new Thread(new Runnable() {
 //                @Override
 //                public void run() {
 //                    m_myHandler.sendEmptyMessage(5);
 //                }
 //            }).start();
-        }
-        exImage_1.setOnClickListener(myOnClickLister);
-        exImage_2.setOnClickListener(myOnClickLister);
-        closeBtn.setOnClickListener(myOnClickLister);
+//        }
+//        exImage_1.setOnClickListener(myOnClickLister);
+//        exImage_2.setOnClickListener(myOnClickLister);
+//        closeBtn.setOnClickListener(myOnClickLister);
     }
 
     @Override
@@ -560,6 +560,18 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //		}
 
 //		JPushInterface.onPause(this);
+
+        if(loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+
+        if(lockLoading != null) {
+            lockLoading.dismiss();
+        }
+
+        if(loadingDialog1 != null) {
+            loadingDialog1.dismiss();
+        }
 
         if (dialog != null) {
             dialog.dismiss();
@@ -590,6 +602,18 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if(loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+
+        if(lockLoading != null) {
+            lockLoading.dismiss();
+        }
+
+        if(loadingDialog1 != null) {
+            loadingDialog1.dismiss();
+        }
 
         if (dialog != null) {
             dialog.dismiss();
