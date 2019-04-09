@@ -544,60 +544,60 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //        closeBtn.setOnClickListener(myOnClickLister);
     }
 
-    @Override
-    protected void onPause() {
-        isForeground = false;
-//        if (loadingDialog != null && loadingDialog.isShowing()) {
+//    @Override
+//    protected void onPause() {
+//        isForeground = false;
+////        if (loadingDialog != null && loadingDialog.isShowing()) {
+////            loadingDialog.dismiss();
+////        }
+////        if (lockLoading != null && lockLoading.isShowing()) {
+////            lockLoading.dismiss();
+////        }
+//        super.onPause();
+//
+////		if(mlocationClient!=null) {
+////			mlocationClient.stopLocation();//停止定位
+////		}
+//
+////		JPushInterface.onPause(this);
+//
+//        if(loadingDialog != null) {
 //            loadingDialog.dismiss();
 //        }
-//        if (lockLoading != null && lockLoading.isShowing()) {
+//
+//        if(lockLoading != null) {
 //            lockLoading.dismiss();
 //        }
-        super.onPause();
-
-//		if(mlocationClient!=null) {
-//			mlocationClient.stopLocation();//停止定位
-//		}
-
-//		JPushInterface.onPause(this);
-
-        if(loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-
-        if(lockLoading != null) {
-            lockLoading.dismiss();
-        }
-
-        if(loadingDialog1 != null) {
-            loadingDialog1.dismiss();
-        }
-
-        if (dialog != null) {
-            dialog.dismiss();
-        }
-
-        if (advDialog != null) {
-            advDialog.dismiss();
-        }
-
-		if(mapView!=null){
-            mapView.onPause();
-        }
-
-
-
-
-//		deactivate();
-//		mFirstFix = false;
-        tz = 0;
-
-        ToastUtil.showMessage(this, "main====onPause");
-        Log.e("main===", "main====onPause");
-
-//		closeBroadcast();
-
-    }
+//
+//        if(loadingDialog1 != null) {
+//            loadingDialog1.dismiss();
+//        }
+//
+//        if (dialog != null) {
+//            dialog.dismiss();
+//        }
+//
+//        if (advDialog != null) {
+//            advDialog.dismiss();
+//        }
+//
+//		if(mapView!=null){
+//            mapView.onPause();
+//        }
+//
+//
+//
+//
+////		deactivate();
+////		mFirstFix = false;
+//        tz = 0;
+//
+//        ToastUtil.showMessage(this, "main====onPause");
+//        Log.e("main===", "main====onPause");
+//
+////		closeBroadcast();
+//
+//    }
 
     @Override
     protected void onDestroy() {
