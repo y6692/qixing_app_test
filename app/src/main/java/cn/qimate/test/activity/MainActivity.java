@@ -289,8 +289,8 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
         bikeMarkerList = new ArrayList<>();
         imageWith = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.8);
 
-        mapView = findViewById(R.id.mainUI_map);
-        mapView.onCreate(savedInstanceState);
+//        mapView = findViewById(R.id.mainUI_map);
+//        mapView.onCreate(savedInstanceState);
 
 //        if (aMap == null) {
 //            aMap = mapView.getMap();
