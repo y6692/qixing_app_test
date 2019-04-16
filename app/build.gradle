@@ -49,7 +49,7 @@ android {
 
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "7MA_${releaseTime()}.apk"
+                    outputFileName = "7MA_test_${releaseTime()}.apk"
                 }
             }
         }
