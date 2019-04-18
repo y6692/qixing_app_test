@@ -414,17 +414,17 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //            }
 //        }
 
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.setCancelable(false);
-        loadingDialog.setCanceledOnTouchOutside(false);
-
-        lockLoading = new LoadingDialog(this);
-        lockLoading.setCancelable(false);
-        lockLoading.setCanceledOnTouchOutside(false);
-
-        loadingDialog1 = new LoadingDialog(this);
-        loadingDialog1.setCancelable(false);
-        loadingDialog1.setCanceledOnTouchOutside(false);
+//        loadingDialog = new LoadingDialog(this);
+//        loadingDialog.setCancelable(false);
+//        loadingDialog.setCanceledOnTouchOutside(false);
+//
+//        lockLoading = new LoadingDialog(this);
+//        lockLoading.setCancelable(false);
+//        lockLoading.setCanceledOnTouchOutside(false);
+//
+//        loadingDialog1 = new LoadingDialog(this);
+//        loadingDialog1.setCancelable(false);
+//        loadingDialog1.setCanceledOnTouchOutside(false);
 
 //        dialog = new Dialog(this, R.style.Theme_AppCompat_Dialog);
 //        View dialogView = LayoutInflater.from(this).inflate(R.layout.ui_frist_view, null);
@@ -544,16 +544,16 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //        closeBtn.setOnClickListener(myOnClickLister);
     }
 
-//    @Override
-//    protected void onPause() {
-//        isForeground = false;
+    @Override
+    protected void onPause() {
+        isForeground = false;
 ////        if (loadingDialog != null && loadingDialog.isShowing()) {
 ////            loadingDialog.dismiss();
 ////        }
 ////        if (lockLoading != null && lockLoading.isShowing()) {
 ////            lockLoading.dismiss();
 ////        }
-//        super.onPause();
+        super.onPause();
 //
 ////		if(mlocationClient!=null) {
 ////			mlocationClient.stopLocation();//停止定位
@@ -597,31 +597,31 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //
 ////		closeBroadcast();
 //
-//    }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if(loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-
-        if(lockLoading != null) {
-            lockLoading.dismiss();
-        }
-
-        if(loadingDialog1 != null) {
-            loadingDialog1.dismiss();
-        }
-
-        if (dialog != null) {
-            dialog.dismiss();
-        }
-
-        if (advDialog != null) {
-            advDialog.dismiss();
-        }
+//        if(loadingDialog != null) {
+//            loadingDialog.dismiss();
+//        }
+//
+//        if(lockLoading != null) {
+//            lockLoading.dismiss();
+//        }
+//
+//        if(loadingDialog1 != null) {
+//            loadingDialog1.dismiss();
+//        }
+//
+//        if (dialog != null) {
+//            dialog.dismiss();
+//        }
+//
+//        if (advDialog != null) {
+//            advDialog.dismiss();
+//        }
 
         if(mapView!=null){
             mapView.onDestroy();
@@ -852,7 +852,7 @@ public class MainActivity extends Activity implements OnClickListener, LocationS
 //            setUpMap();
 //        }
 
-        context = this;
+//        context = this;
 
 
 //        if (1 == 1) {
