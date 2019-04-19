@@ -486,22 +486,22 @@ public class MainActivity extends Activity implements OnClickListener
         aMap.setOnMapTouchListener(this);
         setUpLocationStyle();
 
-        leftBtn.setOnClickListener(this);
-        rightBtn.setOnClickListener(this);
-        marqueeLayout.setOnClickListener(this);
-        myLocationBtn.setOnClickListener(this);
-        myCommissionLayout.setOnClickListener(this);
-        myLocationLayout.setOnClickListener(this);
-        linkLayout.setOnClickListener(this);
-        scanLock.setOnClickListener(this);
-        linkBtn.setOnClickListener(this);
-        authBtn.setOnClickListener(this);
-        rechargeBtn.setOnClickListener(this);
-        refreshLayout.setOnClickListener(this);
-        advImageView.setOnClickListener(this);
-        advCloseBtn.setOnClickListener(this);
-        cartBtn.setOnClickListener(this);
-        slideLayout.setOnClickListener(this);
+//        leftBtn.setOnClickListener(this);
+//        rightBtn.setOnClickListener(this);
+//        marqueeLayout.setOnClickListener(this);
+//        myLocationBtn.setOnClickListener(this);
+//        myCommissionLayout.setOnClickListener(this);
+//        myLocationLayout.setOnClickListener(this);
+//        linkLayout.setOnClickListener(this);
+//        scanLock.setOnClickListener(this);
+//        linkBtn.setOnClickListener(this);
+//        authBtn.setOnClickListener(this);
+//        rechargeBtn.setOnClickListener(this);
+//        refreshLayout.setOnClickListener(this);
+//        advImageView.setOnClickListener(this);
+//        advCloseBtn.setOnClickListener(this);
+//        cartBtn.setOnClickListener(this);
+//        slideLayout.setOnClickListener(this);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
         params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
@@ -569,139 +569,139 @@ public class MainActivity extends Activity implements OnClickListener
 //        }
 //
 //
-//        if (flag == 1) {
-//            flag = 0;
-//            return;
+        if (flag == 1) {
+            flag = 0;
+            return;
+        }
+
+        uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+        access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+
+        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
+        oid = SharedPreferencesUrls.getInstance().getString("oid", "");
+        osn = SharedPreferencesUrls.getInstance().getString("osn", "");
+        type = SharedPreferencesUrls.getInstance().getString("type", "");
+
+        ToastUtil.showMessage(this, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
+        Log.e("main===", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
+
+        closeBroadcast();
+//        try {
+//            registerReceiver(Config.initFilter());
+//            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
+//        } catch (Exception e) {
+//            ToastUtil.showMessage(this, "eee====" + e);
 //        }
+
+        getFeedbackStatus();
+
+        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
+        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
+            authBtn.setVisibility(View.VISIBLE);
+            authBtn.setText("您还未登录，点我快速登录");
+            authBtn.setEnabled(true);
+            cartBtn.setVisibility(View.GONE);
+            refreshLayout.setVisibility(View.GONE);
+            rechargeBtn.setVisibility(View.GONE);
+        } else {
+            refreshLayout.setVisibility(View.VISIBLE);
+            if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                    case 1:
+                        authBtn.setEnabled(true);
+                        authBtn.setVisibility(View.VISIBLE);
+                        authBtn.setText("您还未认证，点我快速认证");
+                        break;
+                    case 2:
+//                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
+//                        if (!"".equals(m_nowMac)) {
+//                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+//                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
+//                                finish();
+//                            }
+//                            //蓝牙锁
+//                            if (mBluetoothAdapter == null) {
+//                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+//                                mBluetoothAdapter = bluetoothManager.getAdapter();
+//                            }
 //
-//        uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-//        access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+//                            if (mBluetoothAdapter == null) {
+//                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
+//                                finish();
+//                                return;
+//                            }
 //
-//        m_nowMac = SharedPreferencesUrls.getInstance().getString("m_nowMac", "");
-//        oid = SharedPreferencesUrls.getInstance().getString("oid", "");
-//        osn = SharedPreferencesUrls.getInstance().getString("osn", "");
-//        type = SharedPreferencesUrls.getInstance().getString("type", "");
-//
-//        ToastUtil.showMessage(this, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
-//        Log.e("main===", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
-//
-//        closeBroadcast();
-////        try {
-////            registerReceiver(Config.initFilter());
-////            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
-////        } catch (Exception e) {
-////            ToastUtil.showMessage(this, "eee====" + e);
-////        }
-//
-//        getFeedbackStatus();
-//
-//        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-//        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
-//        String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
-//        if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
-//            authBtn.setVisibility(View.VISIBLE);
-//            authBtn.setText("您还未登录，点我快速登录");
-//            authBtn.setEnabled(true);
-//            cartBtn.setVisibility(View.GONE);
-//            refreshLayout.setVisibility(View.GONE);
-//            rechargeBtn.setVisibility(View.GONE);
-//        } else {
-//            refreshLayout.setVisibility(View.VISIBLE);
-//            if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-//                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-//                    case 1:
-//                        authBtn.setEnabled(true);
-//                        authBtn.setVisibility(View.VISIBLE);
-//                        authBtn.setText("您还未认证，点我快速认证");
-//                        break;
-//                    case 2:
-////                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
-////                        if (!"".equals(m_nowMac)) {
-////                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-////                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-////                                finish();
-////                            }
-////                            //蓝牙锁
-////                            if (mBluetoothAdapter == null) {
-////                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-////                                mBluetoothAdapter = bluetoothManager.getAdapter();
-////                            }
+//                            if (!mBluetoothAdapter.isEnabled()) {
+//                                flag = 1;
+//                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                                startActivityForResult(enableBtIntent, 188);
+//                            } else {
+////                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+////                                    @Override
+////                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+////                                        k++;
+////                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
 ////
-////                            if (mBluetoothAdapter == null) {
-////                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-////                                finish();
-////                                return;
-////                            }
+////                                        if (!macList.contains(""+device)){
+////                                            macList.add(""+device);
+////                                            m_myHandler.sendEmptyMessage(3);
+////                                        }
 ////
-////                            if (!mBluetoothAdapter.isEnabled()) {
-////                                flag = 1;
-////                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-////                                startActivityForResult(enableBtIntent, 188);
-////                            } else {
-//////                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-//////                                    @Override
-//////                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-//////                                        k++;
-//////                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-//////
-//////                                        if (!macList.contains(""+device)){
-//////                                            macList.add(""+device);
-//////                                            m_myHandler.sendEmptyMessage(3);
-//////                                        }
-//////
-//////                                    }
-//////                                };
-//////
-//////                                startXB();
-//////
-//////                                if (lockLoading != null && !lockLoading.isShowing()){
-//////                                    lockLoading.setTitle("还车点确认中");
-//////                                    lockLoading.show();
-//////                                }
-//////
-//////                                m_myHandler.postDelayed(new Runnable() {
-//////                                    @Override
-//////                                    public void run() {
-//////                                        if(macList.size() == 0) {
-//////                                            m_myHandler.sendEmptyMessage(3);
-//////                                        }
-//////                                    }
-//////                                }, 6 * 1000);
+////                                    }
+////                                };
 ////
-////                            }
-////                        }
+////                                startXB();
+////
+////                                if (lockLoading != null && !lockLoading.isShowing()){
+////                                    lockLoading.setTitle("还车点确认中");
+////                                    lockLoading.show();
+////                                }
+////
+////                                m_myHandler.postDelayed(new Runnable() {
+////                                    @Override
+////                                    public void run() {
+////                                        if(macList.size() == 0) {
+////                                            m_myHandler.sendEmptyMessage(3);
+////                                        }
+////                                    }
+////                                }, 6 * 1000);
 //
-//                        getCurrentorder1(uid, access_token);
-//                        break;
-//                    case 3:
-//                        authBtn.setEnabled(true);
-//                        authBtn.setVisibility(View.VISIBLE);
-//                        authBtn.setText("认证被驳回，请重新认证");
-//                        break;
-//                    case 4:
-//                        authBtn.setEnabled(false);
-//                        authBtn.setVisibility(View.VISIBLE);
-//                        authBtn.setText("认证审核中");
-//                        break;
-//                }
-//            } else {
-//                authBtn.setVisibility(View.GONE);
-//            }
-//            if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))
-//                    || "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) || SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-//                    "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))) {
-//                rechargeBtn.setVisibility(View.VISIBLE);
-//            } else {
-//                rechargeBtn.setVisibility(View.GONE);
-//            }
-//            if (("0".equals(specialdays) || specialdays == null || "".equals(specialdays))
-//                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))) {
-//                cartBtn.setVisibility(View.GONE);
-//            } else {
-//                cartBtn.setVisibility(View.VISIBLE);
-//                cartBtn.setText("免费" + specialdays + "天,每次前一个小时免费,点击续费");
-//            }
-//        }
+//                            }
+//                        }
+
+                        getCurrentorder1(uid, access_token);
+                        break;
+                    case 3:
+                        authBtn.setEnabled(true);
+                        authBtn.setVisibility(View.VISIBLE);
+                        authBtn.setText("认证被驳回，请重新认证");
+                        break;
+                    case 4:
+                        authBtn.setEnabled(false);
+                        authBtn.setVisibility(View.VISIBLE);
+                        authBtn.setText("认证审核中");
+                        break;
+                }
+            } else {
+                authBtn.setVisibility(View.GONE);
+            }
+            if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))
+                    || "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) || SharedPreferencesUrls.getInstance().getString("money", "") == null ||
+                    "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))) {
+                rechargeBtn.setVisibility(View.VISIBLE);
+            } else {
+                rechargeBtn.setVisibility(View.GONE);
+            }
+            if (("0".equals(specialdays) || specialdays == null || "".equals(specialdays))
+                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))) {
+                cartBtn.setVisibility(View.GONE);
+            } else {
+                cartBtn.setVisibility(View.VISIBLE);
+                cartBtn.setText("免费" + specialdays + "天,每次前一个小时免费,点击续费");
+            }
+        }
     }
 
 
@@ -740,6 +740,22 @@ public class MainActivity extends Activity implements OnClickListener
 
         if (advDialog != null) {
             advDialog.dismiss();
+        }
+
+        if(customDialog != null) {
+            customDialog.dismiss();
+        }
+
+        if(customDialog2 != null) {
+            customDialog2.dismiss();
+        }
+
+        if(customDialog3 != null) {
+            customDialog3.dismiss();
+        }
+
+        if(customDialog4 != null) {
+            customDialog4.dismiss();
         }
 
 		if(mapView!=null){
@@ -782,6 +798,22 @@ public class MainActivity extends Activity implements OnClickListener
 
         if (advDialog != null) {
             advDialog.dismiss();
+        }
+
+        if(customDialog != null) {
+            customDialog.dismiss();
+        }
+
+        if(customDialog2 != null) {
+            customDialog2.dismiss();
+        }
+
+        if(customDialog3 != null) {
+            customDialog3.dismiss();
+        }
+
+        if(customDialog4 != null) {
+            customDialog4.dismiss();
         }
 
         if(mapView!=null){
