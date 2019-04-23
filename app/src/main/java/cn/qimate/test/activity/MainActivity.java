@@ -585,7 +585,7 @@ public class MainActivity extends Activity implements OnClickListener
         ToastUtil.showMessage(this, oid + ">>>" + osn + ">>>" + type + ">>>main===onResume===" + SharedPreferencesUrls.getInstance().getBoolean("isStop", true) + ">>>" + m_nowMac);
         Log.e("main===", "main====onResume==="+first+"==="+mBluetoothAdapter+"==="+mLeScanCallback);
 
-        closeBroadcast();
+//        closeBroadcast();
 //        try {
 //            registerReceiver(Config.initFilter());
 //            GlobalParameterUtils.getInstance().setLockType(LockType.MTS);
@@ -605,85 +605,29 @@ public class MainActivity extends Activity implements OnClickListener
             cartBtn.setVisibility(View.GONE);
             refreshLayout.setVisibility(View.GONE);
             rechargeBtn.setVisibility(View.GONE);
-        } else {
+        }else {
             refreshLayout.setVisibility(View.VISIBLE);
             if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                    case 1:
-                        authBtn.setEnabled(true);
-                        authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("您还未认证，点我快速认证");
-                        break;
-                    case 2:
-//                        if (!"".equals(m_nowMac) && !SharedPreferencesUrls.getInstance().getBoolean("switcher",false)) {
-//                        if (!"".equals(m_nowMac)) {
-//                            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-//                                ToastUtil.showMessageApp(context, "您的设备不支持蓝牙4.0");
-//                                finish();
-//                            }
-//                            //蓝牙锁
-//                            if (mBluetoothAdapter == null) {
-//                                BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-//                                mBluetoothAdapter = bluetoothManager.getAdapter();
-//                            }
-//
-//                            if (mBluetoothAdapter == null) {
-//                                ToastUtil.showMessageApp(context, "获取蓝牙失败");
-//                                finish();
-//                                return;
-//                            }
-//
-//                            if (!mBluetoothAdapter.isEnabled()) {
-//                                flag = 1;
-//                                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                                startActivityForResult(enableBtIntent, 188);
-//                            } else {
-////                                mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-////                                    @Override
-////                                    public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-////                                        k++;
-////                                        Log.e("main===LeScan", device + "====" + rssi + "====" + k);
-////
-////                                        if (!macList.contains(""+device)){
-////                                            macList.add(""+device);
-////                                            m_myHandler.sendEmptyMessage(3);
-////                                        }
-////
-////                                    }
-////                                };
-////
-////                                startXB();
-////
-////                                if (lockLoading != null && !lockLoading.isShowing()){
-////                                    lockLoading.setTitle("还车点确认中");
-////                                    lockLoading.show();
-////                                }
-////
-////                                m_myHandler.postDelayed(new Runnable() {
-////                                    @Override
-////                                    public void run() {
-////                                        if(macList.size() == 0) {
-////                                            m_myHandler.sendEmptyMessage(3);
-////                                        }
-////                                    }
-////                                }, 6 * 1000);
-//
-//                            }
-//                        }
-
-                        getCurrentorder1(uid, access_token);
-                        break;
-                    case 3:
-                        authBtn.setEnabled(true);
-                        authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("认证被驳回，请重新认证");
-                        break;
-                    case 4:
-                        authBtn.setEnabled(false);
-                        authBtn.setVisibility(View.VISIBLE);
-                        authBtn.setText("认证审核中");
-                        break;
-                }
+//                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+//                    case 1:
+//                        authBtn.setEnabled(true);
+//                        authBtn.setVisibility(View.VISIBLE);
+//                        authBtn.setText("您还未认证，点我快速认证");
+//                        break;
+//                    case 2:
+//                        getCurrentorder1(uid, access_token);
+//                        break;
+//                    case 3:
+//                        authBtn.setEnabled(true);
+//                        authBtn.setVisibility(View.VISIBLE);
+//                        authBtn.setText("认证被驳回，请重新认证");
+//                        break;
+//                    case 4:
+//                        authBtn.setEnabled(false);
+//                        authBtn.setVisibility(View.VISIBLE);
+//                        authBtn.setText("认证审核中");
+//                        break;
+//                }
             } else {
                 authBtn.setVisibility(View.GONE);
             }
@@ -704,8 +648,91 @@ public class MainActivity extends Activity implements OnClickListener
         }
     }
 
+    private void getCurrentorder1(String uid, String access_token) {
+        RequestParams params = new RequestParams();
+        params.put("uid", uid);
+        params.put("access_token", access_token);
+        HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                if (loadingDialog != null && !loadingDialog.isShowing()) {
+                    loadingDialog.setTitle("正在加载");
+                    loadingDialog.show();
+                }
+            }
 
             @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+                UIHelper.ToastError(context, throwable.toString());
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                try {
+                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
+                    if (result.getFlag().equals("Success")) {
+                        if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+                            if ("[]".equals(result.getData()) || 0 == result.getData().length()) {
+                                authBtn.setEnabled(false);
+                                authBtn.setVisibility(View.GONE);
+
+                                SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
+                                SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
+
+                            } else {
+                                CurRoadBikingBean bean = JSON.parseObject(result.getData(), CurRoadBikingBean.class);
+
+                                m_nowMac = bean.getMacinfo();
+
+                                Log.e("main===", "getMacinfo====" + bean.getMacinfo());
+
+                                if (!"".equals(m_nowMac)) {
+                                    oid = bean.getOid();
+                                    osn = bean.getOsn();
+                                    type = bean.getType();
+
+                                    SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
+                                    SharedPreferencesUrls.getInstance().putString("oid", oid);
+                                    SharedPreferencesUrls.getInstance().putString("osn", osn);
+                                    SharedPreferencesUrls.getInstance().putString("type", type);
+
+                                }
+
+                                Log.e("main===", "getStatus====" + bean.getStatus());
+
+                                if ("1".equals(bean.getStatus())) {
+                                    SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
+
+                                    authBtn.setText("您有一条进行中的行程，点我查看");
+                                    Tag = 0;
+                                } else {
+                                    SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
+                                    SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
+
+                                    authBtn.setText("您有一条未支付的行程，点我查看");
+                                    Tag = 1;
+                                }
+                                authBtn.setVisibility(View.VISIBLE);
+                                authBtn.setEnabled(true);
+                            }
+                        }
+                    } else {
+                        ToastUtils.show(result.getMsg());
+                    }
+                } catch (Exception e) {
+                }
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+            }
+        });
+    }
+
+
+    @Override
     protected void onPause() {
         isForeground = false;
 ////        if (loadingDialog != null && loadingDialog.isShowing()) {
@@ -1229,88 +1256,7 @@ public class MainActivity extends Activity implements OnClickListener
 
 
 
-    private void getCurrentorder1(String uid, String access_token) {
-        RequestParams params = new RequestParams();
-        params.put("uid", uid);
-        params.put("access_token", access_token);
-        HttpHelper.post(context, Urls.getCurrentorder, params, new TextHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                if (loadingDialog != null && !loadingDialog.isShowing()) {
-                    loadingDialog.setTitle("正在加载");
-                    loadingDialog.show();
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-                UIHelper.ToastError(context, throwable.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                try {
-                    ResultConsel result = JSON.parseObject(responseString, ResultConsel.class);
-                    if (result.getFlag().equals("Success")) {
-                        if ("2".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
-                            if ("[]".equals(result.getData()) || 0 == result.getData().length()) {
-                                authBtn.setEnabled(false);
-                                authBtn.setVisibility(View.GONE);
-
-                                SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-                                SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
-
-                            } else {
-                                CurRoadBikingBean bean = JSON.parseObject(result.getData(), CurRoadBikingBean.class);
-
-                                m_nowMac = bean.getMacinfo();
-
-                                Log.e("main===", "getMacinfo====" + bean.getMacinfo());
-
-                                if (!"".equals(m_nowMac)) {
-                                    oid = bean.getOid();
-                                    osn = bean.getOsn();
-                                    type = bean.getType();
-
-                                    SharedPreferencesUrls.getInstance().putString("m_nowMac", m_nowMac);
-                                    SharedPreferencesUrls.getInstance().putString("oid", oid);
-                                    SharedPreferencesUrls.getInstance().putString("osn", osn);
-                                    SharedPreferencesUrls.getInstance().putString("type", type);
-
-                                }
-
-                                Log.e("main===", "getStatus====" + bean.getStatus());
-
-                                if ("1".equals(bean.getStatus())) {
-                                    SharedPreferencesUrls.getInstance().putBoolean("isStop", false);
-
-                                    authBtn.setText("您有一条进行中的行程，点我查看");
-                                    Tag = 0;
-                                } else {
-                                    SharedPreferencesUrls.getInstance().putBoolean("isStop", true);
-                                    SharedPreferencesUrls.getInstance().putString("m_nowMac", "");
-
-                                    authBtn.setText("您有一条未支付的行程，点我查看");
-                                    Tag = 1;
-                                }
-                                authBtn.setVisibility(View.VISIBLE);
-                                authBtn.setEnabled(true);
-                            }
-                        }
-                    } else {
-                        ToastUtils.show(result.getMsg());
-                    }
-                } catch (Exception e) {
-                }
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
-                }
-            }
-        });
-    }
 
 
 //    @Override
