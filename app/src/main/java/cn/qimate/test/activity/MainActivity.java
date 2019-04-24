@@ -308,9 +308,8 @@ public class MainActivity extends Activity implements OnClickListener
 		filter.addAction(Intent.ACTION_USER_PRESENT);
 		registerReceiver(mScreenReceiver, filter);
 
-		//注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
-		filter = new IntentFilter("data.broadcast.action");
-		registerReceiver(broadcastReceiver, filter);
+//		filter = new IntentFilter("data.broadcast.action");
+//		registerReceiver(broadcastReceiver, filter);
 
 		new Thread(new Runnable() {
 			@Override
@@ -531,7 +530,7 @@ public class MainActivity extends Activity implements OnClickListener
             dialog.show();
         }
         else {
-            initHttp();
+//            initHttp();
 
             new Thread(new Runnable() {
                 @Override
@@ -593,11 +592,18 @@ public class MainActivity extends Activity implements OnClickListener
 //            ToastUtil.showMessage(this, "eee====" + e);
 //        }
 
-        getFeedbackStatus();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                m_myHandler.sendEmptyMessage(6);
+//            }
+//        }).start();
 
-        String uid = SharedPreferencesUrls.getInstance().getString("uid", "");
-        String access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+//        getFeedbackStatus();
+
+        String iscert = SharedPreferencesUrls.getInstance().getString("iscert", "");
         String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
+        String money = SharedPreferencesUrls.getInstance().getString("money", "");
         if (uid == null || "".equals(uid) || access_token == null || "".equals(access_token)) {
             authBtn.setVisibility(View.VISIBLE);
             authBtn.setText("您还未登录，点我快速登录");
@@ -607,7 +613,40 @@ public class MainActivity extends Activity implements OnClickListener
             rechargeBtn.setVisibility(View.GONE);
         }else {
             refreshLayout.setVisibility(View.VISIBLE);
-            if (SharedPreferencesUrls.getInstance().getString("iscert", "") != null && !"".equals(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
+            if (iscert != null && !"".equals(iscert)) {
+                switch (iscert) {
+                    case "1":
+                        authBtn.setEnabled(true);
+                        authBtn.setVisibility(View.VISIBLE);
+                        authBtn.setText("您还未认证，点我快速认证");
+                        break;
+                    case "2":
+
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                m_myHandler.sendEmptyMessage(7);
+//                            }
+//                        }).start();
+
+//                        getCurrentorder1(uid, access_token);
+                        break;
+                    case "3":
+                        authBtn.setEnabled(true);
+                        authBtn.setVisibility(View.VISIBLE);
+                        authBtn.setText("认证被驳回，请重新认证");
+                        break;
+                    case "4":
+                        authBtn.setEnabled(false);
+                        authBtn.setVisibility(View.VISIBLE);
+                        authBtn.setText("认证审核中");
+                        break;
+
+                    default:
+                        break;
+                }
+
+
 //                switch (Integer.parseInt(SharedPreferencesUrls.getInstance().getString("iscert", ""))) {
 //                    case 1:
 //                        authBtn.setEnabled(true);
@@ -631,15 +670,12 @@ public class MainActivity extends Activity implements OnClickListener
             } else {
                 authBtn.setVisibility(View.GONE);
             }
-            if ("0.00".equals(SharedPreferencesUrls.getInstance().getString("money", ""))
-                    || "0".equals(SharedPreferencesUrls.getInstance().getString("money", "")) || SharedPreferencesUrls.getInstance().getString("money", "") == null ||
-                    "".equals(SharedPreferencesUrls.getInstance().getString("money", ""))) {
+            if (money == null || "0.00".equals(money) || "0".equals(money) || "".equals(money)) {
                 rechargeBtn.setVisibility(View.VISIBLE);
             } else {
                 rechargeBtn.setVisibility(View.GONE);
             }
-            if (("0".equals(specialdays) || specialdays == null || "".equals(specialdays))
-                    && ("0".equals(specialdays) || specialdays == null || "".equals(specialdays))) {
+            if (specialdays == null || "0".equals(specialdays) ||  "".equals(specialdays)) {
                 cartBtn.setVisibility(View.GONE);
             } else {
                 cartBtn.setVisibility(View.VISIBLE);
@@ -868,10 +904,10 @@ public class MainActivity extends Activity implements OnClickListener
             unregisterReceiver(mScreenReceiver);
             mScreenReceiver = null;
         }
-        if (broadcastReceiver != null) {
-            unregisterReceiver(broadcastReceiver);
-            broadcastReceiver = null;
-        }
+//        if (broadcastReceiver != null) {
+//            unregisterReceiver(broadcastReceiver);
+//            broadcastReceiver = null;
+//        }
 
         closeBroadcast();
 
@@ -1233,6 +1269,14 @@ public class MainActivity extends Activity implements OnClickListener
 //                            Glide.with(context).load(imageUrl).into(advImageView);
 //                        }
 //                    }
+                    break;
+
+                case 6:
+                    getFeedbackStatus();
+                    break;
+
+                case 7:
+                    getCurrentorder1(uid, access_token);
                     break;
 
                 case 0x99://搜索超时
@@ -1823,14 +1867,26 @@ public class MainActivity extends Activity implements OnClickListener
 	};
 
 
-	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
-			getFeedbackStatus();
-		}
-	};
+//	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//
+//		@Override
+//		public void onReceive(Context context, Intent intent) {
+////			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
+////			getFeedbackStatus();
+//
+//            uid = SharedPreferencesUrls.getInstance().getString("uid", "");
+//            access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
+//
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    m_myHandler.sendEmptyMessage(7);
+//                    m_myHandler.sendEmptyMessage(6);
+//                }
+//            }).start();
+//
+//		}
+//	};
 
 
 	private String parseAdvData(int rssi, byte[] scanRecord) {
