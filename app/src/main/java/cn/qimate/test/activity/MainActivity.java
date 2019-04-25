@@ -308,8 +308,8 @@ public class MainActivity extends Activity implements OnClickListener
 		filter.addAction(Intent.ACTION_USER_PRESENT);
 		registerReceiver(mScreenReceiver, filter);
 
-//		filter = new IntentFilter("data.broadcast.action");
-//		registerReceiver(broadcastReceiver, filter);
+		filter = new IntentFilter("data.broadcast.action");
+		registerReceiver(broadcastReceiver, filter);
 
 		new Thread(new Runnable() {
 			@Override
@@ -485,22 +485,22 @@ public class MainActivity extends Activity implements OnClickListener
         aMap.setOnMapTouchListener(this);
         setUpLocationStyle();
 
-//        leftBtn.setOnClickListener(this);
-//        rightBtn.setOnClickListener(this);
-//        marqueeLayout.setOnClickListener(this);
-//        myLocationBtn.setOnClickListener(this);
-//        myCommissionLayout.setOnClickListener(this);
-//        myLocationLayout.setOnClickListener(this);
-//        linkLayout.setOnClickListener(this);
-//        scanLock.setOnClickListener(this);
-//        linkBtn.setOnClickListener(this);
-//        authBtn.setOnClickListener(this);
-//        rechargeBtn.setOnClickListener(this);
-//        refreshLayout.setOnClickListener(this);
-//        advImageView.setOnClickListener(this);
-//        advCloseBtn.setOnClickListener(this);
-//        cartBtn.setOnClickListener(this);
-//        slideLayout.setOnClickListener(this);
+        leftBtn.setOnClickListener(this);
+        rightBtn.setOnClickListener(this);
+        marqueeLayout.setOnClickListener(this);
+        myLocationBtn.setOnClickListener(this);
+        myCommissionLayout.setOnClickListener(this);
+        myLocationLayout.setOnClickListener(this);
+        linkLayout.setOnClickListener(this);
+        scanLock.setOnClickListener(this);
+        linkBtn.setOnClickListener(this);
+        authBtn.setOnClickListener(this);
+        rechargeBtn.setOnClickListener(this);
+        refreshLayout.setOnClickListener(this);
+        advImageView.setOnClickListener(this);
+        advCloseBtn.setOnClickListener(this);
+        cartBtn.setOnClickListener(this);
+        slideLayout.setOnClickListener(this);
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleImage.getLayoutParams();
         params.height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.16);
@@ -599,7 +599,7 @@ public class MainActivity extends Activity implements OnClickListener
 //            }
 //        }).start();
 
-//        getFeedbackStatus();
+        getFeedbackStatus();
 
         String iscert = SharedPreferencesUrls.getInstance().getString("iscert", "");
         String specialdays = SharedPreferencesUrls.getInstance().getString("specialdays", "");
@@ -629,7 +629,7 @@ public class MainActivity extends Activity implements OnClickListener
 //                            }
 //                        }).start();
 
-//                        getCurrentorder1(uid, access_token);
+                        getCurrentorder1(uid, access_token);
                         break;
                     case "3":
                         authBtn.setEnabled(true);
@@ -904,10 +904,10 @@ public class MainActivity extends Activity implements OnClickListener
             unregisterReceiver(mScreenReceiver);
             mScreenReceiver = null;
         }
-//        if (broadcastReceiver != null) {
-//            unregisterReceiver(broadcastReceiver);
-//            broadcastReceiver = null;
-//        }
+        if (broadcastReceiver != null) {
+            unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
+        }
 
         closeBroadcast();
 
@@ -1867,13 +1867,13 @@ public class MainActivity extends Activity implements OnClickListener
 	};
 
 
-//	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-//
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-////			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
-////			getFeedbackStatus();
-//
+	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			getCurrentorder1(SharedPreferencesUrls.getInstance().getString("uid", ""), SharedPreferencesUrls.getInstance().getString("access_token", ""));
+			getFeedbackStatus();
+
 //            uid = SharedPreferencesUrls.getInstance().getString("uid", "");
 //            access_token = SharedPreferencesUrls.getInstance().getString("access_token", "");
 //
@@ -1884,9 +1884,9 @@ public class MainActivity extends Activity implements OnClickListener
 //                    m_myHandler.sendEmptyMessage(6);
 //                }
 //            }).start();
-//
-//		}
-//	};
+
+		}
+	};
 
 
 	private String parseAdvData(int rssi, byte[] scanRecord) {
